@@ -302,6 +302,23 @@ Output strictly valid JSON with exactly these keys:
   "draft_message": "<full email body crafted in the requested {tone} tone>"
 }}"""
 
+    def _get_greeting_name(self, prospect_name: str, company: str, email_addr: str) -> str:
+        if not prospect_name or prospect_name.lower() in ["unknown", "prospect", "contact", ""]:
+            if email_addr and "@" in email_addr:
+                handle = email_addr.split("@")[0]
+                if "." in handle:
+                    return handle.split(".")[0].capitalize()
+                return handle.capitalize()
+            return "there"
+        
+        org_keywords = ["team", "events", "support", "research", "solutions", "technologies", "media", "systems", "corp", "inc", "ltd", "llc", "cloud", "group", "community", "news", "updates", "mailer", "info", "notifications"]
+        words = prospect_name.split()
+        if any(w.lower() in org_keywords for w in words) or prospect_name.strip().lower() == company.strip().lower():
+            clean_brand = words[0] if words else company
+            return f"{clean_brand} Team"
+            
+        return words[0]
+
     def _heuristic_analysis(self, lead_data: Dict[str, Any], signals: Dict[str, Any], custom_instructions: Optional[str], tone: str) -> Dict[str, Any]:
         """Provides expert deterministic analysis and rich tone-specific drafts."""
         # Calculate dynamic urgency score (1-10)
@@ -345,57 +362,60 @@ Output strictly valid JSON with exactly these keys:
         
         prospect_name = lead_data.get("name", "Prospect")
         company = lead_data.get("company", "Company")
+        email_addr = lead_data.get("email", "")
         subject = lead_data.get("subject", "our discussion")
-        clean_subject = subject.replace("Re:", "").replace("RE:", "").strip()
+        clean_subject = subject.replace("Re:", "").replace("RE:", "").replace("Fwd:", "").replace("FWD:", "").strip()
+        
+        greeting_name = self._get_greeting_name(prospect_name, company, email_addr)
+        sender_full_name = settings.sender_display_name
+        sender_first_name = sender_full_name.split()[0]
         
         reason_text = " ".join(reasons) if reasons else f"Active message thread regarding '{clean_subject[:60]}' with {prospect_name}."
-        next_action_text = f"Send personalized follow-up to {prospect_name} regarding {clean_subject[:50]}." if signals.get("last_sender_is_prospect") else f"Check in with {prospect_name} to confirm receipt and maintain momentum."
+        next_action_text = f"Send personalized follow-up to {greeting_name} regarding {clean_subject[:50]}." if signals.get("last_sender_is_prospect") else f"Check in with {greeting_name} to confirm receipt and maintain momentum."
 
-        name = prospect_name.split()[0]
-        
         # Distinct, rich templates for each tone:
         if tone == "Short & Direct":
             body = (
-                f"Hi {name},\n\n"
+                f"Hi {greeting_name},\n\n"
                 f"Following up on {clean_subject} for {company}.\n\n"
                 f"Are you free for a quick 5-minute sync tomorrow at 11:00 AM to review next steps?\n\n"
                 f"Best,\n"
-                f"Sathwik"
+                f"{sender_first_name}"
             )
         elif tone == "Warm & Friendly":
             body = (
-                f"Hi {name},\n\n"
+                f"Hi {greeting_name},\n\n"
                 f"Hope you are having a wonderful week!\n\n"
-                f"I wanted to check in regarding our conversation on {clean_subject}. We would love to partner with {company} and make sure all your questions are answered.\n\n"
+                f"I wanted to check in regarding our conversation on {clean_subject}. We would love to assist {company} and make sure all your questions are answered.\n\n"
                 f"Please let me know if you would like to jump on a quick call this week, or if I can share any additional information.\n\n"
                 f"Warm regards,\n"
-                f"Sathwik"
+                f"{sender_full_name}"
             )
         elif tone == "Urgent / Action-Oriented":
             body = (
-                f"Hi {name},\n\n"
+                f"Hi {greeting_name},\n\n"
                 f"Following up right away on {clean_subject} so we don't hold up your timeline for {company}.\n\n"
                 f"I have everything ready on our end—could we do a brief 10-minute call today or tomorrow morning to lock in next steps?\n\n"
                 f"Best regards,\n"
-                f"Sathwik"
+                f"{sender_full_name}"
             )
         else:  # Professional (Default)
             body = (
-                f"Hi {name},\n\n"
+                f"Hi {greeting_name},\n\n"
                 f"Thank you for your time regarding {clean_subject}.\n\n"
                 f"I am following up to review our discussion for {company} and address any questions your team may have as we move forward.\n\n"
                 f"Please let me know your availability this week for a brief review session.\n\n"
                 f"Best regards,\n"
-                f"Sathwik"
+                f"{sender_full_name}"
             )
 
         if custom_instructions:
             body = (
-                f"Hi {name},\n\n"
+                f"Hi {greeting_name},\n\n"
                 f"{custom_instructions}\n\n"
                 f"Looking forward to hearing from you.\n\n"
                 f"Best regards,\n"
-                f"Sathwik"
+                f"{sender_full_name}"
             )
 
         return {

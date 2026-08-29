@@ -30,9 +30,25 @@ class Settings:
     GMAIL_CREDENTIALS_PATH: str = os.getenv("GMAIL_CREDENTIALS_PATH", str(BASE_DIR / "credentials.json"))
     GMAIL_TOKEN_PATH: str = os.getenv("GMAIL_TOKEN_PATH", str(BASE_DIR / "token.json"))
     
+    # User Profile / Sender Settings
+    USER_NAME: str = os.getenv("USER_NAME", "")
+
     # Gmail IMAP Settings (App Password — simpler alternative to OAuth)
     GMAIL_EMAIL: str = os.getenv("GMAIL_EMAIL", "")
     GMAIL_APP_PASSWORD: str = os.getenv("GMAIL_APP_PASSWORD", "")
+
+    @property
+    def sender_display_name(self) -> str:
+        if self.USER_NAME:
+            return self.USER_NAME
+        if self.GMAIL_EMAIL:
+            handle = self.GMAIL_EMAIL.split("@")[0]
+            if "." in handle or "_" in handle:
+                return handle.replace(".", " ").replace("_", " ").title()
+            if "sathvik" in handle.lower() or "sathwik" in handle.lower():
+                return "Sathwik Kashyap"
+            return handle.title()
+        return "Sathwik Kashyap"
     
     # Vector Database & Embeddings
     CHROMA_PERSIST_DIR: str = os.getenv("CHROMA_PERSIST_DIR", str(BASE_DIR / "chroma_db"))

@@ -113,32 +113,37 @@ export const apiService = {
       });
       if (res.ok) return await res.json();
     } catch (e) {
-      console.warn('[API] Fallback draft generator.');
+      console.warn('[API] Backend draft error, using local generator:', e);
     }
-
-    const lead = MOCK_LEADS.find(l => l.id === leadId) || MOCK_LEADS[0];
-    const firstName = lead.name.split(' ')[0];
     
-    let body = lead.draft.body;
+    // Fallback if backend network fails
+    const leads = await apiService.getLeads();
+    const lead = leads.find(l => l.id === leadId) || { name: 'Contact', company: 'Company', subject: 'our discussion', draft: {} };
+    const firstName = lead.name ? lead.name.split(' ')[0] : 'there';
+    const cleanSubj = lead.subject ? lead.subject.replace(/^(Re|RE|Fwd|FWD):\s*/i, '') : 'our discussion';
+    
+    let body = "";
     if (tone === 'Short & Direct') {
-      body = `Hi ${firstName},\n\nFollowing up on our pricing discussion for ${lead.company}. Let me know if you are free for a 5-minute sync tomorrow to finalize the terms.\n\nBest,\nJeevan`;
+      body = `Hi ${firstName},\n\nFollowing up on ${cleanSubj} for ${lead.company}.\n\nAre you free for a quick 5-minute sync tomorrow at 11:00 AM to review next steps?\n\nBest,\nSathwik`;
     } else if (tone === 'Warm & Friendly') {
-      body = `Hi ${firstName},\n\nHope your week is going great!\n\nJust checking in on the proposal we discussed for ${lead.company}. Would love to answer any questions your team might have.\n\nWarm regards,\nJeevan Krishna`;
+      body = `Hi ${firstName},\n\nHope you are having a wonderful week!\n\nI wanted to check in regarding our conversation on ${cleanSubj}. We would love to partner with ${lead.company} and make sure all your questions are answered.\n\nPlease let me know if you would like to jump on a quick call this week, or if I can share any additional details.\n\nWarm regards,\nSathwik`;
     } else if (tone === 'Urgent / Action-Oriented') {
-      body = `Hi ${firstName},\n\nFollowing up right away so we don't hold up your timeline for ${lead.company}. I've prepared all the terms—let's connect today so we can get your team onboarded.\n\nBest,\nJeevan`;
+      body = `Hi ${firstName},\n\nFollowing up right away on ${cleanSubj} so we don't hold up your timeline for ${lead.company}.\n\nI have everything ready on our end—could we do a brief 10-minute call today or tomorrow morning to lock in next steps?\n\nBest regards,\nSathwik`;
+    } else {
+      body = `Hi ${firstName},\n\nThank you for your time regarding ${cleanSubj}.\n\nI am following up to review our discussion for ${lead.company} and address any questions your team may have as we move forward.\n\nPlease let me know your availability this week for a brief review session.\n\nBest regards,\nSathwik`;
     }
     
     if (customInstructions) {
-      body = `Hi ${firstName},\n\n${customInstructions}\n\nLooking forward to hearing from you.\n\nBest regards,\nJeevan Krishna`;
+      body = `Hi ${firstName},\n\n${customInstructions}\n\nLooking forward to hearing from you.\n\nBest regards,\nSathwik`;
     }
 
     return {
-      subject: lead.draft.subject,
-      recipient: lead.email,
+      subject: `Re: ${cleanSubj}`,
+      recipient: lead.email || '',
       body,
       tone,
-      urgency: lead.urgency,
-      reason: lead.reason
+      urgency: lead.urgency || 5,
+      reason: lead.reason || ''
     };
   },
 

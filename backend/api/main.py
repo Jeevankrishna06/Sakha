@@ -120,20 +120,6 @@ def get_lead_details(lead_id: str):
     lead_copy["signals"] = {**lead.get("signals", {}), **signals}
     return lead_copy
 
-@api_router.post("/draft/{lead_id}")
-def create_gmail_draft_for_lead(lead_id: str, request: Optional[CreateDraftRequest] = None):
-    """Creates a real or simulated Gmail draft for the prospect."""
-    lead = get_lead_by_id(lead_id)
-    if not lead:
-        raise HTTPException(status_code=404, detail="Lead not found")
-        
-    to_email = request.to_email if request else lead.get("email", "")
-    subject = request.subject if request else lead.get("draft", {}).get("subject", "Following up")
-    body_text = request.body_text if request else lead.get("draft", {}).get("body", "")
-    
-    result = gmail_client.create_draft(to_email=to_email, subject=subject, body_text=body_text)
-    return result
-
 @api_router.post("/draft/generate")
 def generate_custom_draft(payload: GenerateDraftRequest):
     """Dynamically generates or regenerates a draft using specified tone and custom instructions."""
@@ -148,6 +134,20 @@ def generate_custom_draft(payload: GenerateDraftRequest):
     )
     update_lead_draft(payload.lead_id, draft)
     return draft
+
+@api_router.post("/draft/{lead_id}")
+def create_gmail_draft_for_lead(lead_id: str, request: Optional[CreateDraftRequest] = None):
+    """Creates a real or simulated Gmail draft for the prospect."""
+    lead = get_lead_by_id(lead_id)
+    if not lead:
+        raise HTTPException(status_code=404, detail="Lead not found")
+        
+    to_email = request.to_email if request else lead.get("email", "")
+    subject = request.subject if request else lead.get("draft", {}).get("subject", "Following up")
+    body_text = request.body_text if request else lead.get("draft", {}).get("body", "")
+    
+    result = gmail_client.create_draft(to_email=to_email, subject=subject, body_text=body_text)
+    return result
 
 @api_router.post("/chat")
 def query_sales_copilot(payload: ChatQueryRequest):
