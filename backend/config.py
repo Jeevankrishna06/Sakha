@@ -50,6 +50,9 @@ class Settings:
             return handle.title()
         return "Sathwik Kashyap"
     
+    # Gmail Pub/Sub Real-Time Push Settings
+    GMAIL_PUBSUB_TOPIC: str = os.getenv("GMAIL_PUBSUB_TOPIC", "")
+
     # Vector Database & Embeddings
     CHROMA_PERSIST_DIR: str = os.getenv("CHROMA_PERSIST_DIR", str(BASE_DIR / "chroma_db"))
     EMBEDDING_MODEL_NAME: str = os.getenv("EMBEDDING_MODEL_NAME", "all-MiniLM-L6-v2")

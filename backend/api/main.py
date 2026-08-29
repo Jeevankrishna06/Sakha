@@ -53,8 +53,48 @@ class GmailConnectRequest(BaseModel):
     email: str
     app_password: str
 
+class PubSubMessage(BaseModel):
+    data: Optional[str] = None
+    messageId: Optional[str] = None
+    publishTime: Optional[str] = None
+
+class PubSubPushEnvelope(BaseModel):
+    message: Optional[PubSubMessage] = None
+    subscription: Optional[str] = None
+
 # ----------------- Core API Router -----------------
 api_router = APIRouter()
+
+@api_router.post("/webhooks/gmail-pubsub")
+def receive_gmail_pubsub_webhook(payload: PubSubPushEnvelope):
+    """
+    Receives real-time push webhook notifications from Google Cloud Pub/Sub
+    whenever a new email arrives in Gmail.
+    """
+    import base64
+    import json
+    try:
+        if payload.message and payload.message.data:
+            decoded_bytes = base64.b64decode(payload.message.data)
+            data = json.loads(decoded_bytes.decode('utf-8', errors='ignore'))
+            print(f"[PubSub Webhook] Real-time Gmail event received: {data}")
+        
+        # Trigger immediate background sync & AI pipeline
+        run_ingestion_pipeline()
+        return {"status": "ok", "message": "Real-time sync triggered"}
+    except Exception as e:
+        print(f"[PubSub Webhook] Error processing push event: {e}")
+        return {"status": "ok", "error": str(e)}
+
+@api_router.post("/gmail/watch")
+def start_gmail_pubsub_watch(topic: Optional[str] = None):
+    """Enables real-time push sync via Google Cloud Pub/Sub."""
+    return gmail_client.start_watch(topic)
+
+@api_router.post("/gmail/stop-watch")
+def stop_gmail_pubsub_watch():
+    """Disables real-time push sync."""
+    return gmail_client.stop_watch()
 
 @api_router.get("/health")
 def health_check():

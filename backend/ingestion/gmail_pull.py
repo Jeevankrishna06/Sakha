@@ -531,5 +531,44 @@ class GmailClient:
         except Exception as e:
             return {"success": False, "message": f"SMTP send failed: {e}"}
 
+    def start_watch(self, topic_name: Optional[str] = None) -> Dict[str, Any]:
+        """Starts real-time Gmail Pub/Sub push watch on INBOX."""
+        topic = topic_name or settings.GMAIL_PUBSUB_TOPIC
+        if not topic:
+            return {"status": "error", "message": "GMAIL_PUBSUB_TOPIC not configured in .env (e.g. projects/YOUR_PROJECT/topics/sakha-gmail-watch)"}
+
+        if self.auth_mode == "oauth" and self.service:
+            try:
+                request = {
+                    'labelIds': ['INBOX'],
+                    'topicName': topic
+                }
+                res = self.service.users().watch(userId='me', body=request).execute()
+                print(f"[GmailClient] Pub/Sub watch active on {topic}: {res}")
+                return {
+                    "status": "success",
+                    "historyId": res.get("historyId"),
+                    "expiration": res.get("expiration"),
+                    "topic": topic,
+                    "message": f"Real-time Gmail Pub/Sub watch activated on {topic}"
+                }
+            except Exception as e:
+                return {"status": "error", "message": f"Failed to start watch: {e}"}
+
+        return {
+            "status": "error",
+            "message": "Pub/Sub watch requires OAuth 2.0 (credentials.json + token.json). IMAP mode uses fast local sync."
+        }
+
+    def stop_watch(self) -> Dict[str, Any]:
+        """Stops real-time Gmail Pub/Sub push watch."""
+        if self.auth_mode == "oauth" and self.service:
+            try:
+                self.service.users().stop(userId='me').execute()
+                return {"status": "success", "message": "Gmail Pub/Sub watch stopped."}
+            except Exception as e:
+                return {"status": "error", "message": f"Failed to stop watch: {e}"}
+        return {"status": "success", "message": "No active OAuth watch."}
+
 
 gmail_client = GmailClient()
