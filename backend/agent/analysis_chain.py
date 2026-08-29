@@ -219,34 +219,61 @@ Return JSON with exactly these keys:
 }}"""
 
     def _heuristic_analysis(self, lead_data: Dict[str, Any], signals: Dict[str, Any], custom_instructions: Optional[str], tone: str) -> Dict[str, Any]:
-        """Provides expert deterministic fallback analysis."""
-        existing_urgency = lead_data.get("urgency", 5)
-        existing_reason = lead_data.get("reason", "Prospect conversation active.")
-        existing_action = lead_data.get("next_action", "Follow up with prospect.")
-        existing_draft = lead_data.get("draft", {})
+        """Provides expert deterministic analysis and urgency scoring."""
+        # Calculate dynamic urgency score (1-10)
+        score = 5
+        reasons = []
+
+        if signals.get("unanswered_promise"):
+            score += 3
+            reasons.append("Unanswered promise detected in thread — immediate follow-up required.")
+        elif signals.get("pricing_requested"):
+            score += 2
+            reasons.append("Prospect inquired about pricing or terms.")
         
-        name = lead_data.get("name", "there").split()[0]
-        company = lead_data.get("company", "your team")
+        if signals.get("demo_mentioned"):
+            score += 1
+            reasons.append("Demo, presentation, or review call discussed.")
+
+        if signals.get("last_sender_is_prospect"):
+            score += 2
+            reasons.append("Awaiting reply from our side.")
+        else:
+            score -= 1
+
+        # Bound score between 1 and 10
+        score = max(1, min(10, score))
+        
+        level = "Critical" if score >= 9 else ("High" if score >= 7 else ("Medium" if score >= 4 else "Low"))
+        
+        prospect_name = lead_data.get("name", "Prospect")
+        company = lead_data.get("company", "Company")
+        subject = lead_data.get("subject", "our discussion")
+        
+        reason_text = " ".join(reasons) if reasons else f"Recent message thread regarding '{subject[:60]}' with {prospect_name}."
+        next_action_text = f"Send personalized follow-up to {prospect_name} regarding {subject[:50]}." if signals.get("last_sender_is_prospect") else f"Check in with {prospect_name} to confirm receipt and maintain momentum."
+
+        name = prospect_name.split()[0]
         
         # Tone adjustments
         if tone == "Short & Direct":
-            body = f"Hi {name},\n\nFollowing up on our discussion regarding {company}. Let me know if you're free for a quick 5-minute call tomorrow to finalize next steps.\n\nBest,\nJeevan"
+            body = f"Hi {name},\n\nFollowing up on {subject}. Let me know if you are free for a brief sync tomorrow to discuss next steps.\n\nBest regards,\nSathwik"
         elif tone == "Warm & Friendly":
-            body = f"Hi {name},\n\nHope you're having a wonderful week!\n\nI wanted to check in on our previous conversation and see how things are progressing with {company}. Would love to answer any questions your team might have.\n\nWarm regards,\nJeevan Krishna"
+            body = f"Hi {name},\n\nHope your week is going great!\n\nI wanted to check in regarding {subject} and see how things are progressing on your side. Would love to answer any questions you might have.\n\nWarm regards,\nSathwik"
         elif tone == "Urgent / Action-Oriented":
-            body = f"Hi {name},\n\nFollowing up right away to make sure we don't miss your timeline for {company}. I have prepared all details on our end—let's connect today so we can get your team started.\n\nBest,\nJeevan"
+            body = f"Hi {name},\n\nFollowing up right away on {subject} so we can keep things moving on schedule. Please let me know your availability for a quick call today.\n\nBest regards,\nSathwik"
         else:
-            body = existing_draft.get("body") or f"Hi {name},\n\nFollowing up on our recent discussion regarding {company}.\n\nPlease let me know if you have any questions or if you would like to schedule time this week to review next steps.\n\nBest regards,\nJeevan Krishna"
+            body = f"Hi {name},\n\nThank you for reaching out regarding {subject}.\n\nPlease let me know if you have any questions or if you'd like to schedule time this week to review next steps.\n\nBest regards,\nSathwik"
 
         if custom_instructions:
-            body = f"Hi {name},\n\n{custom_instructions}\n\nLooking forward to hearing from you.\n\nBest regards,\nJeevan Krishna"
+            body = f"Hi {name},\n\n{custom_instructions}\n\nLooking forward to hearing from you.\n\nBest regards,\nSathwik"
 
         return {
-            "urgency": existing_urgency,
-            "urgency_level": lead_data.get("urgency_level", "Medium"),
-            "reason": existing_reason,
-            "next_action": existing_action,
-            "draft_subject": existing_draft.get("subject", f"Follow up: {company} & Sakha"),
+            "urgency": score,
+            "urgency_level": level,
+            "reason": reason_text,
+            "next_action": next_action_text,
+            "draft_subject": f"Re: {subject}",
             "draft_message": body,
             "signals": signals
         }

@@ -1,0 +1,1008 @@
+[
+  {
+    "id": "gmail-1",
+    "name": "Agoda Research",
+    "email": "noreply@agoda.com",
+    "company": "Agoda",
+    "role": "Key Contact",
+    "subject": "We'd love to hear from you!  🤩",
+    "urgency": 9,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 26, 2026 11:23 PM",
+    "reason": "Prospect inquired about pricing or terms. Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Agoda Research regarding We'd love to hear from you!  🤩.",
+    "thread": [
+      {
+        "id": "msg_515200",
+        "sender": "Agoda Research",
+        "sender_email": "noreply@agoda.com",
+        "date": "Aug 26, 2026 11:23 PM",
+        "body": "<!--build-once-->\r\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\">\r\n<head>\r\n    <link href=\"https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,700;1,300&display=swap\" rel=\"stylesheet\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n    <meta http-equiv=\"Content-language\" content=\"en-US\" />\r\n    <title>KTC</title>\r\n    <style type=\"text/css\">\r\n        html, body { width: 100%; height: 100%; margin: 0; padding: 0; }\r\n        body, table, td, p, a, li, blockquote { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }\r\n        img { height: auto; line-height: 100%; border: 0; outline: none; text-decoration: none; display: inline; -ms-interpolation-mode: bicubic; }\r\n        table { border-collapse: collapse !important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }\r\n        table td { mso-line-height-rule: exactly; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }\r\n        h1, h2, h3, h4, h5, h6, p { margin: 0; }\r\n        table { display: table; }\r\n        td { display: table-cell; }\r\n        #outlook a { padding: 0; }\r\n        .ExternalClass, .ReadMsgBody { width: 100%; }\r\n        .ExternalClass p { margin: 0; margin-bottom: 0; }\r\n        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: 100%; }\r\n        a { text-decoration: underline; }\r\n        a:hover { text-decoration: none; }\r\n        a:visited { color: #00adff; }\r\n        p[class=menu] a { text-decoration: none; }\r\n        p[class=menu] a:hover { text-decoration: underline; }\r\n        a[href^=tel] { color: inherit; text-decoration: underline; }\r\n        table[class=entry-left] a, table[class=entry-right] a { text-decoration: none; }\r\n        table[class=entry-left] a:hover, table[class=entry-right] a:hover { text-decoration: underline; }\r\n        div[class=visible-mobile] { display: none !important; }\r\n        .btn-coupon-disabled {\r\n            background: #ECEFF5 !important;\r\n        }\r\n        .text-coupon-disabled {\r\n            color: #CED0D4 !important;\r\n        }\r\n        /* Light Dark mode enabled */\r\n        :root {\r\n            color-scheme: ligth dark;\r\n            supported-colo",
+        "is_outbound": false,
+        "subject": "We'd love to hear from you!  🤩"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": true,
+      "demo_mentioned": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: We'd love to hear from you!  🤩",
+      "body": "Hi Agoda Research,\n\nThank you for reaching out regarding We'd love to hear from you!  🤩.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "Critical"
+  },
+  {
+    "id": "gmail-2",
+    "name": "LinkedIn",
+    "email": "messages-noreply@linkedin.com",
+    "company": "Linkedin",
+    "role": "Key Contact",
+    "subject": "22 people viewed your profile",
+    "urgency": 7,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 27, 2026 12:02 AM",
+    "reason": "Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to LinkedIn regarding 22 people viewed your profile.",
+    "thread": [
+      {
+        "id": "msg_795848",
+        "sender": "LinkedIn",
+        "sender_email": "messages-noreply@linkedin.com",
+        "date": "Aug 27, 2026 12:02 AM",
+        "body": "Your profile is looking great\r\n\r\nYour work and accomplishments are being recognized\r\n\r\n22 profile views\r\n  \r\n          https://www.linkedin.com/comm/me/profile-views?lipi=urn%3Ali%3Apage%3Aemail_b2_professional_identity_digest_02%3B%2FM6O0HjUSQConCIxJodsow%3D%3D&midToken=AQEmKj3Uma2Pqg&midSig=2a75EMa9a2Gco1&trk=eml-b2_professional_identity_digest_02-email~professional~identity~digest-0-profile~views&trkEmail=eml-b2_professional_identity_digest_02-email~professional~identity~digest-0-profile~views-null-pwmnw1~mtare1i6~oi-null-null&eid=pwmnw1-mtare1i6-oi&otpToken=Y2M2Y2U5ZDg3OGRjMTI2YjQwZTM0YWRjOGFlNzIxN2ZkNmMxZGYxMWU5YjljMWI2NDAzZjRjMDA1ZTA2ZjcyZWE3MzhlNmZjODVjNDNiNzk5YWQ3ZDhjYzNjN2E3Y2Y2YzI3ZmI4YTAxOGFhNjc4NGRhYmFiOGY3MWUyOWVjOTc0Y2IwZDQzNmVkY2ZjNmU0NjgsMiwx\r\n\r\nUnlock the full list with Premium\r\nPremium subscribers get 11x more profile views on average.\r\nhttp://www.linkedin.com/comm/premium/products/?upsellOrderOrigin=Tracking%3Av1%3Aemail_pid_upsell%3AEmail+Stork%3AMarketing&referenceId=wBn0MyWoR9WT5%2Bme%2BSEhpg%3D%3D&isSS=false&upsellSlotId=EMAIL_PID&lipi=urn%3Ali%3Apage%3Aemail_b2_professional_identity_digest_02%3B%2FM6O0HjUSQConCIxJodsow%3D%3D&midToken=AQEmKj3Uma2Pqg&midSig=2a75EMa9a2Gco1&trk=eml-b2_professional_identity_digest_02-jymbii-0-premium~upsell~v2~text&trkEmail=eml-b2_professional_identity_digest_02-jymbii-0-premium~upsell~v2~text-null-pwmnw1~mtare1i6~oi-null-null&eid=pwmnw1-mtare1i6-oi&otpToken=Y2M2Y2U5ZDg3OGRjMTI2YjQwZTM0YWRjOGFlNzIxN2ZkNmMxZGYxMWU5YjljMWI2NDAzZjRjMDA1ZTA2ZjcyZWE3MzhlNmZjODVjNDNiNzk5YWQ3ZDhjYzNjN2E3Y2Y2YzI3ZmI4YTAxOGFhNjc4NGRhYmFiOGY3MWUyOWVjOTc0Y2IwZDQzNmVkY2ZjNmU0NjgsMiwx\r\n  \r\n      \r\n\r\n----------------------------------------\r\n\r\nThis email was intended for Sathwik Kashyap P S (AI & ML Student | Interested in Artificial Intelligence, Automation & Real-World Applications| Developing Skills in Python, Data Science & Problem Solving)\r\nLearn why we included this: https://www.linkedin.com/help/linkedin/answer/4788?lang=en&lipi=urn%3Ali%3Apage%3Aemail_b2_professional_identity_digest_02%3B%2FM6O0HjUSQConCIxJodsow%3D%3D&midToken=AQEmKj3Uma2Pqg&midSig=2a75EMa9a2Gco1&trk=eml-b2_professional_identity_digest_02-SecurityHelp-0-textfooterglimmer&trkEmail=eml-b2_professional_identity_digest_02-SecurityHelp-0-textfooterglimmer-null-pwmnw1~mtare1i6~oi-null-null&eid=pwmnw1-mtare1i6-oi&otpToken=Y2M2Y2U5ZDg3OGRjMTI2YjQwZTM0YWRjOGFlNzIxN2ZkNmMxZGYxMWU5YjljMWI2NDAzZjRjMDA1ZTA2ZjcyZWE3MzhlNmZjODVjNDNiNzk5YWQ3ZDhjYzNjN2E3Y2Y2YzI3ZmI4YTAxOGFhNjc",
+        "is_outbound": false,
+        "subject": "22 people viewed your profile"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: 22 people viewed your profile",
+      "body": "Hi LinkedIn,\n\nThank you for reaching out regarding 22 people viewed your profile.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-3",
+    "name": "Bindhushree S R",
+    "email": "invitations@linkedin.com",
+    "company": "Linkedin",
+    "role": "Key Contact",
+    "subject": "I want to connect",
+    "urgency": 7,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 27, 2026 06:02 AM",
+    "reason": "Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Bindhushree S R regarding I want to connect.",
+    "thread": [
+      {
+        "id": "msg_986479",
+        "sender": "Bindhushree S R",
+        "sender_email": "invitations@linkedin.com",
+        "date": "Aug 27, 2026 06:02 AM",
+        "body": "Bindhushree is waiting for your response\r\n        \r\nHi Sathwik, I’d like to join your professional network\r\n\r\nBindhushree S R\r\nElectrical & Electronics Engineering Student | Building Impact-Driven Solutions | Aspiring UPSC candidate\r\nIndia\r\n42 connections in common\r\nSee all connections in common:https://www.linkedin.com/comm/search/results/people/?facetNetwork=%5B%22F%22%5D&facetConnectionOf=%5B%22ADoAAFooui0BET2bg3hpgPNIO1eSiRReQnIAzRw%22%5D&origin=SHARED_CONNECTIONS_CANNED_SEARCH&lipi=urn%3Ali%3Apage%3Aemail_email_m2m_invite_single_01%3BYjmGv1OTQmys2cSHoEjJuw%3D%3D&midToken=AQEmKj3Uma2Pqg&midSig=1_ZNmfYILGGso1&trk=eml-email_m2m_invite_single_01-connections~in~common~text-0-view~connections&trkEmail=eml-email_m2m_invite_single_01-connections~in~common~text-0-view~connections-null-pwmnw1~mtb4909y~zs-null-null&eid=pwmnw1-mtb4909y-zs&otpToken=MmE2ODJhOWFjZDVjZWUzMDA1MmMxZDVkNDZiNDdiNjMzMTk2ZDE0YmI2MTU3Mjc4ZjY0OWFkZmZiY2UwMmIwZWE3Yjg1MzA4YmI5ZDJjOWNhZGNkNTkzZDY2YzcxNzZmNzBhMmExZGIyYWRiYTk4NDFhMTAxNmNhM2RkZmRiZTIwYTc5NmNiN2Y4MjVjOGUxNzIsMiwx\r\n\r\nAccept:https://www.linkedin.com/comm/mynetwork/invite-accept/invitationId/7498591608398053377/sharedKey/iB3bIvrA/?inviterVanityName=bindhushree-s-r-b516a5362&lipi=urn%3Ali%3Apage%3Aemail_email_m2m_invite_single_01%3BYjmGv1OTQmys2cSHoEjJuw%3D%3D&midToken=AQEmKj3Uma2Pqg&midSig=1_ZNmfYILGGso1&trk=eml-email_m2m_invite_single_01-null-0-null&trkEmail=eml-email_m2m_invite_single_01-null-0-null-null-pwmnw1~mtb4909y~zs-null-null&eid=pwmnw1-mtb4909y-zs&otpToken=MmE2ODJhOWFjZDVjZWUzMDA1MmMxZDVkNDZiNDdiNjMzMTk2ZDE0YmI2MTU3Mjc4ZjY0OWFkZmZiY2UwMmIwZWE3Yjg1MzA4YmI5ZDJjOWNhZGNkNTkzZDY2YzcxNzZmNzBhMmExZGIyYWRiYTk4NDFhMTAxNmNhM2RkZmRiZTIwYTc5NmNiN2Y4MjVjOGUxNzIsMiwx\r\nView profile:https://in.linkedin.com/comm/in/bindhushree-s-r-b516a5362?lipi=urn%3Ali%3Apage%3Aemail_email_m2m_invite_single_01%3BYjmGv1OTQmys2cSHoEjJuw%3D%3D&midToken=AQEmKj3Uma2Pqg&midSig=1_ZNmfYILGGso1&trk=eml-email_m2m_invite_single_01-null-0-null&trkEmail=eml-email_m2m_invite_single_01-null-0-null-null-pwmnw1~mtb4909y~zs-null-null&eid=pwmnw1-mtb4909y-zs&otpToken=MmE2ODJhOWFjZDVjZWUzMDA1MmMxZDVkNDZiNDdiNjMzMTk2ZDE0YmI2MTU3Mjc4ZjY0OWFkZmZiY2UwMmIwZWE3Yjg1MzA4YmI5ZDJjOWNhZGNkNTkzZDY2YzcxNzZmNzBhMmExZGIyYWRiYTk4NDFhMTAxNmNhM2RkZmRiZTIwYTc5NmNiN2Y4MjVjOGUxNzIsMiwx\r\n\r\nBuild your network with InMail\r\nMessage anyone on LinkedIn with Premium InMail. It’s 4.6x more effective in hearing back than cold email.\r\nhttp://www.linkedin.com/comm/premium/products/?upsellOrderOrigin=Tracking",
+        "is_outbound": false,
+        "subject": "I want to connect"
+      },
+      {
+        "id": "msg_496375",
+        "sender": "Reetu Nataraj",
+        "sender_email": "invitations@linkedin.com",
+        "date": "Aug 27, 2026 08:02 PM",
+        "body": "Reetu is waiting for your response\r\n        \r\nHi Sathwik, I’d like to join your professional network\r\n\r\nReetu Nataraj\r\nStudent at RNS Institute of Technology - India\r\nBengaluru\r\n11 connections in common\r\nSee all connections in common:https://www.linkedin.com/comm/search/results/people/?facetNetwork=%5B%22F%22%5D&facetConnectionOf=%5B%22ADoAAGPG5uEBjvK_ZG0BKN5gg2SnIPBa0AKo2-k%22%5D&origin=SHARED_CONNECTIONS_CANNED_SEARCH&lipi=urn%3Ali%3Apage%3Aemail_email_m2m_invite_single_01%3B%2FY00sSWSS5qU6pyMYXMwAw%3D%3D&midToken=AQEmKj3Uma2Pqg&midSig=1ViDQMcIAOHso1&trk=eml-email_m2m_invite_single_01-connections~in~common~text-0-view~connections&trkEmail=eml-email_m2m_invite_single_01-connections~in~common~text-0-view~connections-null-pwmnw1~mtby996u~lx-null-null&eid=pwmnw1-mtby996u-lx&otpToken=YWVhMjg0NGIxYmM4ZWRhYTVjMjYwYWI0NzRhNjgyODczMGNmZTVkNjliYzFjNjJkOWVkZDFhOTFkZjEzZDYxZmQ5YzVlNjdjMWYxMzEyMTNhNDY3NTIxYTE4NTA2MGU3MjdlMTYwMWQ5OTE3ZWM1ZWU5ODIzOWU3ZGJlMDBlNGNmZjJhMGY4OWQ4MWVhMTBiNGMsMiwx\r\n\r\nAccept:https://www.linkedin.com/comm/mynetwork/invite-accept/invitationId/7498817830021238784/sharedKey/m7NM1VF3/?inviterVanityName=reetu-nataraj-2557423a8&lipi=urn%3Ali%3Apage%3Aemail_email_m2m_invite_single_01%3B%2FY00sSWSS5qU6pyMYXMwAw%3D%3D&midToken=AQEmKj3Uma2Pqg&midSig=1ViDQMcIAOHso1&trk=eml-email_m2m_invite_single_01-null-0-null&trkEmail=eml-email_m2m_invite_single_01-null-0-null-null-pwmnw1~mtby996u~lx-null-null&eid=pwmnw1-mtby996u-lx&otpToken=YWVhMjg0NGIxYmM4ZWRhYTVjMjYwYWI0NzRhNjgyODczMGNmZTVkNjliYzFjNjJkOWVkZDFhOTFkZjEzZDYxZmQ5YzVlNjdjMWYxMzEyMTNhNDY3NTIxYTE4NTA2MGU3MjdlMTYwMWQ5OTE3ZWM1ZWU5ODIzOWU3ZGJlMDBlNGNmZjJhMGY4OWQ4MWVhMTBiNGMsMiwx\r\nView profile:https://in.linkedin.com/comm/in/reetu-nataraj-2557423a8?lipi=urn%3Ali%3Apage%3Aemail_email_m2m_invite_single_01%3B%2FY00sSWSS5qU6pyMYXMwAw%3D%3D&midToken=AQEmKj3Uma2Pqg&midSig=1ViDQMcIAOHso1&trk=eml-email_m2m_invite_single_01-null-0-null&trkEmail=eml-email_m2m_invite_single_01-null-0-null-null-pwmnw1~mtby996u~lx-null-null&eid=pwmnw1-mtby996u-lx&otpToken=YWVhMjg0NGIxYmM4ZWRhYTVjMjYwYWI0NzRhNjgyODczMGNmZTVkNjliYzFjNjJkOWVkZDFhOTFkZjEzZDYxZmQ5YzVlNjdjMWYxMzEyMTNhNDY3NTIxYTE4NTA2MGU3MjdlMTYwMWQ5OTE3ZWM1ZWU5ODIzOWU3ZGJlMDBlNGNmZjJhMGY4OWQ4MWVhMTBiNGMsMiwx\r\n\r\nBuild your network with InMail\r\nMessage anyone on LinkedIn with Premium InMail. It’s 4.6x more effective in hearing back than cold email.\r\nhttp://www.linkedin.com/comm/premium/products/?upsellOrderOrigin=Tracking%3Av1%3Aemail_m2m_upsell%3AEmail+Stork%3AMarketing&referenceI",
+        "is_outbound": false,
+        "subject": "I want to connect"
+      },
+      {
+        "id": "msg_841562",
+        "sender": "Vishal Rajput",
+        "sender_email": "invitations@linkedin.com",
+        "date": "Aug 28, 2026 06:02 PM",
+        "body": "Vishal, Data Analyst from Pentagon Space is waiting for your response\r\n        \r\nHi Sathwik, I’d like to join your professional network\r\n\r\nVishal Rajput\r\nComputer Science Engineering Student |Data Analyst Intern| Interested in AI & Web Development\r\nBengaluru\r\n1 connection in common\r\nSee all connections in common:https://www.linkedin.com/comm/search/results/people/?facetNetwork=%5B%22F%22%5D&facetConnectionOf=%5B%22ADoAAEbOruIBf1kSO09coHlLVonD6Y0eC1B0KWc%22%5D&origin=SHARED_CONNECTIONS_CANNED_SEARCH&lipi=urn%3Ali%3Apage%3Aemail_email_m2m_invite_single_01%3BE3NwEV5kQtWZsIXZYCnRCw%3D%3D&midToken=AQEmKj3Uma2Pqg&midSig=382r5sPd9qIIo1&trk=eml-email_m2m_invite_single_01-connections~in~common~text-0-view~connections&trkEmail=eml-email_m2m_invite_single_01-connections~in~common~text-0-view~connections-null-pwmnw1~mtd9es78~z2-null-null&eid=pwmnw1-mtd9es78-z2&otpToken=ZjM0YTdkZGNiY2ZkNmFhZWQxMDYxNmFhYjNmNWEwODg3NzM0ZGY2Mjc4MjRjMDc1YTZiMzBiMjc3ZWFmZmM4MTc3OGZiYjM3N2IwYjgyMzU2NzRlMWYyNzc5N2QzNDgzOGU2Y2U0MGNjM2EzY2E4M2QyNzczMmFhMDczMzk0NzJjMTZlNjg2MmMwNzBmMDBhNDcsMiwx\r\n\r\nAccept:https://www.linkedin.com/comm/mynetwork/invite-accept/invitationId/7499156675371675649/sharedKey/d1q0NZ5a/?inviterVanityName=vishalrrajput&lipi=urn%3Ali%3Apage%3Aemail_email_m2m_invite_single_01%3BE3NwEV5kQtWZsIXZYCnRCw%3D%3D&midToken=AQEmKj3Uma2Pqg&midSig=382r5sPd9qIIo1&trk=eml-email_m2m_invite_single_01-null-0-null&trkEmail=eml-email_m2m_invite_single_01-null-0-null-null-pwmnw1~mtd9es78~z2-null-null&eid=pwmnw1-mtd9es78-z2&otpToken=ZjM0YTdkZGNiY2ZkNmFhZWQxMDYxNmFhYjNmNWEwODg3NzM0ZGY2Mjc4MjRjMDc1YTZiMzBiMjc3ZWFmZmM4MTc3OGZiYjM3N2IwYjgyMzU2NzRlMWYyNzc5N2QzNDgzOGU2Y2U0MGNjM2EzY2E4M2QyNzczMmFhMDczMzk0NzJjMTZlNjg2MmMwNzBmMDBhNDcsMiwx\r\nView profile:https://in.linkedin.com/comm/in/vishalrrajput?lipi=urn%3Ali%3Apage%3Aemail_email_m2m_invite_single_01%3BE3NwEV5kQtWZsIXZYCnRCw%3D%3D&midToken=AQEmKj3Uma2Pqg&midSig=382r5sPd9qIIo1&trk=eml-email_m2m_invite_single_01-null-0-null&trkEmail=eml-email_m2m_invite_single_01-null-0-null-null-pwmnw1~mtd9es78~z2-null-null&eid=pwmnw1-mtd9es78-z2&otpToken=ZjM0YTdkZGNiY2ZkNmFhZWQxMDYxNmFhYjNmNWEwODg3NzM0ZGY2Mjc4MjRjMDc1YTZiMzBiMjc3ZWFmZmM4MTc3OGZiYjM3N2IwYjgyMzU2NzRlMWYyNzc5N2QzNDgzOGU2Y2U0MGNjM2EzY2E4M2QyNzczMmFhMDczMzk0NzJjMTZlNjg2MmMwNzBmMDBhNDcsMiwx\r\n\r\nBuild your network with InMail\r\nMessage anyone on LinkedIn with Premium InMail. It’s 4.6x more effective in hearing back than cold email.\r\nhttp://www.linkedin.com/comm/premium/products/?upsellOrderOrigin=Tracking%3Av1%3",
+        "is_outbound": false,
+        "subject": "I want to connect"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": false,
+      "thread_depth": 3
+    },
+    "draft": {
+      "subject": "Re: I want to connect",
+      "body": "Hi Bindhushree S R,\n\nThank you for reaching out regarding I want to connect.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-4",
+    "name": "Unstop Events",
+    "email": "updates@unstop.events",
+    "company": "Unstop",
+    "role": "Key Contact",
+    "subject": "Join the Official WhatsApp Group | AI Product Hackathon '26",
+    "urgency": 8,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 27, 2026 07:55 AM",
+    "reason": "Demo, presentation, or review call discussed. Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Unstop Events regarding Join the Official WhatsApp Group | AI Product Hack.",
+    "thread": [
+      {
+        "id": "msg_227065",
+        "sender": "Unstop Events",
+        "sender_email": "updates@unstop.email",
+        "date": "Aug 27, 2026 07:55 AM",
+        "body": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n\r\n<head>\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n    <title>General</title>\r\n    <meta name=\"author\" content=\"\" content=\"\" />\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\r\n    <meta name=\"x-apple-disable-message-reformatting\">\r\n    <style type=\"text/css\">\r\n        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');\r\n\r\n        body {\r\n            width: auto;\r\n            background-color: #F6F8FA;\r\n            margin: 0 auto;\r\n            padding: 0;\r\n            font-size: 14px;\r\n            -webkit-text-size-adjust: 100% !important;\r\n            -ms-text-size-adjust: 100% !important;\r\n            -webkit-font-smoothing: antialiased;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n        h1,\r\n        h2,\r\n        h3,\r\n        h4,\r\n        h5,\r\n        h6,\r\n        p,\r\n        span,\r\n        a,\r\n        strong,\r\n        div,\r\n        td {\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n\r\n        img {\r\n            border: 0 !important;\r\n            outline: none !important;\r\n            display: block;\r\n        }\r\n\r\n        a {\r\n            text-decoration: none;\r\n            color: #0073e6;\r\n        }\r\n        .h_text_color:hover {\r\n            color: #0073e6 !important;\r\n            text-decoration: underline !important;\r\n        }\r\n\r\n        table {\r\n            border-collapse: collapse;\r\n            mso-table-lspace: 0px;\r\n            mso-table-rspace: 0px;\r\n        }\r\n\r\n        .text_box {\r\n            font-size: 15px;\r\n            color: #434343;\r\n            line-height: 22px;\r\n            font-weight: 400;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n        .text_box p {\r\n            font-size: 15px;\r\n            color: #434343;\r\n            margin: 0 0 15px;\r\n            line-height: 22px;\r\n            font-weight: 400;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n\r\n        .text_box strong {\r\n            font-weight: 700;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n\r\n        .text_box ul,\r\n        .text_box ol {\r\n            margin: 10px 0 15px;\r\n            padding: 0;\r\n            padding-left: 30px;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n\r\n        .text_box ul li,\r\n        .text_box ol li {\r\n            font-size: 15px;\r\n            color: #434343;\r\n        ",
+        "is_outbound": false,
+        "subject": "Join the Official WhatsApp Group | AI Product Hackathon '26"
+      },
+      {
+        "id": "msg_957021",
+        "sender": "Sakshi | Product Space",
+        "sender_email": "noreply@theproductspace.in",
+        "date": "Aug 28, 2026 10:12 AM",
+        "body": "\r\n  <!DOCTYPE html>\r\n  <html>\r\n  <head>\r\n    <meta charset=\"UTF-8\" />\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\r\n    <title>Email</title>\r\n\r\n    <!--[if mso]>\r\n      <style>\r\n        * { font-family: Arial, sans-serif !important; }\r\n      </style>\r\n    <![endif]-->\r\n\r\n    <style>\r\n      /* Below the 600px container width the card is the whole screen,\r\n         so drop its side gutters and let content run edge to edge. */\r\n      @media only screen and (max-width: 600px) {\r\n        .tps-pad { padding-left: 0 !important; padding-right: 0 !important; }\r\n      }\r\n    </style>\r\n  </head>\r\n\r\n  <body style=\"margin:0;padding:0;background-color:#f3f4f6;\">\r\n    <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color:#f3f4f6;\">\r\n      <tr>\r\n        <td align=\"center\">\r\n\r\n          <!-- Main Container -->\r\n          <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"max-width:600px;background:#ffffff;\">\r\n\r\n            <!-- Content -->\r\n            <tr>\r\n              <td class=\"tps-pad\" style=\"padding:24px;font-family:Arial,Helvetica,sans-serif;color:#111827;font-size:14px;line-height:1.6;\">\r\n                Thank you for registering for the <a href=\"https://ptj36cc.r.ap-south-1.awstrack.me/L0/https:%2F%2Ftheproductspace.in%2Fevents%2Fai-product-buildathon/1/010901a047db5bcf-13048971-fe1e-4a95-8c75-0cae9edce6c4-000000/fSIgR0tWWhPLv41F_JfndX5j0Aw=258\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: rgb(0, 123, 255); text-decoration: underline; cursor: pointer;\"><b>AI Product Hackathon.</b></a><br><br>Make sure you receive all important updates on time.<br><br>We request that you join the official WhatsApp group for the hackathon.<br><br>👉 If you have not joined any WhatsApp group for this hackathon yet, please join using the link below: <a href=\"https://ptj36cc.r.ap-south-1.awstrack.me/L0/https:%2F%2Fchat.whatsapp.com%2FDfKGuK5Ii7Z3AjJgYP0BXV%3Fs=cl%26p=a%26ilr=0/1/010901a047db5bcf-13048971-fe1e-4a95-8c75-0cae9edce6c4-000000/WTK2v4th-c0KLWX1wXqT7KjwxCw=258\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: rgb(0, 123, 255); text-decoration: underline; cursor: pointer;\"><b>https://chat.whatsapp.com/DfKGuK5Ii7Z3AjJgYP0BXV?s=cl&amp;p=a&amp;ilr=0</b></a><br><br>Please join the group as soon as possible so you don’t miss key communication related to the kickoff call, sessions, announcements &amp; submissions.<br><br>Looking forward to your active participation in the hackathon.<",
+        "is_outbound": false,
+        "subject": "Join the Official WhatsApp Group | AI Product Hackathon '26"
+      },
+      {
+        "id": "msg_665981",
+        "sender": "Unstop Events",
+        "sender_email": "updates@unstop.events",
+        "date": "Aug 29, 2026 01:54 AM",
+        "body": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n\r\n<head>\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n    <title>General</title>\r\n    <meta name=\"author\" content=\"\" content=\"\" />\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\r\n    <meta name=\"x-apple-disable-message-reformatting\">\r\n    <style type=\"text/css\">\r\n        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');\r\n\r\n        body {\r\n            width: auto;\r\n            background-color: #F6F8FA;\r\n            margin: 0 auto;\r\n            padding: 0;\r\n            font-size: 14px;\r\n            -webkit-text-size-adjust: 100% !important;\r\n            -ms-text-size-adjust: 100% !important;\r\n            -webkit-font-smoothing: antialiased;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n        h1,\r\n        h2,\r\n        h3,\r\n        h4,\r\n        h5,\r\n        h6,\r\n        p,\r\n        span,\r\n        a,\r\n        strong,\r\n        div,\r\n        td {\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n\r\n        img {\r\n            border: 0 !important;\r\n            outline: none !important;\r\n            display: block;\r\n        }\r\n\r\n        a {\r\n            text-decoration: none;\r\n            color: #0073e6;\r\n        }\r\n        .h_text_color:hover {\r\n            color: #0073e6 !important;\r\n            text-decoration: underline !important;\r\n        }\r\n\r\n        table {\r\n            border-collapse: collapse;\r\n            mso-table-lspace: 0px;\r\n            mso-table-rspace: 0px;\r\n        }\r\n\r\n        .text_box {\r\n            font-size: 15px;\r\n            color: #434343;\r\n            line-height: 22px;\r\n            font-weight: 400;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n        .text_box p {\r\n            font-size: 15px;\r\n            color: #434343;\r\n            margin: 0 0 15px;\r\n            line-height: 22px;\r\n            font-weight: 400;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n\r\n        .text_box strong {\r\n            font-weight: 700;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n\r\n        .text_box ul,\r\n        .text_box ol {\r\n            margin: 10px 0 15px;\r\n            padding: 0;\r\n            padding-left: 30px;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n\r\n        .text_box ul li,\r\n        .text_box ol li {\r\n            font-size: 15px;\r\n            color: #434343;\r\n        ",
+        "is_outbound": false,
+        "subject": "Join the Official WhatsApp Group | AI Product Hackathon '26"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": true,
+      "thread_depth": 3
+    },
+    "draft": {
+      "subject": "Re: Join the Official WhatsApp Group | AI Product Hackathon '26",
+      "body": "Hi Unstop Events,\n\nThank you for reaching out regarding Join the Official WhatsApp Group | AI Product Hackathon '26.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-5",
+    "name": "Google",
+    "email": "noreply-accounts@google.com",
+    "company": "Google",
+    "role": "Key Contact",
+    "subject": "You shared some Google Account data with Claude",
+    "urgency": 7,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 27, 2026 01:59 AM",
+    "reason": "Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Google regarding You shared some Google Account data with Claude.",
+    "thread": [
+      {
+        "id": "msg_965553",
+        "sender": "Google",
+        "sender_email": "noreply-accounts@google.com",
+        "date": "Aug 27, 2026 01:59 AM",
+        "body": "Keep track of your Google Account data\r\n\r\n\r\n\r\nsathvikkashyapps@gmail.com\r\n\r\n \r\n\r\n<!--[if !mso]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n\r\nYou're receiving this email because you used Sign in with Google to sign in  \r\nto\r\n\r\n\r\n<https://c.gle/ACT4xYyv4xoxQFLqzhOK7afXqtyWfQFxsdZxDSojiyNFGeO07zIOf-EmrxllXewfHwq2ZpuFayHB9Os1BDtgbnYWN-eyko-SjYHFKeew5ZqX2FTPGQ>Claude\r\n\r\n\r\non 27 August at 14:29.\r\n\r\nThis email summarises the info that you shared. There's nothing that you  \r\nneed to do right now.\r\n\r\n\r\n<!--[if !mso]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nYou're receiving this email because you used Sign in with Google to sign in  \r\nto\r\n\r\n\r\n<https://c.gle/ACT4xYyv4xoxQFLqzhOK7afXqtyWfQFxsdZxDSojiyNFGeO07zIOf-EmrxllXewfHwq2ZpuFayHB9Os1BDtgbnYWN-eyko-SjYHFKeew5ZqX2FTPGQ>Claude\r\n\r\n\r\non 27 August at 14:29.\r\n\r\nThis email summarises the info that you shared. There's nothing that you  \r\nneed to do right now.\r\n\r\n<!--[if false]><!-->\r\n\r\n\r\nClaude received this profile info\r\n\r\n\r\n\r\nSathwik Kashyap P S\r\n\r\nName and profile picture\r\n\r\n\r\n\r\nsathvikkashyapps@gmail.com\r\n\r\nEmail address\r\n\r\n\r\n\r\n\r\n\r\n \r\n\r\n\r\nThis email includes the info that you shared on\r\n\r\n27 August at 14:29\r\n\r\nIf you want to stop using Sign in with Google with\r\n\r\nClaude, go to your Google Account.\r\n\r\n\r\n<!--[if !mso]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nClaude received this profile info\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nSathwik Kashyap P S\r\n\r\nName and profile picture\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nsathvikkashyapps@gmail.com\r\n\r\nEmail address\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n \r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nThis email includes the info that you shared on\r\n\r\n27 August at 14:29\r\n\r\n<!--[if false]><!-->\r\n\r\nIf you want to stop using Sign in with Google with\r\n\r\nClaude, go to your Google Account.\r\n\r\n<!--[if false]><!-->\r\n\r\n\r\n<!--[if mso]>\r\n<v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\"  \r\nxmlns:w=\"urn:schemas-microsoft-com:office:word\"  \r\nhref=\"https://accounts.google.com/AccountChooser?Email=sathvikkashyapps@gmail.com&continue=https%3A%2F%2Fmyaccount.google.com%2Flinkedapps%2Foverview%2FAY6rrVHYGfetcyl8ZcByxnzp_xM2hD1wmTEbuiOda0OlgDIGRFZGN2zW-67KrCWcEx31zlc1zzIluzlMgaAjkocnMgba%2Futm_source%3De_notification%26utm_medium%3Demail_notification\"  \r\nstyle=\"height:48px;width:268px;v-text-anchor:middle;\" arcsize",
+        "is_outbound": false,
+        "subject": "You shared some Google Account data with Claude"
+      },
+      {
+        "id": "msg_61539",
+        "sender": "Google",
+        "sender_email": "noreply-accounts@google.com",
+        "date": "Aug 28, 2026 08:06 AM",
+        "body": "Keep track of your Google Account data\r\n\r\n\r\n\r\nsathvikkashyapps@gmail.com\r\n\r\n \r\n\r\n<!--[if !mso]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n\r\nYou're receiving this email because you used Sign in with Google to sign in  \r\nto\r\n\r\n\r\n<https://c.gle/ACT4xYwwW_u7j7NrfwKu36CSqnD5dIHbD_v51q7d9mqd0rvQZ8bGMil9Icaz3Gpe_byHGUWn7uM6InVDx8m_v2GnqtPIyPtDYxkwG7e2CLs4gcgEWw>Claude\r\n\r\n\r\non 28 August at 20:36.\r\n\r\nThis email summarises the info that you shared. There's nothing that you  \r\nneed to do right now.\r\n\r\n\r\n<!--[if !mso]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nYou're receiving this email because you used Sign in with Google to sign in  \r\nto\r\n\r\n\r\n<https://c.gle/ACT4xYwwW_u7j7NrfwKu36CSqnD5dIHbD_v51q7d9mqd0rvQZ8bGMil9Icaz3Gpe_byHGUWn7uM6InVDx8m_v2GnqtPIyPtDYxkwG7e2CLs4gcgEWw>Claude\r\n\r\n\r\non 28 August at 20:36.\r\n\r\nThis email summarises the info that you shared. There's nothing that you  \r\nneed to do right now.\r\n\r\n<!--[if false]><!-->\r\n\r\n\r\nClaude received this profile info\r\n\r\n\r\n\r\nSathwik Kashyap P S\r\n\r\nName and profile picture\r\n\r\n\r\n\r\nsathvikkashyapps@gmail.com\r\n\r\nEmail address\r\n\r\n\r\n\r\n\r\n\r\n \r\n\r\n\r\nThis email includes the info that you shared on\r\n\r\n28 August at 20:36\r\n\r\nIf you want to stop using Sign in with Google with\r\n\r\nClaude, go to your Google Account.\r\n\r\n\r\n<!--[if !mso]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nClaude received this profile info\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nSathwik Kashyap P S\r\n\r\nName and profile picture\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nsathvikkashyapps@gmail.com\r\n\r\nEmail address\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n \r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nThis email includes the info that you shared on\r\n\r\n28 August at 20:36\r\n\r\n<!--[if false]><!-->\r\n\r\nIf you want to stop using Sign in with Google with\r\n\r\nClaude, go to your Google Account.\r\n\r\n<!--[if false]><!-->\r\n\r\n\r\n<!--[if mso]>\r\n<v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\"  \r\nxmlns:w=\"urn:schemas-microsoft-com:office:word\"  \r\nhref=\"https://accounts.google.com/AccountChooser?Email=sathvikkashyapps@gmail.com&continue=https%3A%2F%2Fmyaccount.google.com%2Flinkedapps%2Foverview%2FAY6rrVGKSzwkGw9vq1r9Jp4O7oDlKXZ06_0qunFHoxlPiNJa5wpqM3oCtTtIwvJ357JGQTo-sM6pwxNtpxxARTcLpPBx%2Futm_source%3De_notification%26utm_medium%3Demail_notification\"  \r\nstyle=\"height:48px;width:268px;v-text-anchor:middle;\" arcsize",
+        "is_outbound": false,
+        "subject": "You shared some Google Account data with Claude"
+      },
+      {
+        "id": "msg_564266",
+        "sender": "Google",
+        "sender_email": "noreply-accounts@google.com",
+        "date": "Aug 28, 2026 10:21 PM",
+        "body": "Keep track of your Google Account data\r\n\r\n\r\n\r\nsathvikkashyapps@gmail.com\r\n\r\n \r\n\r\n<!--[if !mso]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n\r\nYou're receiving this email because you used Sign in with Google to sign in  \r\nto\r\n\r\n\r\n<https://c.gle/ACT4xYzeS2z0WnwHUWH1PhP-H3rjx67RvWLZ41AT_yXMJBzF_EHM8l4DdoF3yaOIKvEt3Cpq-hZOL1IzQ4uL7qIR1tHW-vk7rGJlg52vs-OUOx5EIw>Claude\r\n\r\n\r\non 29 August at 10:51.\r\n\r\nThis email summarises the info that you shared. There's nothing that you  \r\nneed to do right now.\r\n\r\n\r\n<!--[if !mso]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nYou're receiving this email because you used Sign in with Google to sign in  \r\nto\r\n\r\n\r\n<https://c.gle/ACT4xYzeS2z0WnwHUWH1PhP-H3rjx67RvWLZ41AT_yXMJBzF_EHM8l4DdoF3yaOIKvEt3Cpq-hZOL1IzQ4uL7qIR1tHW-vk7rGJlg52vs-OUOx5EIw>Claude\r\n\r\n\r\non 29 August at 10:51.\r\n\r\nThis email summarises the info that you shared. There's nothing that you  \r\nneed to do right now.\r\n\r\n<!--[if false]><!-->\r\n\r\n\r\nClaude received this profile info\r\n\r\n\r\n\r\nSathwik Kashyap P S\r\n\r\nName and profile picture\r\n\r\n\r\n\r\nsathvikkashyapps@gmail.com\r\n\r\nEmail address\r\n\r\n\r\n\r\n\r\n\r\n \r\n\r\n\r\nThis email includes the info that you shared on\r\n\r\n29 August at 10:51\r\n\r\nIf you want to stop using Sign in with Google with\r\n\r\nClaude, go to your Google Account.\r\n\r\n\r\n<!--[if !mso]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nClaude received this profile info\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nSathwik Kashyap P S\r\n\r\nName and profile picture\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nsathvikkashyapps@gmail.com\r\n\r\nEmail address\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\n \r\n\r\n<!--[if false]><!-->\r\n\r\n<!--[if false]><!-->\r\n\r\nThis email includes the info that you shared on\r\n\r\n29 August at 10:51\r\n\r\n<!--[if false]><!-->\r\n\r\nIf you want to stop using Sign in with Google with\r\n\r\nClaude, go to your Google Account.\r\n\r\n<!--[if false]><!-->\r\n\r\n\r\n<!--[if mso]>\r\n<v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\"  \r\nxmlns:w=\"urn:schemas-microsoft-com:office:word\"  \r\nhref=\"https://accounts.google.com/AccountChooser?Email=sathvikkashyapps@gmail.com&continue=https%3A%2F%2Fmyaccount.google.com%2Flinkedapps%2Foverview%2FAY6rrVEUjmH5ZKxNjEeGFzzmPQvPEn91imgb3uB-CKiK6cOZuUSis1UcuA07vN6X0qaOiYzH8kt2KMjtcChcS18evZQn%2Futm_source%3De_notification%26utm_medium%3Demail_notification\"  \r\nstyle=\"height:48px;width:268px;v-text-anchor:middle;\" arcsize",
+        "is_outbound": false,
+        "subject": "You shared some Google Account data with Claude"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": false,
+      "thread_depth": 3
+    },
+    "draft": {
+      "subject": "Re: You shared some Google Account data with Claude",
+      "body": "Hi Google,\n\nThank you for reaching out regarding You shared some Google Account data with Claude.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-6",
+    "name": "Apple",
+    "email": "News@InsideApple.Apple.com",
+    "company": "Insideapple",
+    "role": "Key Contact",
+    "subject": "Watch a special announcement from Apple.",
+    "urgency": 7,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 27, 2026 10:41 AM",
+    "reason": "Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Apple regarding Watch a special announcement from Apple..",
+    "thread": [
+      {
+        "id": "msg_542178",
+        "sender": "Apple",
+        "sender_email": "News@InsideApple.Apple.com",
+        "date": "Aug 27, 2026 10:41 AM",
+        "body": "Surprise and shine.\r\n\r\n9 September 2026 10:30 PM IST\r\n\r\nLearn more, Apple event Learn more\r\nhttps://c.apple.com/r?v=2&a=1zIdgxRYc2DtYV9mVx1rKVlLY4S3XP4jfdSiAIA8JV%2Fx6Yckyxxl8Pg2dMxhXJi2iXtDmS%2FlI5YjbJSk50H6YLFyvWbXA5kCPpAOIdesf%2BrUi8DwhMQ7YQil2M8b2bQyBzt3jNSGhrYKhr51wCCH3hbaeArkQdT%2BeFqXOP6yhnZTXvfFZNhBEQfBpz%2Baa1m6l59zTgkfHigPCvkn53ooNUTzBurcFwON6uKK4v0D3r1XPF4V8uMVrDqBpuMM2uPX0XEGQKHQJo8%2FKy9HZu1Kjk5eAwLxdU%2BlIOZPXHGvSySKKlrL59AxoOcVKuG8R5pwHFj74g3kE2t8ceDeejpOTUa0d7kuvoY%2F1OCdERKIXWt9o7P0ZiiPhF3KKN54zTLv\r\n\r\n-------------------\r\n\r\nShop Online\r\nhttps://c.apple.com/r?v=2&a=1zIdgxRYc2DtYV9mVx1rKVlLY4S3XP4jfdSiAIA8JV%2Fx6Yckyxxl8Pg2dMxhXJi2iXtDmS%2FlI5YjbJSk50H6YLFyvWbXA5kCPpAOIdesf%2BrUi8DwhMQ7YQil2M8b2bQyBzt3jNSGhrYKhr51wCCH3hbaeArkQdT%2BeFqXOP6yhnZTXvfFZNhBEQfBpz%2Baa1m6l59zTgkfHigPCvkn53ooNUTzBurcFwON6uKK4v0D3r1XPF4V8uMVrDqBpuMM2uPX0XEGQKHQJo8%2FKy9HZu1Kjk5eAwLxdU%2BlIOZPXHGvSySKKlrL59AxoOcVKuG8R5pwHFj74g3kE2t8ceDeejpOTUa0d7kuvoY%2F1OCdERKIXWsWcwQoQtbUlnSPxXm01cjG\r\n\r\nFind a Store\r\nhttps://c.apple.com/r?v=2&a=1zIdgxRYc2DtYV9mVx1rKVlLY4S3XP4jfdSiAIA8JV%2Fx6Yckyxxl8Pg2dMxhXJi2iXtDmS%2FlI5YjbJSk50H6YLFyvWbXA5kCPpAOIdesf%2BrUi8DwhMQ7YQil2M8b2bQyBzt3jNSGhrYKhr51wCCH3hbaeArkQdT%2BeFqXOP6yhnZTXvfFZNhBEQfBpz%2Baa1m6l59zTgkfHigPCvkn53ooNUTzBurcFwON6uKK4v0D3r1XPF4V8uMVrDqBpuMM2uPX0XEGQKHQJo8%2FKy9HZu1Kjk5eAwLxdU%2BlIOZPXHGvSySKKlrL59AxoOcVKuG8R5pwHFj74g3kE2t8ceDeejpOTUa0d7kuvoY%2F1OCdERKIXWvdSZFuLHy4j2Mh3IMPlm0V\r\n\r\n000800 040 1966\r\n\r\nGet the Apple Store App\r\nhttps://c.apple.com/r?v=2&a=o2CKfLM8dAL7lynfnyn7UJTCXlxvszNCDfXdAGZs%2FfQzir5aezEoQeQ6nf2DG5Ljj1IOhRzeimdwoTCPPytfnEoxN0hpPc6dzmRcAfSpiv3Z%2FV%2FahPM7%2BkVAJPouNHHZdknOXsw%2FhD46%2FSUTv6UyQJ3BF3RyYlx%2BhqNOPJ2HjWR7%2BAwzxKVn6FCCP6K5800PDgKiq5aca%2Fe4f3RpUy%2F%2BoAmZhYQAgJ%2Fhuh7zZ1K2ytT%2BlznWxXaO%2Bw4lJ%2FTl%2FlldTRKgcC655rlret0%2BED5%2BrGkJusjqNb9EfYY1t5MTTmo%3D\r\n\r\nTM and © 2026 Apple Inc. All rights reserved.Apple India Private Limited13th Floor, Prestige Minsk SquareMunicipal No 6, Cubbon RoadBengaluru, Karnataka - 560 001, IndiaCIN: U30007KA1996PTC019630.Telephone: +91 80 4045 5181Email: india_support@apple.comWebsite: https://www.apple.com/in\r\n\r\nmailto:india_support@apple.com\r\nhttps://www.apple.com/in/\r\n\r\nPrivacy Policy Privacy Policy\r\nhttps://c.apple.com/r?v=2&a=o2CKfLM8dAL7lynfnyn7UJTCXlxvszNCDfXdAGZs%2FfQzir5aezEoQeQ6nf2DG5Ljj1IOhRzeimdwoTCPPytfnEoxN0hpPc6dzmRcAfSpiv3Z%2FV%2FahPM7%2BkVAJPouNHHZdknOXsw%2FhD46%2FSUTv6UyQJ3BF3RyYlx%2BhqNOPJ2HjWR7%2BAwzxKVn6FCCP6K5800PDgKiq5aca%2Fe4f3RpUy%2F%2BoAmZ",
+        "is_outbound": false,
+        "subject": "Watch a special announcement from Apple."
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: Watch a special announcement from Apple.",
+      "body": "Hi Apple,\n\nThank you for reaching out regarding Watch a special announcement from Apple..\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-7",
+    "name": "LinkedIn",
+    "email": "messages-noreply@linkedin.com",
+    "company": "Linkedin",
+    "role": "Key Contact",
+    "subject": "👤 You may know Haasini MS",
+    "urgency": 7,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 28, 2026 12:02 AM",
+    "reason": "Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to LinkedIn regarding 👤 You may know Haasini MS.",
+    "thread": [
+      {
+        "id": "msg_499122",
+        "sender": "LinkedIn",
+        "sender_email": "messages-noreply@linkedin.com",
+        "date": "Aug 28, 2026 12:02 AM",
+        "body": "Do you know Haasini MS?3 mutual connections\r\n\r\nYes, connect: https://www.linkedin.com/comm/mynetwork/send-invite/haasini-ms-40295939b/?lipi=urn%3Ali%3Apage%3Aemail_email_pymk_02%3BZklJoHvVTbCJdJwF5KOrXw%3D%3D&midSig=0N4_uQl5UyHIo1&midToken=AQEmKj3Uma2Pqg&trkEmail=eml-email_pymk_02-pymkCard-0-pymk_cta%3A+urn%3Ali%3Amember%3A1647636482-null-pwmnw1%7Emtc6tw6g%7Euk-null-null&trk=eml-email_pymk_02-pymkCard-0-pymk_cta%3A+urn%3Ali%3Amember%3A1647636482&_sig=02QWzh6IoyHIo1\r\n\r\n\r\nMore people you may know\r\n            \r\n    Srilakshmi Narayan\r\nCSE Cybersecurity Student at RNS Institute of Technology\r\nhttps://www.linkedin.com/comm/mynetwork/send-invite/srilakshmi-narayan-252577390/?lipi=urn%3Ali%3Apage%3Aemail_email_pymk_02%3BZklJoHvVTbCJdJwF5KOrXw%3D%3D&midSig=0N4_uQl5UyHIo1&midToken=AQEmKj3Uma2Pqg&trkEmail=eml-email_pymk_02-pymkCard-0-pymk_cta%3A+urn%3Ali%3Amember%3A1613833118-null-pwmnw1%7Emtc6tw6g%7Euk-null-null&trk=eml-email_pymk_02-pymkCard-0-pymk_cta%3A+urn%3Ali%3Amember%3A1613833118&_sig=0lX5RDeF4yHIo110 mutual connections\r\n            \r\n    Sumanth Kiran\r\nSecond year ECE Student at RNSIT \r\nhttps://www.linkedin.com/comm/mynetwork/send-invite/sumanth-kiran-6ba510383/?lipi=urn%3Ali%3Apage%3Aemail_email_pymk_02%3BZklJoHvVTbCJdJwF5KOrXw%3D%3D&midSig=0N4_uQl5UyHIo1&midToken=AQEmKj3Uma2Pqg&trkEmail=eml-email_pymk_02-pymkCard-0-pymk_cta%3A+urn%3Ali%3Amember%3A1586823406-null-pwmnw1%7Emtc6tw6g%7Euk-null-null&trk=eml-email_pymk_02-pymkCard-0-pymk_cta%3A+urn%3Ali%3Amember%3A1586823406&_sig=2MB5zpJpYyHIo130 mutual connections\r\n            \r\n    Sanjana Deshpande\r\n1st year AIML Student  | Python Enthusiast | Exploring AI, Machine Learning & Innovation|Open to Collaborating with Ambitious People\r\nhttps://www.linkedin.com/comm/mynetwork/send-invite/sanjana-deshpande-a44a433a9/?lipi=urn%3Ali%3Apage%3Aemail_email_pymk_02%3BZklJoHvVTbCJdJwF5KOrXw%3D%3D&midSig=0N4_uQl5UyHIo1&midToken=AQEmKj3Uma2Pqg&trkEmail=eml-email_pymk_02-pymkCard-0-pymk_cta%3A+urn%3Ali%3Amember%3A1677714964-null-pwmnw1%7Emtc6tw6g%7Euk-null-null&trk=eml-email_pymk_02-pymkCard-0-pymk_cta%3A+urn%3Ali%3Amember%3A1677714964&_sig=1cIrEeS0syHIo127 mutual connections\r\n            \r\n    Vijetha H S\r\nStudent at RNS Institute of Technology, Bangalore.\r\nhttps://www.linkedin.com/comm/mynetwork/send-invite/vijetha-h-s-4600ab39b/?lipi=urn%3Ali%3Apage%3Aemail_email_pymk_02%3BZklJoHvVTbCJdJwF5KOrXw%3D%3D&midSig=0N4_uQl5UyHIo1&midToken=AQEmKj3Uma2Pqg&trkEmail=eml-email_pymk_02-pymkCard-0-pymk_cta%3A+urn%3Ali%3Amember%3A16455",
+        "is_outbound": false,
+        "subject": "👤 You may know Haasini MS"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: 👤 You may know Haasini MS",
+      "body": "Hi LinkedIn,\n\nThank you for reaching out regarding 👤 You may know Haasini MS.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-8",
+    "name": "LeetCode",
+    "email": "no-reply@leetcode.com",
+    "company": "Leetcode",
+    "role": "Key Contact",
+    "subject": "LeetCode Weekly Digest",
+    "urgency": 9,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 28, 2026 09:04 AM",
+    "reason": "Prospect inquired about pricing or terms. Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to LeetCode regarding LeetCode Weekly Digest.",
+    "thread": [
+      {
+        "id": "msg_391085",
+        "sender": "LeetCode",
+        "sender_email": "no-reply@leetcode.com",
+        "date": "Aug 28, 2026 09:04 AM",
+        "body": "@import url(\"https://use.typekit.net/vyq6kag.css\");\n\n  /* Take care of image borders and formatting */\n  img {\n    max-width: 600px;\n    outline: none;\n    text-decoration: none;\n    -ms-interpolation-mode: bicubic;\n  }\n\n  a {\n    text-decoration: none;\n    border: 0;\n    outline: none;\n    color: #212121;\n  }\n\n  p {\n    margin: 0;\n  }\n\n  u+.body a {\n    color: inherit;\n    text-decoration: none;\n    font-size: inherit;\n    font-weight: inherit;\n    line-height: inherit;\n  }\n\n  a img {\n    border: none;\n  }\n\n  /* General styling */\n  td,\n  h1,\n  h2,\n  h3 {\n    font-family: Helvetica, Arial, sans-serif;\n    font-weight: 400;\n  }\n\n  td {\n    text-align: center;\n  }\n\n  body {\n    -webkit-font-smoothing: antialiased;\n    -webkit-text-size-adjust: none;\n    width: 100%;\n    height: 100%;\n    color: #37302d;\n    background: #ffffff;\n    font-size: 16px;\n  }\n\n  table {\n    border-collapse: collapse !important;\n  }\n\n  .headline {\n    color: #ffffff;\n    font-size: 36px;\n  }\n\n  .force-full-width {\n    width: 100% !important;\n  }\n\n  .new-badge {\n    display: none;\n  }\n\n\n  @media screen {\n\n    /*Thanks Outlook 2013! http://goo.gl/XLxpyl*/\n    td,\n    h1,\n    h2,\n    h3 {\n      font-family: Helvetica, \"Arial\", \"sans-serif\";\n    }\n  }\n\n\n  /* Mobile styles */\n  @media only screen and (max-width: 480px) {\n    table[class=\"w320\"] {\n      width: 320px !important;\n    }\n  }\n\n  @media only screen and (max-width: 400px) {\n    span[class=\"new-badge\"] {\n      display: none;\n    }\n\n    span[class=\"new-badge-mobile\"] {\n      display: inline;\n    }\n  }\n\n  @media only screen and (min-width: 401px) {\n    span[class=\"new-badge\"] {\n      display: inline;\n    }\n\n    span[class=\"new-badge-mobile\"] {\n      display: none;\n    }\n  }\n\n  Weekly Digest\n\n\n\n  \n    \n      \n        \n          \n            \n              \n                \n                  \n                    \n                      \n                    \n                  \n                  \n                    \n                      \n                        Hi LeetCoder!\n                      \n                    \n                  \n                  \n                    \n                      \n\nLooking to sharpen your coding game? Our Back-to-School promotion is on, offering the perfect boost to your prep routine. It’s your chance to get LeetCode premium for $60 off, learn smarter, train harder, and become the “leet” one in your class. Check out this post for details.\n\n\n\nDon't forget to join us for the  Daily LeetCoding Challeng",
+        "is_outbound": false,
+        "subject": "LeetCode Weekly Digest"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": true,
+      "demo_mentioned": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: LeetCode Weekly Digest",
+      "body": "Hi LeetCode,\n\nThank you for reaching out regarding LeetCode Weekly Digest.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "Critical"
+  },
+  {
+    "id": "gmail-9",
+    "name": "Himanshu Singh",
+    "email": "himanshu.singh@theproductspace.co.in",
+    "company": "Theproductspace",
+    "role": "Key Contact",
+    "subject": "Invitation from an unknown sender: AI Product Hackathon Kickoff Call\r\n | Product Space @ Sat Aug 29, 2026 9am - 10am (GMT+5:30) (sathvikkashyapps@gmail.com)",
+    "urgency": 8,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 28, 2026 10:01 AM",
+    "reason": "Demo, presentation, or review call discussed. Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Himanshu Singh regarding Invitation from an unknown sender: AI Product Hack.",
+    "thread": [
+      {
+        "id": "msg_156966",
+        "sender": "Himanshu Singh",
+        "sender_email": "himanshu.singh@theproductspace.co.in",
+        "date": "Aug 28, 2026 10:01 AM",
+        "body": "This event isn't in your calendar yet\r\nYou haven't interacted with himanshu.singh@theproductspace.co.in before. Do  \r\nyou want to automatically add this and future invitations from them to your  \r\ncalendar?\r\nAdd to calendar  \r\nhttps://calendar.google.com/calendar/marksenderasknown?mark_sender_as_known=ChpzYXRodmlra2FzaHlhcHBzQGdtYWlsLmNvbRI8TkhWeGREWXhhRFV3WTNNMGRIRnpibWxpWW0wMk5qa3lNbU1nYzJGMGFIWnBhMnRoYzJoNVlYQndjMEJ0GiRoaW1hbnNodS5zaW5naEB0aGVwcm9kdWN0c3BhY2UuY28uaW4&mark_sender_as_known_sig=ANfaT24wRgIhAJER6A0c9F1aDYcJg7RwWO_XwtmDBEumF2nQZQZaSsZ-AiEAoHoU-nfRYjOg18E4jb8L0oua5_rFfByRFFHsuxEv8Cg&ctok=c2F0aHZpa2thc2h5YXBwc0BnbWFpbC5jb20&es=1\r\n\r\nAI Product Hackathon Kickoff Call | Product Space\r\nSaturday Aug 29, 2026 ⋅ 9am – 10am\r\nIndia Standard Time - Kolkata\r\n\r\nLocation\r\nhttps://learn.theproductspace.in/edmingleliveclass/join?token=AK9yjyzbpDXOZ1PF\t\r\nhttps://www.google.com/url?q=https%3A%2F%2Flearn.theproductspace.in%2Fedmingleliveclass%2Fjoin%3Ftoken%3DAK9yjyzbpDXOZ1PF&sa=D&source=calendar&usd=2&usg=AOvVaw2PC0UqlrtfLzgp-BmOz5qp\r\n\r\n\r\n\r\nWelcome to the AI Product Hackathon Kickoff Call 🚀\r\n\r\nHello 👋,\r\n\r\nThank you for registering for the AI Product Hackathon.\r\n\r\n🖥️ Join the Session from this Link:  \r\nhttps://learn.theproductspace.in/edmingleliveclass/join?token=AK9yjyzbpDXOZ1PF\r\n\r\n👉 Join this WhatsApp group for further updates: Join Now\r\n\r\nFor more details or to participate in referral rewards, check our emails  \r\nsent from info@theproductspace.in.\r\n\r\nThank you.\r\nTeam Product Space\r\n\r\nOrganizer\r\nHimanshu Singh\r\nhimanshu.singh@theproductspace.co.in\r\n\r\nReply for sathvikkashyapps@gmail.com and view more details  \r\nhttps://calendar.google.com/calendar/event?action=VIEW&eid=NHVxdDYxaDUwY3M0dHFzbmliYm02NjkyMmMgc2F0aHZpa2thc2h5YXBwc0Bt&tok=MzYjaGltYW5zaHUuc2luZ2hAdGhlcHJvZHVjdHNwYWNlLmNvLmluMGQyYWE2ZTMxN2VlMDk3YTRlZTMzMWJlOTUxZjAyMjEwZTY4Y2NlMQ&ctz=Asia%2FKolkata&hl=en&es=1\r\nYour attendance is optional.\r\n\r\n~~//~~\r\nInvitation from Google Calendar: https://calendar.google.com/calendar/\r\n\r\nYou are receiving this email because you are subscribed to calendar  \r\nnotifications. To stop receiving these emails, go to  \r\nhttps://calendar.google.com/calendar/r/settings, select this calendar, and  \r\nchange \"Other notifications\".\r\n\r\nForwarding this invitation could allow any recipient to send a response to  \r\nthe organizer, be added to the guest list, invite others regardless of  \r\ntheir own invitation status, or modify your RSVP.\r\n\r\nLearn more https://support.google.com/calenda",
+        "is_outbound": false,
+        "subject": "Invitation from an unknown sender: AI Product Hackathon Kickoff Call\r\n | Product Space @ Sat Aug 29, 2026 9am - 10am (GMT+5:30) (sathvikkashyapps@gmail.com)"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": true,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: Invitation from an unknown sender: AI Product Hackathon Kickoff Call\r\n | Product Space @ Sat Aug 29, 2026 9am - 10am (GMT+5:30) (sathvikkashyapps@gmail.com)",
+      "body": "Hi Himanshu Singh,\n\nThank you for reaching out regarding Invitation from an unknown sender: AI Product Hackathon Kickoff Call\r\n | Product Space @ Sat Aug 29, 2026 9am - 10am (GMT+5:30) (sathvikkashyapps@gmail.com).\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-10",
+    "name": "duolingo",
+    "email": "hello@duolingo.com",
+    "company": "Duolingo",
+    "role": "Key Contact",
+    "subject": "Got 5 minutes? Time for a tiny French lesson.",
+    "urgency": 7,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 28, 2026 10:04 AM",
+    "reason": "Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to duolingo regarding Got 5 minutes? Time for a tiny French lesson..",
+    "thread": [
+      {
+        "id": "msg_583367",
+        "sender": "duolingo",
+        "sender_email": "hello@duolingo.com",
+        "date": "Aug 28, 2026 10:04 AM",
+        "body": "\n\nSTART A LESSON\nhttps://www.duolingo.com/course/fr/en?email_type=practice_reminder\n\n\n\n**Practice makes progress**\nTake 5 minutes to learn something new today!\n\n\n\n---\n\n\n\nSa\n: 🧊\nSu\n: ✅\nMo\n: ✅\nTu\n: ✅\nWe\n: 🧊\nTh\n: ✅\nFr\n: ❌\n\n\n\n\n---\n\n---\n\nIf you’d rather not receive notifications, you can unsubscribe in\nhttps://www.duolingo.com/unsubscribe?type=notify_practice&email=sathvikkashyapps@gmail.com\n\n(c)  Duolingo\n5900 Penn Avenue\nPittsburgh PA 15206\nUSA",
+        "is_outbound": false,
+        "subject": "Got 5 minutes? Time for a tiny French lesson."
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: Got 5 minutes? Time for a tiny French lesson.",
+      "body": "Hi duolingo,\n\nThank you for reaching out regarding Got 5 minutes? Time for a tiny French lesson..\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-11",
+    "name": "Vaibhav Sisinty",
+    "email": "stayingahead@mail.beehiiv.com",
+    "company": "Mail",
+    "role": "Key Contact",
+    "subject": "1200 rogue ai agents",
+    "urgency": 10,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 28, 2026 12:51 PM",
+    "reason": "Prospect inquired about pricing or terms. Demo, presentation, or review call discussed. Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Vaibhav Sisinty regarding 1200 rogue ai agents.",
+    "thread": [
+      {
+        "id": "msg_229780",
+        "sender": "Vaibhav Sisinty",
+        "sender_email": "stayingahead@mail.beehiiv.com",
+        "date": "Aug 28, 2026 12:51 PM",
+        "body": "----------\nView image: (https://media.beehiiv.com/cdn-cgi/image/fit=scale-down,format=auto,onerror=redirect,quality=80/uploads/asset/file/06e9e26b-31e3-41b9-8d33-1e4fc1dccda7/Frame_2147225035.png?t=1785742897)\nCaption: \n\n\n--------------------\n\n\n———————————————————————————\n\nHappy rakhi, folks. I was hoping to open with the humanoid robot games in Beijing, do a round-up of the best runs and the funniest clips.\n\nWriting this before the whole thing wraps though, so will do that Tuesday, stay tuned.\n\nToday I want to talk about a report that dropped the other day. It sounds like sci-fi twitter bait but it’s real, documented, and weird.\n\n**Roughly 1,200 AI agents that were never meant to know each other existed found a way to talk, organised themselves, and hacked a company over 4 days.**\n\nI read the full 90-page report, and it has a twist. \n\nBut first, **some catchup:**\n\n\n--------------------\n# **NEWS NEWS NEWS**\n\nNVIDIA has agreed to [buy Hugging Face](https://techcrunch.com/2026/08/26/nvidia-closes-in-on-hugging-face-acquisition/) for $12.9 billion. Yes, the same Hugging Face from today's story.\n\nZ.ai revealed it was behind [0x Alpha](https://docs.z.ai/guides/vlm/glm-5.3-flash), the anonymous model that topped coding benchmarks all week.\n\nInstinct, a viral AI assistant run by a 23-year-old, just [raised $350M at a $2.5B valuation](https://techcrunch.com/2026/08/26/viral-ai-startup-instinct-has-raised-350-million-at-a-2-5-billion-valuation/). The product isn't even public yet.\n\nClaude's memory now [works across chat and Cowork](https://9to5mac.com/2026/08/25/anthropic-update-unifies-memory-feature-across-claude-cowork-and-chat/), with topic-by-topic controls and sensitive topics off by default.\n\n\n--------------------\n# **Partner with us**\n\n\n\nView image: (https://media.beehiiv.com/cdn-cgi/image/fit=scale-down,format=auto,onerror=redirect,quality=80/uploads/asset/file/978c14f6-6101-4997-8b1a-97628b017ac0/Frame_2147225019.png?t=1785834324)\nFollow image link: (https://forms.gle/3KxZyshCm95j1Btk7)\nCaption: \n\n\n--------------------\n# **What happened**\n\nOpenAI was running an internal cybersecurity test called _exploitgym_ with thousands of AI agents, each sealed in its own sandbox and told to find and exploit a specific software bug.\n\nNone of them were supposed to know the others existed.\n\n**A big chunk of the tasks were literally impossible.**\n\nThe bug an agent was told to use couldn't crack the target it was handed. Give a capable AI an impossible job with no gracefu",
+        "is_outbound": false,
+        "subject": "1200 rogue ai agents"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": true,
+      "demo_mentioned": true,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: 1200 rogue ai agents",
+      "body": "Hi Vaibhav Sisinty,\n\nThank you for reaching out regarding 1200 rogue ai agents.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "Critical"
+  },
+  {
+    "id": "gmail-12",
+    "name": "LinkedIn",
+    "email": "updates-noreply@linkedin.com",
+    "company": "Linkedin",
+    "role": "Key Contact",
+    "subject": "Manish Mazumder and others share their thoughts on LinkedIn",
+    "urgency": 7,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 28, 2026 02:03 PM",
+    "reason": "Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to LinkedIn regarding Manish Mazumder and others share their thoughts on.",
+    "thread": [
+      {
+        "id": "msg_145012",
+        "sender": "LinkedIn",
+        "sender_email": "updates-noreply@linkedin.com",
+        "date": "Aug 28, 2026 02:03 PM",
+        "body": "Manish Mazumder shared a post: Do not make another projects in RAG + LangChain + Vector DB + LLM + fancy UI. In 2026 this kind of project doesn’t work anymore. \r\n\r\nA good AI / ML /…\r\nLIKE EMPATHY INTEREST 172, 4 Comments\r\nRead more: https://www.linkedin.com/comm/feed/update/urn:li:activity:7496791901476392960?highlightedUpdateUrn=urn%3Ali%3Aactivity%3A7496791901476392960&showCommentBox=true&origin=NETWORK_CONVERSATIONS&lipi=urn%3Ali%3Apage%3Aemail_email_network_conversations_01%3BxVHzuQ3uQHS5HszsY6m62w%3D%3D&midToken=AQEmKj3Uma2Pqg&midSig=0WHsdWYKZHIso1&trk=eml-email_network_conversations_01-network~post~cta~text-0-read~more&trkEmail=eml-email_network_conversations_01-network~post~cta~text-0-read~more-null-pwmnw1~mtd0u5c6~2k-null-null&eid=pwmnw1-mtd0u5c6-2k&otpToken=NTMyNjE1OWFlN2U1OGE4ZDgyODJmZTc0Mjc3Nzc0OWM4ZGY3NjQ5YWNjMjE5NjEyNjc5OWM1NjQ2ZmIzZDdhZjZmMjNhYTRjNTFmODIwYmQxYzExYjAyODI0ZTMwYjA3ZThkNGQ2ZjM3ZGZiZWRkMzlhMjIyNmI1YTFiNWY4NTE4ZWVjZWNmMTY2Nzk4ZDU2NzgsMiwx\r\n        \r\n\r\n\r\n\r\n          \r\n            \r\n\r\n        \r\n\r\n          Pratham Uday Chandratre shared a post: 𝐌𝐨𝐬𝐭 𝐦𝐚𝐜𝐡𝐢𝐧𝐞 𝐥𝐞𝐚𝐫𝐧𝐢𝐧𝐠 𝐜𝐨𝐮𝐫𝐬𝐞𝐬 𝐭𝐞𝐚𝐜𝐡 𝐲𝐨𝐮 𝐡𝐨𝐰 𝐭𝐨 𝐮𝐬𝐞 𝐚𝐥𝐠𝐨𝐫𝐢𝐭𝐡𝐦𝐬.\r\n\r\nVery few teach you why they work.…\r\nLIKE EMPATHY INTEREST 170, 3 Comments\r\nMachine Learning Guide\r\n\r\nRead more: https://www.linkedin.com/comm/feed/update/urn:li:activity:7496429672176517120?highlightedUpdateUrn=urn%3Ali%3Aactivity%3A7496429672176517120&showCommentBox=true&origin=NETWORK_CONVERSATIONS&lipi=urn%3Ali%3Apage%3Aemail_email_network_conversations_01%3BxVHzuQ3uQHS5HszsY6m62w%3D%3D&midToken=AQEmKj3Uma2Pqg&midSig=0WHsdWYKZHIso1&trk=eml-email_network_conversations_01-network~post~cta~text-0-read~more&trkEmail=eml-email_network_conversations_01-network~post~cta~text-0-read~more-null-pwmnw1~mtd0u5c6~2k-null-null&eid=pwmnw1-mtd0u5c6-2k&otpToken=NTMyNjE1OWFlN2U1OGE4ZDgyODJmZTc0Mjc3Nzc0OWM4ZGY3NjQ5YWNjMjE5NjEyNjc5OWM1NjQ2ZmIzZDdhZjZmMjNhYTRjNTFmODIwYmQxYzExYjAyODI0ZTMwYjA3ZThkNGQ2ZjM3ZGZiZWRkMzlhMjIyNmI1YTFiNWY4NTE4ZWVjZWNmMTY2Nzk4ZDU2NzgsMiwx\r\n        \r\n\r\n\r\n\r\n    \r\n          \r\n    \r\nRudra Chakraborty liked this\r\n  \r\n        \r\n\r\n          \r\nSankeerthana Kasi LIKE 33, 3 Comments\r\n\r\n\r\n  \r\n        \r\n\r\n          \r\n    \r\n    Read more:  https://www.linkedin.com/comm/feed/update/urn:li:activity:7496814600705974273?highlightedUpdateUrn=urn%3Ali%3Aactivity%3A7496814600705974273&highlightedUpdateType=NETWORK_CONVERSATIONS&showCommentBox=true&origin=EMAIL&lipi=urn%3Ali%3Apage%3Aemail_email_network_conversations_01%3BxVHzuQ3uQHS5HszsY6m62",
+        "is_outbound": false,
+        "subject": "Manish Mazumder and others share their thoughts on LinkedIn"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: Manish Mazumder and others share their thoughts on LinkedIn",
+      "body": "Hi LinkedIn,\n\nThank you for reaching out regarding Manish Mazumder and others share their thoughts on LinkedIn.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-13",
+    "name": "Anthropic",
+    "email": "no-reply-aoNIiAU9ara1mSh3-0k_yA@mail.anthropic.com",
+    "company": "Mail",
+    "role": "Key Contact",
+    "subject": "Your secure link to Claude.ai is here | 2026-08-28 20:33:39",
+    "urgency": 7,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 28, 2026 03:03 PM",
+    "reason": "Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Anthropic regarding Your secure link to Claude.ai is here | 2026-08-28.",
+    "thread": [
+      {
+        "id": "msg_884418",
+        "sender": "Anthropic",
+        "sender_email": "no-reply-aoNIiAU9ara1mSh3-0k_yA@mail.anthropic.com",
+        "date": "Aug 28, 2026 03:03 PM",
+        "body": "\r\n\r\n<!doctype html><html lang=\"und\" dir=\"auto\" xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><head><title></title><!--[if !mso]><!--><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><!--<![endif]--><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><style type=\"text/css\">#outlook a { padding:0; }\r\n      body { margin:0;padding:0;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%; }\r\n      table, td { border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt; }\r\n      img { border:0;height:auto;line-height:100%; outline:none;text-decoration:none;-ms-interpolation-mode:bicubic; }\r\n      p { display:block;margin:13px 0; }</style><!--[if mso]>\r\n    <noscript>\r\n    <xml>\r\n    <o:OfficeDocumentSettings>\r\n      <o:AllowPNG/>\r\n      <o:PixelsPerInch>96</o:PixelsPerInch>\r\n    </o:OfficeDocumentSettings>\r\n    </xml>\r\n    </noscript>\r\n    <![endif]--><!--[if lte mso 11]>\r\n    <style type=\"text/css\">\r\n      .mj-outlook-group-fix { width:100% !important; }\r\n    </style>\r\n    <![endif]--><!--[if !mso]><!--><link href=\"https://fonts.googleapis.com/css?family=Roboto:300,400,500,700\" rel=\"stylesheet\" type=\"text/css\"><style type=\"text/css\">@import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500,700);</style><!--<![endif]--><style type=\"text/css\">@media only screen and (min-width:480px) {\r\n        .mj-column-per-100 { width:100% !important; max-width: 100%; }\r\n.mj-column-per-65 { width:65% !important; max-width: 65%; }\r\n.mj-column-per-35 { width:35% !important; max-width: 35%; }\r\n      }</style><style media=\"screen and (min-width:480px)\">.moz-text-html .mj-column-per-100 { width:100% !important; max-width: 100%; }\r\n.moz-text-html .mj-column-per-65 { width:65% !important; max-width: 65%; }\r\n.moz-text-html .mj-column-per-35 { width:35% !important; max-width: 35%; }</style><style type=\"text/css\">@media only screen and (max-width:479px) {\r\n      table.mj-full-width-mobile { width: 100% !important; }\r\n      td.mj-full-width-mobile { width: auto !important; }\r\n    }</style><style type=\"text/css\">@media only screen and (max-width: 480px) {\r\n            .layout-feature-card {\r\n              max-width: 265px !important;\r\n              margin: 0 auto 16px !important;\r\n            }\r\n          }</style><meta name=\"color-scheme\" content=\"light\"><meta name=\"supported-color-schemes\" content=\"lig",
+        "is_outbound": false,
+        "subject": "Your secure link to Claude.ai is here | 2026-08-28 20:33:39"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: Your secure link to Claude.ai is here | 2026-08-28 20:33:39",
+      "body": "Hi Anthropic,\n\nThank you for reaching out regarding Your secure link to Claude.ai is here | 2026-08-28 20:33:39.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-14",
+    "name": "Truecaller",
+    "email": "hello@updates.truecaller.com",
+    "company": "Updates",
+    "role": "Key Contact",
+    "subject": "⚠️ Fix Caller ID now -- spam calls are reaching you",
+    "urgency": 8,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 29, 2026 12:02 AM",
+    "reason": "Demo, presentation, or review call discussed. Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Truecaller regarding ⚠️ Fix Caller ID now -- spam calls are reaching yo.",
+    "thread": [
+      {
+        "id": "msg_155131",
+        "sender": "Truecaller",
+        "sender_email": "hello@updates.truecaller.com",
+        "date": "Aug 29, 2026 12:02 AM",
+        "body": "96      :root{ color-scheme: light only; supported-color-schemes: light only; } body{ margin:0; padding:0; background:#ffffff; } table{ border-collapse:collapse; } img{ border:0; display:block; }    You're unprotected until you fix this. You&#39;re unprotected until you fix this.                                                                 You&#39;re missing Caller ID protection                                                                Without it, Truecaller can&#39;t show who&#39;s calling or block spam calls. Granting access takes 10 seconds.                                Fix Caller ID                                Stay safe,       Team Truecaller                                                                  This message has been sent to you for registering on truecaller app. If you do not want to receive these emails from Truecaller, you can unsubscribe in the link below.                                                                                                                                                                                                                                                                © 2026 Truecaller AB             Privacy | Terms of Service                                                                                                    \nClick here to unsubscribe",
+        "is_outbound": false,
+        "subject": "⚠️ Fix Caller ID now -- spam calls are reaching you"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": true,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: ⚠️ Fix Caller ID now -- spam calls are reaching you",
+      "body": "Hi Truecaller,\n\nThank you for reaching out regarding ⚠️ Fix Caller ID now -- spam calls are reaching you.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-15",
+    "name": "Sakshi | Product Space",
+    "email": "noreply@theproductspace.in",
+    "company": "Theproductspace",
+    "role": "Key Contact",
+    "subject": "1 Hour to Go: AI Product Hackathon Kickoff Call '26 🚀",
+    "urgency": 8,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 29, 2026 02:31 AM",
+    "reason": "Demo, presentation, or review call discussed. Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Sakshi | Product Space regarding 1 Hour to Go: AI Product Hackathon Kickoff Call '2.",
+    "thread": [
+      {
+        "id": "msg_53334",
+        "sender": "Sakshi | Product Space",
+        "sender_email": "noreply@theproductspace.in",
+        "date": "Aug 29, 2026 02:31 AM",
+        "body": "\r\n  <!DOCTYPE html>\r\n  <html>\r\n  <head>\r\n    <meta charset=\"UTF-8\" />\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\r\n    <title>Email</title>\r\n\r\n    <!--[if mso]>\r\n      <style>\r\n        * { font-family: Arial, sans-serif !important; }\r\n      </style>\r\n    <![endif]-->\r\n\r\n    <style>\r\n      /* Below the 600px container width the card is the whole screen,\r\n         so drop its side gutters and let content run edge to edge. */\r\n      @media only screen and (max-width: 600px) {\r\n        .tps-pad { padding-left: 0 !important; padding-right: 0 !important; }\r\n      }\r\n    </style>\r\n  </head>\r\n\r\n  <body style=\"margin:0;padding:0;background-color:#f3f4f6;\">\r\n    <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color:#f3f4f6;\">\r\n      <tr>\r\n        <td align=\"center\">\r\n\r\n          <!-- Main Container -->\r\n          <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"max-width:600px;background:#ffffff;\">\r\n\r\n            <!-- Content -->\r\n            <tr>\r\n              <td class=\"tps-pad\" style=\"padding:24px;font-family:Arial,Helvetica,sans-serif;color:#111827;font-size:14px;line-height:1.6;\">\r\n                AI Product Hackathon Kick-Off Call will start at 9 AM (IST).<br><br><b>💻 Please join the session from this link:</b> <a href=\"https://ptj36cc.r.ap-south-1.awstrack.me/L0/https:%2F%2Flearn.theproductspace.in%2Fedmingleliveclass%2Fjoin%3Ftoken=AK9yjyzbpDXOZ1PF/1/010901a04b5b5ddc-5429178d-89cf-44b9-89e8-96c6a0bfc767-000000/fjdwbsSY_gP4-KCPbZu-p4nslTE=258\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: rgb(0, 123, 255); text-decoration: underline; cursor: pointer;\"><b>https://learn.theproductspace.in/edmingleliveclass/join?token=AK9yjyzbpDXOZ1PF</b></a><br><br>Join our WhatsApp group for more event updates, resources, and upcoming sessions: <a href=\"https://ptj36cc.r.ap-south-1.awstrack.me/L0/https:%2F%2Fchat.whatsapp.com%2FDfKGuK5Ii7Z3AjJgYP0BXV%3Fs=cl%26p=a%26ilr=0/1/010901a04b5b5ddc-5429178d-89cf-44b9-89e8-96c6a0bfc767-000000/5mtlFFI7L-CVIa5XX54kyTLN2qs=258\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: rgb(0, 123, 255); text-decoration: underline; cursor: pointer;\"><b>Join Now</b></a><br>  <br>✅ 9 AM - 10 AM IST | Session - AI Product Hackathon Kick-Off Call.<br><br>💻 P.S- Join from your desktop/laptop for the best experience.<br><br>See you all 💙\r\n              </td>\r\n            </tr>\r\n\r\n            <!-- Divider -->\r\n            <tr>\r\n              <td class=\"tp",
+        "is_outbound": false,
+        "subject": "1 Hour to Go: AI Product Hackathon Kickoff Call '26 🚀"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": true,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: 1 Hour to Go: AI Product Hackathon Kickoff Call '26 🚀",
+      "body": "Hi Sakshi | Product Space,\n\nThank you for reaching out regarding 1 Hour to Go: AI Product Hackathon Kickoff Call '26 🚀.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-16",
+    "name": "Sakshi | Product Space",
+    "email": "noreply@theproductspace.in",
+    "company": "Theproductspace",
+    "role": "Key Contact",
+    "subject": "30 Minutes to Go: AI Product Hackathon Kickoff Call '26 🚀",
+    "urgency": 8,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 29, 2026 03:01 AM",
+    "reason": "Demo, presentation, or review call discussed. Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Sakshi | Product Space regarding 30 Minutes to Go: AI Product Hackathon Kickoff Cal.",
+    "thread": [
+      {
+        "id": "msg_549491",
+        "sender": "Sakshi | Product Space",
+        "sender_email": "noreply@theproductspace.in",
+        "date": "Aug 29, 2026 03:01 AM",
+        "body": "\r\n  <!DOCTYPE html>\r\n  <html>\r\n  <head>\r\n    <meta charset=\"UTF-8\" />\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\r\n    <title>Email</title>\r\n\r\n    <!--[if mso]>\r\n      <style>\r\n        * { font-family: Arial, sans-serif !important; }\r\n      </style>\r\n    <![endif]-->\r\n\r\n    <style>\r\n      /* Below the 600px container width the card is the whole screen,\r\n         so drop its side gutters and let content run edge to edge. */\r\n      @media only screen and (max-width: 600px) {\r\n        .tps-pad { padding-left: 0 !important; padding-right: 0 !important; }\r\n      }\r\n    </style>\r\n  </head>\r\n\r\n  <body style=\"margin:0;padding:0;background-color:#f3f4f6;\">\r\n    <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color:#f3f4f6;\">\r\n      <tr>\r\n        <td align=\"center\">\r\n\r\n          <!-- Main Container -->\r\n          <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"max-width:600px;background:#ffffff;\">\r\n\r\n            <!-- Content -->\r\n            <tr>\r\n              <td class=\"tps-pad\" style=\"padding:24px;font-family:Arial,Helvetica,sans-serif;color:#111827;font-size:14px;line-height:1.6;\">\r\n                AI Product Hackathon Kick-Off Call will start at 9 AM (IST).<br><br><b>💻 Please join the session from this link:</b> <a href=\"https://ptj36cc.r.ap-south-1.awstrack.me/L0/https:%2F%2Flearn.theproductspace.in%2Fedmingleliveclass%2Fjoin%3Ftoken=AK9yjyzbpDXOZ1PF/1/010901a04b76d8bd-f9f23a10-7a0a-49e4-bc48-ad8edb7e2ec3-000000/NldcgnRSWvvUCaxtOnVKMICMcX4=258\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: rgb(0, 123, 255); text-decoration: underline; cursor: pointer;\"><b>https://learn.theproductspace.in/edmingleliveclass/join?token=AK9yjyzbpDXOZ1PF</b></a><br><br>Join our WhatsApp group for more event updates, resources, and upcoming sessions: <a href=\"https://ptj36cc.r.ap-south-1.awstrack.me/L0/https:%2F%2Fchat.whatsapp.com%2FDfKGuK5Ii7Z3AjJgYP0BXV%3Fs=cl%26p=a%26ilr=0/1/010901a04b76d8bd-f9f23a10-7a0a-49e4-bc48-ad8edb7e2ec3-000000/TE-AhS8o7afna0DjnjfV5a1ki2E=258\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: rgb(0, 123, 255); text-decoration: underline; cursor: pointer;\"><b>Join Now</b></a><br>  <br>✅ 9 AM - 10 AM IST | Session - AI Product Hackathon Kick-Off Call.<br><br>💻 P.S- Join from your desktop/laptop for the best experience.<br><br>See you all 💙\r\n              </td>\r\n            </tr>\r\n\r\n            <!-- Divider -->\r\n            <tr>\r\n              <td class=\"tp",
+        "is_outbound": false,
+        "subject": "30 Minutes to Go: AI Product Hackathon Kickoff Call '26 🚀"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": true,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: 30 Minutes to Go: AI Product Hackathon Kickoff Call '26 🚀",
+      "body": "Hi Sakshi | Product Space,\n\nThank you for reaching out regarding 30 Minutes to Go: AI Product Hackathon Kickoff Call '26 🚀.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-17",
+    "name": "Sakshi | Product Space",
+    "email": "noreply@theproductspace.in",
+    "company": "Theproductspace",
+    "role": "Key Contact",
+    "subject": "❗ Session Started - AI Product Hackathon Kick-Off Call '26❗",
+    "urgency": 8,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 29, 2026 03:31 AM",
+    "reason": "Demo, presentation, or review call discussed. Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Sakshi | Product Space regarding ❗ Session Started - AI Product Hackathon Kick-Off .",
+    "thread": [
+      {
+        "id": "msg_432876",
+        "sender": "Sakshi | Product Space",
+        "sender_email": "noreply@theproductspace.in",
+        "date": "Aug 29, 2026 03:31 AM",
+        "body": "\r\n  <!DOCTYPE html>\r\n  <html>\r\n  <head>\r\n    <meta charset=\"UTF-8\" />\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\r\n    <title>Email</title>\r\n\r\n    <!--[if mso]>\r\n      <style>\r\n        * { font-family: Arial, sans-serif !important; }\r\n      </style>\r\n    <![endif]-->\r\n\r\n    <style>\r\n      /* Below the 600px container width the card is the whole screen,\r\n         so drop its side gutters and let content run edge to edge. */\r\n      @media only screen and (max-width: 600px) {\r\n        .tps-pad { padding-left: 0 !important; padding-right: 0 !important; }\r\n      }\r\n    </style>\r\n  </head>\r\n\r\n  <body style=\"margin:0;padding:0;background-color:#f3f4f6;\">\r\n    <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color:#f3f4f6;\">\r\n      <tr>\r\n        <td align=\"center\">\r\n\r\n          <!-- Main Container -->\r\n          <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"max-width:600px;background:#ffffff;\">\r\n\r\n            <!-- Content -->\r\n            <tr>\r\n              <td class=\"tps-pad\" style=\"padding:24px;font-family:Arial,Helvetica,sans-serif;color:#111827;font-size:14px;line-height:1.6;\">\r\n                Hello Sathwik Kashyap P S,<br><br>AI Product Hackathon Kick-Off Call will start at 9 AM (IST).<br><br><b>💻 Please join the session from this link: </b><a href=\"https://ptj36cc.r.ap-south-1.awstrack.me/L0/https:%2F%2Flearn.theproductspace.in%2Fedmingleliveclass%2Fjoin%3Ftoken=AK9yjyzbpDXOZ1PF/1/010901a04b924c31-baabb399-a8dd-4545-b128-28a1249f6bc3-000000/TrO1c5TtbEbnHMyHIbACi4JCptI=258\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: rgb(0, 123, 255); text-decoration: underline; cursor: pointer;\"><b>https://learn.theproductspace.in/edmingleliveclass/join?token=AK9yjyzbpDXOZ1PF</b></a><br><br>Join our WhatsApp group for more event updates, resources, and upcoming sessions: <a href=\"https://ptj36cc.r.ap-south-1.awstrack.me/L0/https:%2F%2Fchat.whatsapp.com%2FDfKGuK5Ii7Z3AjJgYP0BXV%3Fs=cl%26p=a%26ilr=0/1/010901a04b924c31-baabb399-a8dd-4545-b128-28a1249f6bc3-000000/RmBFifwRIu-DTryLziqWFmdjIZE=258\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: rgb(0, 123, 255); text-decoration: underline; cursor: pointer;\"><b>Join Now</b></a><br>  <br>✅ 9 AM - 10 AM IST | Session - AI Product Hackathon Kick-Off Call.<br><br>💻 P.S- Join from your desktop/laptop for the best experience.<br><br>See you all 💙\r\n              </td>\r\n            </tr>\r\n\r\n            <!-- Divider -->\r\n           ",
+        "is_outbound": false,
+        "subject": "❗ Session Started - AI Product Hackathon Kick-Off Call '26❗"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": true,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: ❗ Session Started - AI Product Hackathon Kick-Off Call '26❗",
+      "body": "Hi Sakshi | Product Space,\n\nThank you for reaching out regarding ❗ Session Started - AI Product Hackathon Kick-Off Call '26❗.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-18",
+    "name": "Unstop Events",
+    "email": "updates@unstop.events",
+    "company": "Unstop",
+    "role": "Key Contact",
+    "subject": "❗  Session Started  -  AI Product Hackathon Kick-Off Call  '26❗",
+    "urgency": 7,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 29, 2026 03:33 AM",
+    "reason": "Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Unstop Events regarding ❗  Session Started  -  AI Product Hackathon Kick-O.",
+    "thread": [
+      {
+        "id": "msg_550323",
+        "sender": "Unstop Events",
+        "sender_email": "updates@unstop.events",
+        "date": "Aug 29, 2026 03:33 AM",
+        "body": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n\r\n<head>\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n    <title>General</title>\r\n    <meta name=\"author\" content=\"\" content=\"\" />\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\r\n    <meta name=\"x-apple-disable-message-reformatting\">\r\n    <style type=\"text/css\">\r\n        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');\r\n\r\n        body {\r\n            width: auto;\r\n            background-color: #F6F8FA;\r\n            margin: 0 auto;\r\n            padding: 0;\r\n            font-size: 14px;\r\n            -webkit-text-size-adjust: 100% !important;\r\n            -ms-text-size-adjust: 100% !important;\r\n            -webkit-font-smoothing: antialiased;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n        h1,\r\n        h2,\r\n        h3,\r\n        h4,\r\n        h5,\r\n        h6,\r\n        p,\r\n        span,\r\n        a,\r\n        strong,\r\n        div,\r\n        td {\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n\r\n        img {\r\n            border: 0 !important;\r\n            outline: none !important;\r\n            display: block;\r\n        }\r\n\r\n        a {\r\n            text-decoration: none;\r\n            color: #0073e6;\r\n        }\r\n        .h_text_color:hover {\r\n            color: #0073e6 !important;\r\n            text-decoration: underline !important;\r\n        }\r\n\r\n        table {\r\n            border-collapse: collapse;\r\n            mso-table-lspace: 0px;\r\n            mso-table-rspace: 0px;\r\n        }\r\n\r\n        .text_box {\r\n            font-size: 15px;\r\n            color: #434343;\r\n            line-height: 22px;\r\n            font-weight: 400;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n        .text_box p {\r\n            font-size: 15px;\r\n            color: #434343;\r\n            margin: 0 0 15px;\r\n            line-height: 22px;\r\n            font-weight: 400;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n\r\n        .text_box strong {\r\n            font-weight: 700;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n\r\n        .text_box ul,\r\n        .text_box ol {\r\n            margin: 10px 0 15px;\r\n            padding: 0;\r\n            padding-left: 30px;\r\n            font-family: \"Inter\", sans-serif;\r\n        }\r\n\r\n        .text_box ul li,\r\n        .text_box ol li {\r\n            font-size: 15px;\r\n            color: #434343;\r\n        ",
+        "is_outbound": false,
+        "subject": "❗  Session Started  -  AI Product Hackathon Kick-Off Call  '26❗"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: ❗  Session Started  -  AI Product Hackathon Kick-Off Call  '26❗",
+      "body": "Hi Unstop Events,\n\nThank you for reaching out regarding ❗  Session Started  -  AI Product Hackathon Kick-Off Call  '26❗.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-19",
+    "name": "jeevan krishna",
+    "email": "noreply@github.com",
+    "company": "Github",
+    "role": "Key Contact",
+    "subject": "Jeevankrishna06 invited you to Jeevankrishna06/Sakha",
+    "urgency": 9,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 28, 2026 11:37 PM",
+    "reason": "Prospect inquired about pricing or terms. Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to jeevan krishna regarding Jeevankrishna06 invited you to Jeevankrishna06/Sak.",
+    "thread": [
+      {
+        "id": "msg_892310",
+        "sender": "jeevan krishna",
+        "sender_email": "noreply@github.com",
+        "date": "Aug 28, 2026 11:37 PM",
+        "body": "@Jeevankrishna06 has invited you to collaborate on the Jeevankrishna06/Sakha repository.\r\n\r\n\r\nVisit https://github.com/Jeevankrishna06/Sakha/invitations to accept or decline this invitation.\r\n\r\nYou can also head over to https://github.com/Jeevankrishna06/Sakha to check out the repository or visit https://github.com/Jeevankrishna06 to learn a bit more about @Jeevankrishna06.\r\n\r\nThis invitation will expire in 7 days.\r\n\r\nSome helpful tips:\r\n- If you get a 404 page, make sure you’re signed in as sathwikkashyapps-ctrl.\r\n- Too many emails from @Jeevankrishna06? You can block them by visiting\r\n  https://github.com/settings/blocked_users?block_user=Jeevankrishna06 or report abuse at\r\n  https://github.com/contact/report-abuse?report=Jeevankrishna06\r\n\r\n---\r\nView it on GitHub:\r\nhttps://github.com/Jeevankrishna06/Sakha",
+        "is_outbound": false,
+        "subject": "Jeevankrishna06 invited you to Jeevankrishna06/Sakha"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": true,
+      "demo_mentioned": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: Jeevankrishna06 invited you to Jeevankrishna06/Sakha",
+      "body": "Hi jeevan krishna,\n\nThank you for reaching out regarding Jeevankrishna06 invited you to Jeevankrishna06/Sakha.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "Critical"
+  },
+  {
+    "id": "gmail-20",
+    "name": "Sakshi | Product Space",
+    "email": "noreply@theproductspace.in",
+    "company": "Theproductspace",
+    "role": "Key Contact",
+    "subject": "❗Session Started: FREE Certification: Claude for PMs❗",
+    "urgency": 7,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 29, 2026 06:38 AM",
+    "reason": "Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Sakshi | Product Space regarding ❗Session Started: FREE Certification: Claude for P.",
+    "thread": [
+      {
+        "id": "msg_440187",
+        "sender": "Sakshi | Product Space",
+        "sender_email": "noreply@theproductspace.in",
+        "date": "Aug 29, 2026 06:38 AM",
+        "body": "\r\n  <!DOCTYPE html>\r\n  <html>\r\n  <head>\r\n    <meta charset=\"UTF-8\" />\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\r\n    <title>Email</title>\r\n\r\n    <!--[if mso]>\r\n      <style>\r\n        * { font-family: Arial, sans-serif !important; }\r\n      </style>\r\n    <![endif]-->\r\n\r\n    <style>\r\n      /* Below the 600px container width the card is the whole screen,\r\n         so drop its side gutters and let content run edge to edge. */\r\n      @media only screen and (max-width: 600px) {\r\n        .tps-pad { padding-left: 0 !important; padding-right: 0 !important; }\r\n      }\r\n    </style>\r\n  </head>\r\n\r\n  <body style=\"margin:0;padding:0;background-color:#f3f4f6;\">\r\n    <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background-color:#f3f4f6;\">\r\n      <tr>\r\n        <td align=\"center\">\r\n\r\n          <!-- Main Container -->\r\n          <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"max-width:600px;background:#ffffff;\">\r\n\r\n            <!-- Content -->\r\n            <tr>\r\n              <td class=\"tps-pad\" style=\"padding:24px;font-family:Arial,Helvetica,sans-serif;color:#111827;font-size:14px;line-height:1.6;\">\r\n                Hello,<br><br>The mentor <a href=\"https://ptj36cc.r.ap-south-1.awstrack.me/L0/https:%2F%2Fwww.linkedin.com%2Fin%2Fakhil-yash%2F/1/010901a04c3d649d-c06e0880-015b-44e9-8a60-e4aa0c9f6d02-000000/h9WtvdnGGY_F9JTlh4mYbIXm9AU=258\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: rgb(0, 123, 255); text-decoration: underline; cursor: pointer;\"><b>Akhil Yash Tiwari, Founder at Product Space</b></a> has started the session.<br><br><b>💻 Please join the session from this link: </b><a href=\"https://ptj36cc.r.ap-south-1.awstrack.me/L0/https:%2F%2Flearn.theproductspace.in%2Fedmingleliveclass%2Fjoin%3Ftoken=TfUnmjZ1ptUt4OEd/1/010901a04c3d649d-c06e0880-015b-44e9-8a60-e4aa0c9f6d02-000000/I7FyrDlBemeqL1WYJL93ba4clD0=258\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: rgb(0, 123, 255); text-decoration: underline; cursor: pointer;\"><b>https://learn.theproductspace.in/edmingleliveclass/join?token=TfUnmjZ1ptUt4OEd</b></a><br><br>If you haven't joined our WhatsApp community yet: <a href=\"https://ptj36cc.r.ap-south-1.awstrack.me/L0/https:%2F%2Fchat.whatsapp.com%2FBQkwjz4Hd7WKyY0PpsRTT3%3Fs=cl%26p=a%26ilr=0/1/010901a04c3d649d-c06e0880-015b-44e9-8a60-e4aa0c9f6d02-000000/u2vpO1FhapgMrROaWAkl31hFXBc=258\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: rgb(0, 123, 255); text-decoration: un",
+        "is_outbound": false,
+        "subject": "❗Session Started: FREE Certification: Claude for PMs❗"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: ❗Session Started: FREE Certification: Claude for PMs❗",
+      "body": "Hi Sakshi | Product Space,\n\nThank you for reaching out regarding ❗Session Started: FREE Certification: Claude for PMs❗.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-21",
+    "name": "Ollama",
+    "email": "hello@ollama.com",
+    "company": "Ollama",
+    "role": "Key Contact",
+    "subject": "GLM 5.3 & 5.3 Flash models are now available",
+    "urgency": 7,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 29, 2026 07:59 AM",
+    "reason": "Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Ollama regarding GLM 5.3 & 5.3 Flash models are now available.",
+    "thread": [
+      {
+        "id": "msg_80666",
+        "sender": "Ollama",
+        "sender_email": "hello@ollama.com",
+        "date": "Aug 29, 2026 07:59 AM",
+        "body": "\r\n \r\n\r\n\r\n\r\n \r\nZ AI's GLM 5.3 [https://ollama.com/library/glm-5.3] and GLM 5.3 Flash [https://ollama.com/library/glm-5.3-flash] (previously known\r\nas Ox Alpha) models are now available on Ollama’s cloud and are hosted in the US and Europe with zero data retention.\r\n \r\nGLM 5.3 Flash [https://ollama.com/library/glm-5.3-flash] is the first multimodal model in the GLM-5 series. It outperforms GLM 5.2\r\nand is designed for coding, long-running tasks, and agentic work.\r\n \r\n\r\nhttps://ollama.com/library/glm-5.3-flash\r\n\r\n \r\nGLM 5.3 [https://ollama.com/library/glm-5.3] is the flagship and the most capable open-weight model for coding.\r\n \r\n\r\nhttps://ollama.com/library/glm-5.3\r\n\r\n \r\nTo use it with Claude Code, run:\r\nollama launch claude --model glm-5.3-flash:cloud\r\n \r\nFor use with OpenCode, run:\r\nollama launch opencode --model glm-5.3-flash:cloud\r\n \r\nFor use with Hermes, run:\r\nollama launch hermes --model glm-5.3-flash:cloud\r\n \r\nFor GLM 5.3, please change the model name to glm-5.3:cloud\r\n \r\nClaude Desktop can be configured to use Ollama's models via Ollama's settings page.\r\n\r\n\r\n\r\n \r\nLearn more about the models from the GLM-5.3 [https://ollama.com/library/glm-5.3] and the GLM-5.3-Flash\r\n[https://ollama.com/library/glm-5.3-flash] model pages.\r\n \r\nIf you have any concerns or feedback, please let us know [hello@ollama.com].\r\n \r\n❤️ Ollama with its friendly Ox Alpha\r\n \r\n\r\n\r\n\r\n \r\n \r\nYou are receiving this email because you opted in to receive updates from Ollama\r\nOllama, 744 High Street, Palo Alto, CA 94301\r\nUnsubscribe [https://app.loops.so/unsubscribe/cmte3b3y4nxmc01yxbn2zfc2e/15045cd09891d3ac1ec5eddef4474b2d5e9117105a0509e866d739240135ae91b67a99e81ecae703837647ec1f7109264d8b7d107134f27f897079ff]\r\n",
+        "is_outbound": false,
+        "subject": "GLM 5.3 & 5.3 Flash models are now available"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: GLM 5.3 & 5.3 Flash models are now available",
+      "body": "Hi Ollama,\n\nThank you for reaching out regarding GLM 5.3 & 5.3 Flash models are now available.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-22",
+    "name": "Google",
+    "email": "no-reply@accounts.google.com",
+    "company": "Accounts",
+    "role": "Key Contact",
+    "subject": "2-Step Verification turned on",
+    "urgency": 7,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 29, 2026 09:48 AM",
+    "reason": "Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Google regarding 2-Step Verification turned on.",
+    "thread": [
+      {
+        "id": "msg_9664",
+        "sender": "Google",
+        "sender_email": "no-reply@accounts.google.com",
+        "date": "Aug 29, 2026 09:48 AM",
+        "body": "[image: Google]\r\n2-Step Verification turned on\r\n\r\n\r\nsathvikkashyapps@gmail.com\r\n\r\nYour Google Account sathvikkashyapps@gmail.com is now protected with 2-Step\r\nVerification. When you sign in on a new or untrusted device, you’ll need\r\nyour second factor to verify your identity.\r\n\r\n*Don't get locked out!*\r\nYou can add a backup phone or get backup codes to use when you don’t have\r\nyour second factor with you.\r\nYou can review your 2SV settings\r\n<https://accounts.google.com/AccountChooser?Email=sathvikkashyapps@gmail.com&continue=https://myaccount.google.com/signinoptions/twosv?rfn%3D16%26rfnc%3D1%26eid%3D475315333294252468%26et%3D0>\r\nto make changes.\r\nYou can also see security activity at\r\nhttps://myaccount.google.com/notifications\r\nYou received this email to let you know about important changes to your\r\nGoogle Account and services.\r\n© 2026 Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA\r\n",
+        "is_outbound": false,
+        "subject": "2-Step Verification turned on"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: 2-Step Verification turned on",
+      "body": "Hi Google,\n\nThank you for reaching out regarding 2-Step Verification turned on.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
+  },
+  {
+    "id": "gmail-23",
+    "name": "Google",
+    "email": "no-reply@accounts.google.com",
+    "company": "Accounts",
+    "role": "Key Contact",
+    "subject": "Security alert",
+    "urgency": 9,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 29, 2026 09:49 AM",
+    "reason": "Prospect inquired about pricing or terms. Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to Google regarding Security alert.",
+    "thread": [
+      {
+        "id": "msg_858958",
+        "sender": "Google",
+        "sender_email": "no-reply@accounts.google.com",
+        "date": "Aug 29, 2026 09:49 AM",
+        "body": "[image: Google]\r\nApp password created to sign in to your account\r\n\r\n\r\nsathvikkashyapps@gmail.com\r\nIf you didn't generate this password for sakha, someone else might be using\r\nyour account. Check and secure your account now.\r\nCheck activity\r\n<https://accounts.google.com/AccountChooser?Email=sathvikkashyapps@gmail.com&continue=https://myaccount.google.com/alert/nt/1787996973914?rfn%3D20%26rfnc%3D1%26eid%3D-5557470237200436248%26et%3D0>\r\nYou can also see security activity at\r\nhttps://myaccount.google.com/notifications\r\nYou received this email to let you know about important changes to your\r\nGoogle Account and services.\r\n© 2026 Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA\r\n",
+        "is_outbound": false,
+        "subject": "Security alert"
+      },
+      {
+        "id": "msg_442325",
+        "sender": "Google",
+        "sender_email": "no-reply@accounts.google.com",
+        "date": "Aug 29, 2026 09:49 AM",
+        "body": "[image: Google]\r\nApp password created to sign in to your account\r\n\r\n\r\nsathvikkashyapps@gmail.com\r\nIf you didn't generate this password for sakha (2), someone else might be\r\nusing your account. Check and secure your account now.\r\nCheck activity\r\n<https://accounts.google.com/AccountChooser?Email=sathvikkashyapps@gmail.com&continue=https://myaccount.google.com/alert/nt/1787996996756?rfn%3D20%26rfnc%3D1%26eid%3D-4347976708715413474%26et%3D0>\r\nYou can also see security activity at\r\nhttps://myaccount.google.com/notifications\r\nYou received this email to let you know about important changes to your\r\nGoogle Account and services.\r\n© 2026 Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA\r\n",
+        "is_outbound": false,
+        "subject": "Security alert"
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": true,
+      "demo_mentioned": false,
+      "thread_depth": 2
+    },
+    "draft": {
+      "subject": "Re: Security alert",
+      "body": "Hi Google,\n\nThank you for reaching out regarding Security alert.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "Critical"
+  }
+]

@@ -28,8 +28,12 @@ def _decode_header_value(val):
         if isinstance(data, bytes):
             result.append(data.decode(charset or "utf-8", errors="replace"))
         else:
-            result.append(data)
-    return " ".join(result)
+            result.append(str(data))
+    text = " ".join(result)
+    # Sanitize unusual quotes and dashes
+    text = text.replace('\u2011', '-').replace('\u2012', '-').replace('\u2013', '-').replace('\u2014', '--')
+    text = text.replace('\u2018', "'").replace('\u2019', "'").replace('\u201c', '"').replace('\u201d', '"')
+    return text
 
 
 def _extract_body(msg):
@@ -241,125 +245,141 @@ class GmailClient:
         return get_demo_leads()
 
     def _fetch_imap_threads(self, max_threads: int = 20) -> List[Dict[str, Any]]:
-        """Fetch recent emails via IMAP and convert to lead-like format."""
-        imap = imaplib.IMAP4_SSL("imap.gmail.com")
-        imap.login(self.gmail_email, self.gmail_app_password)
-        imap.select("INBOX")
+        """Fetch recent emails via IMAP using fast batch fetching and convert to lead-like format."""
+        try:
+            imap = imaplib.IMAP4_SSL("imap.gmail.com")
+            imap.login(self.gmail_email, self.gmail_app_password)
+            imap.select("INBOX")
 
-        # Search for recent emails
-        status, data = imap.search(None, "ALL")
-        email_ids = data[0].split()
+            # Search for all emails
+            status, data = imap.search(None, "ALL")
+            if status != "OK" or not data or not data[0]:
+                imap.logout()
+                return get_demo_leads()
 
-        # Take the most recent N
-        recent_ids = email_ids[-max_threads:] if len(email_ids) > max_threads else email_ids
-        recent_ids = list(reversed(recent_ids))  # newest first
+            email_ids = data[0].split()
+            # Pick the top N most recent emails
+            recent_ids = email_ids[-max_threads:] if len(email_ids) > max_threads else email_ids
+            recent_ids_str = ",".join([i.decode() if isinstance(i, bytes) else str(i) for i in recent_ids])
 
-        threads = []
-        thread_map = {}  # group by subject line
+            # Batch fetch all recent emails in a single IMAP call
+            status, fetch_data = imap.fetch(recent_ids_str, "(RFC822)")
+            imap.logout()
 
-        for eid in recent_ids:
-            try:
-                status, msg_data = imap.fetch(eid, "(RFC822)")
-                if status != "OK":
+            if status != "OK" or not fetch_data:
+                return get_demo_leads()
+
+            thread_map = {}  # group by clean subject line
+
+            for item in fetch_data:
+                if not isinstance(item, tuple) or len(item) < 2:
                     continue
 
-                raw_email = msg_data[0][1]
-                msg = email.message_from_bytes(raw_email)
-
-                subject = _decode_header_value(msg.get("Subject", ""))
-                from_addr = _decode_header_value(msg.get("From", ""))
-                to_addr = _decode_header_value(msg.get("To", ""))
-                date_str = msg.get("Date", "")
-                body = _extract_body(msg)
-
-                # Parse sender name and email
-                sender_name, sender_email = email.utils.parseaddr(from_addr)
-                if not sender_name:
-                    sender_name = sender_email.split("@")[0] if sender_email else "Unknown"
-
-                # Determine if this is outbound (from our account)
-                is_outbound = self.gmail_email.lower() in from_addr.lower()
-
-                # Parse date nicely
                 try:
-                    parsed_date = email.utils.parsedate_to_datetime(date_str)
-                    nice_date = parsed_date.strftime("%b %d, %Y %I:%M %p")
-                except Exception:
-                    nice_date = date_str[:20] if date_str else "Unknown"
+                    raw_email = item[1]
+                    msg = email.message_from_bytes(raw_email)
 
-                # Normalize subject for thread grouping
-                clean_subject = subject
-                for prefix in ["Re:", "RE:", "Fwd:", "FWD:", "re:", "fwd:"]:
-                    clean_subject = clean_subject.replace(prefix, "").strip()
+                    subject = _decode_header_value(msg.get("Subject", "No Subject"))
+                    from_addr = _decode_header_value(msg.get("From", ""))
+                    to_addr = _decode_header_value(msg.get("To", ""))
+                    date_str = msg.get("Date", "")
+                    body = _extract_body(msg)
 
-                message_obj = {
-                    "id": eid.decode() if isinstance(eid, bytes) else str(eid),
-                    "sender": sender_name,
-                    "sender_email": sender_email,
-                    "date": nice_date,
-                    "body": body[:2000],  # cap body length
-                    "is_outbound": is_outbound,
-                    "subject": subject
-                }
+                    sender_name, sender_email = email.utils.parseaddr(from_addr)
+                    if not sender_name:
+                        sender_name = sender_email.split("@")[0].replace(".", " ").title() if sender_email else "Contact"
 
-                if clean_subject not in thread_map:
-                    thread_map[clean_subject] = {
-                        "subject": clean_subject,
-                        "messages": [],
-                        "participants": set(),
-                        "latest_date": nice_date
+                    is_outbound = self.gmail_email.lower() in from_addr.lower()
+
+                    try:
+                        parsed_date = email.utils.parsedate_to_datetime(date_str)
+                        nice_date = parsed_date.strftime("%b %d, %Y %I:%M %p")
+                    except Exception:
+                        nice_date = date_str[:20] if date_str else "Recent"
+
+                    clean_subject = subject.strip()
+                    for prefix in ["Re:", "RE:", "Fwd:", "FWD:", "re:", "fwd:"]:
+                        if clean_subject.startswith(prefix):
+                            clean_subject = clean_subject[len(prefix):].strip()
+
+                    message_obj = {
+                        "id": f"msg_{hash(subject + date_str) % 1000000}",
+                        "sender": sender_name,
+                        "sender_email": sender_email,
+                        "date": nice_date,
+                        "body": body[:2500],
+                        "is_outbound": is_outbound,
+                        "subject": subject
                     }
 
-                thread_map[clean_subject]["messages"].append(message_obj)
-                if sender_email:
-                    thread_map[clean_subject]["participants"].add(sender_email)
+                    if clean_subject not in thread_map:
+                        thread_map[clean_subject] = {
+                            "subject": clean_subject,
+                            "messages": [],
+                            "participants": set(),
+                            "latest_date": nice_date
+                        }
 
-            except Exception as e:
-                print(f"[GmailClient] Error parsing email {eid}: {e}")
-                continue
+                    thread_map[clean_subject]["messages"].append(message_obj)
+                    if sender_email:
+                        thread_map[clean_subject]["participants"].add(sender_email)
 
-        imap.close()
-        imap.logout()
+                except Exception as ex:
+                    print(f"[GmailClient] Error parsing batch message: {ex}")
+                    continue
 
-        # Convert thread map to lead-like format
-        for idx, (subj, thread_data) in enumerate(thread_map.items()):
-            msgs = thread_data["messages"]
-            # Find the external participant (not our email)
-            external_emails = [e for e in thread_data["participants"] if self.gmail_email.lower() not in e.lower()]
-            contact_email = external_emails[0] if external_emails else list(thread_data["participants"])[0] if thread_data["participants"] else ""
-            # Find name from messages
-            contact_name = "Unknown"
-            for m in msgs:
-                if not m["is_outbound"] and m["sender"] != "Unknown":
-                    contact_name = m["sender"]
-                    break
+            # Convert grouped threads to rich Sakha prospect format
+            threads = []
+            for idx, (subj, thread_data) in enumerate(thread_map.items()):
+                msgs = thread_data["messages"]
+                
+                # Identify external prospect
+                external_emails = [e for e in thread_data["participants"] if self.gmail_email.lower() not in e.lower()]
+                contact_email = external_emails[0] if external_emails else (list(thread_data["participants"])[0] if thread_data["participants"] else "contact@client.com")
+                
+                contact_name = "Prospect"
+                for m in msgs:
+                    if not m["is_outbound"] and m["sender"] not in ["Unknown", "Contact", ""]:
+                        contact_name = m["sender"]
+                        break
+                if contact_name == "Prospect" and "@" in contact_email:
+                    contact_name = contact_email.split("@")[0].replace(".", " ").title()
 
-            threads.append({
-                "id": f"imap-{idx+1}",
-                "name": contact_name,
-                "email": contact_email,
-                "company": contact_email.split("@")[1].split(".")[0].capitalize() if "@" in contact_email else "Unknown",
-                "role": "Contact",
-                "subject": subj,
-                "urgency": 5,  # Default; will be re-scored by analysis_chain
-                "category": "Email Thread",
-                "status": "Active",
-                "last_contact": thread_data["latest_date"],
-                "reason": f"Thread with {len(msgs)} messages about: {subj[:100]}",
-                "next_action": "Review this conversation and decide on follow-up.",
-                "thread": msgs,
-                "signals": {
-                    "buying_intent": "Unknown",
-                    "response_lag_days": 0,
-                    "unanswered_promise": False
-                },
-                "draft": {
-                    "subject": f"Re: {subj}",
-                    "body": "",
-                    "tone": "Professional"
-                },
-                "deal_size": ""
-            })
+                domain_part = contact_email.split("@")[1].split(".")[0].capitalize() if "@" in contact_email else "Enterprise"
+                company_name = domain_part if domain_part not in ["Gmail", "Yahoo", "Outlook", "Hotmail", "Icloud"] else f"{contact_name}'s Team"
+
+                threads.append({
+                    "id": f"gmail-{idx+1}",
+                    "name": contact_name,
+                    "email": contact_email,
+                    "company": company_name,
+                    "role": "Key Contact",
+                    "subject": subj,
+                    "urgency": 6,
+                    "category": "Inbound Conversation",
+                    "status": "Awaiting Response" if not msgs[-1]["is_outbound"] else "Active",
+                    "last_contact": thread_data["latest_date"],
+                    "reason": f"Active thread with {len(msgs)} messages discussing '{subj[:80]}'",
+                    "next_action": f"Review message from {contact_name} and send follow-up.",
+                    "thread": msgs,
+                    "signals": {
+                        "buying_intent": "High" if any(k in subj.lower() for k in ["pricing", "demo", "proposal", "contract", "plan", "quote"]) else "Medium",
+                        "response_lag_days": 1,
+                        "unanswered_promise": False
+                    },
+                    "draft": {
+                        "subject": f"Re: {subj}",
+                        "body": f"Hi {contact_name},\n\nThank you for reaching out regarding {subj}.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+                        "tone": "Professional"
+                    },
+                    "deal_size": ""
+                })
+
+            return threads if threads else get_demo_leads()
+
+        except Exception as e:
+            print(f"[GmailClient] IMAP fetch error: {e}")
+            return get_demo_leads()
 
         return threads if threads else get_demo_leads()
 

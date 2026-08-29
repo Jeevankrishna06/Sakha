@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from backend.config import settings
-from backend.data.demo_leads import get_demo_leads, get_demo_lead_by_id
+from backend.data.leads_store import get_all_leads, get_lead_by_id, update_lead_draft
 from backend.ingestion.gmail_pull import gmail_client
 from backend.rag.retriever import rag_retriever
 from backend.agent.analysis_chain import analysis_chain
@@ -75,7 +75,7 @@ def health_check():
 @app.get("/stats")
 def get_dashboard_stats():
     """Returns aggregated executive dashboard metrics."""
-    leads = get_demo_leads()
+    leads = get_all_leads()
     critical = sum(1 for l in leads if l.get("urgency", 0) >= 9)
     high = sum(1 for l in leads if 7 <= l.get("urgency", 0) <= 8)
     medium = sum(1 for l in leads if 4 <= l.get("urgency", 0) <= 6)
@@ -90,7 +90,8 @@ def get_dashboard_stats():
         "low_priority_count": low,
         "awaiting_response_count": awaiting_reply,
         "due_today_count": critical + high,
-        "last_sync": "Just now"
+        "last_sync": "Just now",
+        "is_live_gmail": gmail_client.is_authenticated
     }
 
 @app.get("/leads")
@@ -98,7 +99,7 @@ def list_leads(urgency_min: Optional[int] = None, search: Optional[str] = None):
     """
     Returns prioritized prospects sorted by urgency score.
     """
-    leads = get_demo_leads()
+    leads = get_all_leads()
     
     # Sort descending by urgency score
     sorted_leads = sorted(leads, key=lambda x: x.get("urgency", 0), reverse=True)
@@ -118,7 +119,7 @@ def list_leads(urgency_min: Optional[int] = None, search: Optional[str] = None):
 @app.get("/lead/{lead_id}")
 def get_lead_details(lead_id: str):
     """Returns complete prospect profile, conversation thread, and AI recommendations."""
-    lead = get_demo_lead_by_id(lead_id)
+    lead = get_lead_by_id(lead_id)
     if not lead:
         raise HTTPException(status_code=404, detail="Lead not found")
         
@@ -133,7 +134,7 @@ def create_gmail_draft_for_lead(lead_id: str, request: Optional[CreateDraftReque
     """
     Creates a real or simulated Gmail draft for the prospect.
     """
-    lead = get_demo_lead_by_id(lead_id)
+    lead = get_lead_by_id(lead_id)
     if not lead:
         raise HTTPException(status_code=404, detail="Lead not found")
         
@@ -149,7 +150,7 @@ def generate_custom_draft(payload: GenerateDraftRequest):
     """
     Dynamically generates or regenerates a draft using specified tone and custom instructions.
     """
-    lead = get_demo_lead_by_id(payload.lead_id)
+    lead = get_lead_by_id(payload.lead_id)
     if not lead:
         raise HTTPException(status_code=404, detail="Lead not found")
         
@@ -158,6 +159,8 @@ def generate_custom_draft(payload: GenerateDraftRequest):
         tone=payload.tone or "Professional",
         custom_prompt=payload.custom_instructions
     )
+    # Cache generated draft
+    update_lead_draft(payload.lead_id, draft)
     return draft
 
 @app.post("/chat")
@@ -191,8 +194,8 @@ def query_sales_copilot(payload: ChatQueryRequest):
 @app.post("/gmail/connect")
 def connect_gmail(payload: GmailConnectRequest):
     """
-    Connect to Gmail using email + App Password (IMAP).
-    This validates credentials and saves them for subsequent operations.
+    Connect to Gmail using email + App Password (IMAP),
+    then immediately ingests, analyzes, and indexes real emails.
     """
     email_addr = payload.email.strip()
     app_pw = payload.app_password.strip()
@@ -201,6 +204,15 @@ def connect_gmail(payload: GmailConnectRequest):
         raise HTTPException(status_code=400, detail="Email and App Password are required")
 
     result = gmail_client.configure_imap(email_addr, app_pw)
+    if result.get("success"):
+        # Automatically pull and analyze real emails!
+        try:
+            pipeline_result = run_ingestion_pipeline()
+            result["pipeline"] = pipeline_result
+            result["message"] = f"Connected as {email_addr}! Processed {pipeline_result.get('leads_processed', 0)} conversation threads."
+        except Exception as e:
+            print(f"[API] Post-connect ingestion notice: {e}")
+            
     return result
 
 @app.get("/gmail/status")
@@ -210,11 +222,11 @@ def gmail_status():
 
 @app.post("/sync")
 def trigger_inbox_sync():
-    """Manually triggers Gmail ingestion and local re-indexing."""
+    """Manually triggers Gmail ingestion, AI analysis, and local re-indexing."""
     result = run_ingestion_pipeline()
     return {
         "status": "success",
-        "message": "Inbox synced and re-indexed successfully into ChromaDB",
+        "message": f"Synced {result.get('leads_processed', 0)} conversation threads from {result.get('auth_mode', 'Gmail')}",
         "details": result
     }
 
