@@ -71,6 +71,59 @@ def _clean_html_text(html_content: str) -> str:
     return result.strip()
 
 
+def _extract_gmail_api_body(payload: Dict[str, Any]) -> str:
+    """
+    Extract plain text or cleaned HTML body from a Gmail API message payload.
+    Handles nested multipart structures and base64url decoding.
+    """
+    if not payload:
+        return ""
+
+    body_plain = ""
+    body_html = ""
+
+    def _walk_parts(part: Dict[str, Any]):
+        nonlocal body_plain, body_html
+        if not isinstance(part, dict):
+            return
+
+        mime_type = part.get("mimeType", "").lower()
+        headers = part.get("headers", [])
+
+        # Skip attachments
+        for h in headers:
+            if h.get("name", "").lower() == "content-disposition" and "attachment" in h.get("value", "").lower():
+                return
+
+        body_data = part.get("body", {}).get("data")
+        if body_data:
+            try:
+                # Gmail API uses URL-safe base64 encoding (RFC 4648)
+                padded_data = body_data + "=" * ((4 - len(body_data) % 4) % 4)
+                decoded_bytes = base64.urlsafe_b64decode(padded_data.encode("ascii"))
+                decoded_text = decoded_bytes.decode("utf-8", errors="replace")
+
+                if mime_type == "text/plain" and not body_plain:
+                    body_plain = decoded_text
+                elif mime_type == "text/html" and not body_html:
+                    body_html = decoded_text
+            except Exception:
+                pass
+
+        # Recursively walk subparts
+        for sub_part in part.get("parts", []):
+            _walk_parts(sub_part)
+
+    _walk_parts(payload)
+
+    if body_plain:
+        lines = [l.strip() for l in body_plain.splitlines() if l.strip()]
+        return "\n".join(lines[:40])
+    elif body_html:
+        return _clean_html_text(body_html)[:2500]
+    return ""
+
+
 def _extract_body(msg):
     """Extract plain text body from an email.message.Message object."""
     body_plain = ""
@@ -272,23 +325,206 @@ class GmailClient:
         # ── OAuth mode ──
         if self.auth_mode == "oauth" and self.service:
             try:
-                results = self.service.users().threads().list(userId='me', maxResults=max_threads).execute()
-                threads = results.get('threads', [])
-                processed = []
-                for t in threads:
-                    thread_detail = self.service.users().threads().get(userId='me', id=t['id']).execute()
-                    messages = thread_detail.get('messages', [])
-                    processed.append({
-                        "id": t['id'],
-                        "thread_length": len(messages)
-                    })
-                return processed
+                return self._fetch_oauth_threads(max_threads)
             except Exception as e:
                 print(f"[GmailClient] OAuth fetch error: {e}")
                 return get_demo_leads()
 
         # ── Demo mode ──
         return get_demo_leads()
+
+    def _fetch_oauth_threads(self, max_threads: int = 20) -> List[Dict[str, Any]]:
+        """Fetch email threads via OAuth 2.0 Gmail API and return full Sakha conversation objects."""
+        user_email = self.gmail_email or ""
+        if not user_email and self.service:
+            try:
+                profile = self.service.users().getProfile(userId='me').execute()
+                user_email = profile.get('emailAddress', '')
+                if user_email:
+                    self.gmail_email = user_email
+            except Exception as ex:
+                print(f"[GmailClient] Could not fetch user profile email: {ex}")
+
+        results = self.service.users().threads().list(userId='me', maxResults=max_threads).execute()
+        threads = results.get('threads', [])
+        if not threads:
+            return get_demo_leads()
+
+        processed_threads = []
+        sender_display = settings.sender_display_name
+
+        for t in threads:
+            thread_id = t.get('id', '')
+            if not thread_id:
+                continue
+
+            try:
+                thread_detail = self.service.users().threads().get(
+                    userId='me',
+                    id=thread_id,
+                    format='full'
+                ).execute()
+                raw_messages = thread_detail.get('messages', [])
+                if not raw_messages:
+                    continue
+
+                parsed_messages = []
+                thread_participants = set()
+                thread_subject = "No Subject"
+
+                for msg in raw_messages:
+                    msg_id = msg.get("id", "")
+                    payload = msg.get("payload", {})
+                    label_ids = msg.get("labelIds", [])
+
+                    # Parse headers into a dictionary
+                    header_map = {}
+                    for h in payload.get("headers", []):
+                        h_name = h.get("name", "").lower()
+                        if h_name not in header_map:
+                            header_map[h_name] = h.get("value", "")
+
+                    from_raw = header_map.get("from", "")
+                    to_raw = header_map.get("to", "")
+                    subject_raw = header_map.get("subject", "No Subject")
+                    date_raw = header_map.get("date", "")
+
+                    from_decoded = _decode_header_value(from_raw)
+                    to_decoded = _decode_header_value(to_raw)
+                    subject_decoded = _decode_header_value(subject_raw) or "No Subject"
+
+                    if not thread_subject or thread_subject == "No Subject":
+                        thread_subject = subject_decoded
+
+                    sender_name, sender_email = email.utils.parseaddr(from_decoded)
+                    if not sender_name:
+                        sender_name = sender_email.split("@")[0].replace(".", " ").title() if sender_email else "Contact"
+
+                    recipient_name, recipient_email = email.utils.parseaddr(to_decoded)
+
+                    # Determine if outbound
+                    is_outbound = "SENT" in label_ids or bool(user_email and user_email.lower() in from_decoded.lower())
+
+                    # Parse date nicely
+                    nice_date = ""
+                    if date_raw:
+                        try:
+                            parsed_date = email.utils.parsedate_to_datetime(date_raw)
+                            nice_date = parsed_date.strftime("%b %d, %Y %I:%M %p")
+                        except Exception:
+                            nice_date = date_raw[:20]
+
+                    if not nice_date:
+                        internal_date = msg.get("internalDate")
+                        if internal_date:
+                            try:
+                                import datetime
+                                dt = datetime.datetime.fromtimestamp(int(internal_date) / 1000.0)
+                                nice_date = dt.strftime("%b %d, %Y %I:%M %p")
+                            except Exception:
+                                nice_date = "Recent"
+                        else:
+                            nice_date = "Recent"
+
+                    body = _extract_gmail_api_body(payload)
+                    if not body and msg.get("snippet"):
+                        body = _clean_html_text(msg.get("snippet", ""))
+
+                    if sender_email:
+                        thread_participants.add(sender_email)
+                    if recipient_email:
+                        thread_participants.add(recipient_email)
+
+                    parsed_messages.append({
+                        "id": msg_id,
+                        "message_id": msg_id,
+                        "thread_id": thread_id,
+                        "sender": sender_name,
+                        "sender_email": sender_email,
+                        "recipient": to_decoded,
+                        "recipient_email": recipient_email,
+                        "subject": subject_decoded,
+                        "date": nice_date,
+                        "snippet": msg.get("snippet", ""),
+                        "body": body[:2500],
+                        "is_outbound": is_outbound
+                    })
+
+                if not parsed_messages:
+                    continue
+
+                # Strip Re:/Fwd: prefixes for display
+                clean_subject = thread_subject.strip()
+                for prefix in ["Re:", "RE:", "Fwd:", "FWD:", "re:", "fwd:"]:
+                    if clean_subject.startswith(prefix):
+                        clean_subject = clean_subject[len(prefix):].strip()
+
+                # Identify external prospect
+                external_emails = [e for e in thread_participants if not user_email or user_email.lower() not in e.lower()]
+                contact_email = external_emails[0] if external_emails else (list(thread_participants)[0] if thread_participants else "contact@client.com")
+
+                contact_name = "Prospect"
+                for m in parsed_messages:
+                    if not m["is_outbound"] and m["sender"] not in ["Unknown", "Contact", "", "Prospect"]:
+                        contact_name = m["sender"]
+                        break
+                if contact_name == "Prospect" and "@" in contact_email:
+                    contact_name = contact_email.split("@")[0].replace(".", " ").title()
+
+                domain_part = contact_email.split("@")[1].split(".")[0].capitalize() if "@" in contact_email else "Enterprise"
+                company_name = domain_part if domain_part not in ["Gmail", "Yahoo", "Outlook", "Hotmail", "Icloud"] else f"{contact_name}'s Team"
+
+                # Intelligent category classification
+                subj_lower = clean_subject.lower()
+                body_sample = (parsed_messages[-1]["body"] if parsed_messages else "").lower()
+                combined_text = f"{subj_lower} {body_sample}"
+
+                if any(k in combined_text for k in ["meeting", "scheduled", "calendar", "call", "zoom", "meet"]):
+                    category = "Meeting / Call"
+                elif any(k in combined_text for k in ["pricing", "proposal", "contract", "quote", "cost", "invoice"]):
+                    category = "Pricing & Terms"
+                elif any(k in combined_text for k in ["demo", "walkthrough", "presentation", "trial"]):
+                    category = "Product Demo"
+                elif any(k in combined_text for k in ["connect", "introduction", "partnership", "collaborate", "hackathon", "event"]):
+                    category = "Partnership / Event"
+                else:
+                    category = "Inbound Discussion"
+
+                is_awaiting = not parsed_messages[-1]["is_outbound"] if parsed_messages else False
+                latest_date = parsed_messages[-1]["date"] if parsed_messages else "Recent"
+
+                processed_threads.append({
+                    "id": thread_id,
+                    "name": contact_name,
+                    "email": contact_email,
+                    "company": company_name,
+                    "role": "Key Contact",
+                    "subject": clean_subject,
+                    "urgency": 7 if is_awaiting else 5,
+                    "category": category,
+                    "status": "Awaiting Response" if is_awaiting else "Active",
+                    "last_contact": latest_date,
+                    "reason": f"Active thread with {len(parsed_messages)} message(s) regarding '{clean_subject[:70]}'",
+                    "next_action": f"Send personalized follow-up to {contact_name} regarding {clean_subject[:45]}." if is_awaiting else f"Follow up with {contact_name} to maintain momentum.",
+                    "thread": parsed_messages,
+                    "signals": {
+                        "buying_intent": "High" if any(k in combined_text for k in ["pricing", "demo", "proposal", "contract", "cost"]) else "Medium",
+                        "response_lag_days": 1,
+                        "unanswered_promise": False
+                    },
+                    "draft": {
+                        "subject": f"Re: {clean_subject}",
+                        "recipient": contact_email,
+                        "body": f"Hi {contact_name.split()[0]},\n\nThank you for reaching out regarding {clean_subject}.\n\nI am following up to review our discussion for {company_name} and address any questions your team may have as we move forward.\n\nPlease let me know your availability this week for a brief review session.\n\nBest regards,\n{sender_display}",
+                        "tone": "Professional"
+                    },
+                    "deal_size": ""
+                })
+            except Exception as thread_ex:
+                print(f"[GmailClient] Error parsing thread {thread_id}: {thread_ex}")
+                continue
+
+        return processed_threads if processed_threads else get_demo_leads()
 
     def _fetch_imap_threads(self, max_threads: int = 25) -> List[Dict[str, Any]]:
         """Fetch recent emails via IMAP using optimized batch fetching and clean prospect extraction."""

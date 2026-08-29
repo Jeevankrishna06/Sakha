@@ -93,3 +93,7 @@ tmp/
 ehthumbs.db
 Thumbs.db
 [Dd]esktop.ini
+
+#other files
+token.json
+credentials.json
