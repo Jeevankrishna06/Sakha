@@ -7,6 +7,14 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
+      // SSE stream endpoint — must not buffer responses
+      '/api/stream': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        headers: { 'Accept': 'text/event-stream' }
+      },
+      // Regular API calls
       '/api': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,

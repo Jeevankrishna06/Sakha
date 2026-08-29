@@ -15,7 +15,8 @@ export default function Navbar({
   onSync,
   isSyncing,
   lastSyncTime,
-  llmProvider = 'groq'
+  llmProvider = 'groq',
+  isLive = false
 }) {
   return (
     <header
@@ -83,6 +84,19 @@ export default function Navbar({
             </span>
             <span>Gmail</span>
             <span className="text-white font-medium">Connected</span>
+            {isLive && (
+              <span
+                className="ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider"
+                style={{
+                  background: 'rgba(0,208,132,0.15)',
+                  color: '#00d084',
+                  border: '1px solid rgba(0,208,132,0.3)',
+                  animation: 'pulse 2s infinite'
+                }}
+              >
+                LIVE
+              </span>
+            )}
           </div>
 
           {/* Model info pill */}

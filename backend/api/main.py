@@ -5,10 +5,14 @@ Provides unified REST API endpoints and full-stack integration with the React Da
 
 from typing import Optional, Dict, Any, List
 import os
+import time
+import json
+import asyncio
+import threading
 from pathlib import Path
-from fastapi import FastAPI, APIRouter, HTTPException, Body
+from fastapi import FastAPI, APIRouter, HTTPException, Body, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -95,6 +99,97 @@ def start_gmail_pubsub_watch(topic: Optional[str] = None):
 def stop_gmail_pubsub_watch():
     """Disables real-time push sync."""
     return gmail_client.stop_watch()
+
+# ---------- Real-Time SSE Event Broadcasting ----------
+# Thread-safe event broadcaster for pushing live updates to all connected frontend clients
+_sse_clients: List[asyncio.Queue] = []
+_sse_lock = threading.Lock()
+_last_lead_hash: Optional[str] = None
+_auto_sync_interval = 30  # seconds between background Gmail polls
+
+def _compute_leads_hash(leads: list) -> str:
+    """Quick fingerprint of current leads to detect changes."""
+    return str(len(leads)) + "|" + "|".join(
+        f"{l.get('id','')}:{l.get('subject','')[:20]}" for l in leads[:50]
+    )
+
+def _broadcast_event(event_type: str, data: dict):
+    """Push an SSE event to all connected frontend clients."""
+    with _sse_lock:
+        dead = []
+        for q in _sse_clients:
+            try:
+                q.put_nowait({"event": event_type, "data": data})
+            except Exception:
+                dead.append(q)
+        for q in dead:
+            _sse_clients.remove(q)
+
+def _background_auto_sync():
+    """Background thread that polls Gmail every N seconds and broadcasts changes."""
+    global _last_lead_hash
+    import time as _time
+    _time.sleep(5)  # wait for startup
+    while True:
+        try:
+            run_ingestion_pipeline()
+            leads = get_all_leads()
+            new_hash = _compute_leads_hash(leads)
+            if _last_lead_hash is not None and new_hash != _last_lead_hash:
+                _broadcast_event("leads_updated", {
+                    "total": len(leads),
+                    "timestamp": _time.strftime("%H:%M:%S"),
+                    "message": f"New emails detected! {len(leads)} leads updated."
+                })
+                print(f"[AutoSync] Change detected — pushed SSE update to {len(_sse_clients)} client(s)")
+            _last_lead_hash = new_hash
+        except Exception as e:
+            print(f"[AutoSync] Background sync error: {e}")
+        _time.sleep(_auto_sync_interval)
+
+# Start background auto-sync thread on import
+_sync_thread = threading.Thread(target=_background_auto_sync, daemon=True)
+_sync_thread.start()
+
+@api_router.get("/stream/leads")
+async def stream_leads_sse(request: Request):
+    """
+    Server-Sent Events endpoint for real-time lead updates.
+    Frontend connects once and receives instant push notifications
+    whenever new emails arrive or leads change.
+    """
+    q: asyncio.Queue = asyncio.Queue()
+    with _sse_lock:
+        _sse_clients.append(q)
+
+    async def event_generator():
+        try:
+            # Send initial heartbeat
+            yield f"event: connected\ndata: {json.dumps({'message': 'Live sync active', 'timestamp': time.strftime('%H:%M:%S')})}\n\n"
+            while True:
+                # Check if client disconnected
+                if await request.is_disconnected():
+                    break
+                try:
+                    event = await asyncio.wait_for(q.get(), timeout=15.0)
+                    yield f"event: {event['event']}\ndata: {json.dumps(event['data'])}\n\n"
+                except asyncio.TimeoutError:
+                    # Send keepalive heartbeat every 15s
+                    yield f"event: heartbeat\ndata: {json.dumps({'ts': time.strftime('%H:%M:%S')})}\n\n"
+        finally:
+            with _sse_lock:
+                if q in _sse_clients:
+                    _sse_clients.remove(q)
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        }
+    )
 
 @api_router.get("/health")
 def health_check():

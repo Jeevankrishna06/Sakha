@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import Navbar from './components/Navbar';
 import StatsOverview from './components/StatsOverview';
 import LeadFilters from './components/LeadFilters';
@@ -15,6 +15,7 @@ export default function App() {
   const [stats, setStats]           = useState(null);
   const [loading, setLoading]       = useState(true);
   const [isSyncing, setIsSyncing]   = useState(false);
+  const [isLive, setIsLive]         = useState(false);
 
   const [searchQuery, setSearchQuery]           = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -25,26 +26,99 @@ export default function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [toastMessage, setToastMessage]   = useState('');
 
-  useEffect(() => { loadData(); }, []);
+  const prevLeadCount = useRef(0);
+  const pollTimerRef  = useRef(null);
+  const sseRef        = useRef(null);
 
-  const loadData = async () => {
+  // Silent data refresh (no loading spinner — used by auto-poll & SSE)
+  const refreshData = useCallback(async () => {
+    try {
+      const [leadsData, statsData] = await Promise.all([
+        apiService.getLeads(),
+        apiService.getStats()
+      ]);
+      const newLeads = leadsData || [];
+      setLeads(newLeads);
+      setStats(statsData || null);
+
+      // Notify user if new leads appeared
+      if (prevLeadCount.current > 0 && newLeads.length > prevLeadCount.current) {
+        const diff = newLeads.length - prevLeadCount.current;
+        showToast(`🔔 ${diff} new email${diff > 1 ? 's' : ''} synced from Gmail!`);
+      }
+      prevLeadCount.current = newLeads.length;
+    } catch (e) { console.error('[AutoRefresh]', e); }
+  }, []);
+
+  // Initial full load (shows loading spinner)
+  const loadData = useCallback(async () => {
     setLoading(true);
     try {
       const [leadsData, statsData] = await Promise.all([
         apiService.getLeads(),
         apiService.getStats()
       ]);
-      setLeads(leadsData || []);
+      const newLeads = leadsData || [];
+      setLeads(newLeads);
       setStats(statsData || null);
+      prevLeadCount.current = newLeads.length;
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
-  };
+  }, []);
+
+  // ── Setup: Initial load + Auto-poll every 15s + SSE real-time listener ──
+  useEffect(() => {
+    loadData();
+
+    // Auto-poll every 15 seconds (silent background refresh)
+    pollTimerRef.current = setInterval(() => {
+      refreshData();
+    }, 15000);
+
+    // SSE real-time push connection
+    const connectSSE = () => {
+      try {
+        const eventSource = new EventSource('/api/stream/leads');
+        sseRef.current = eventSource;
+
+        eventSource.addEventListener('connected', () => {
+          setIsLive(true);
+          console.log('[SSE] Real-time connection established');
+        });
+
+        eventSource.addEventListener('leads_updated', (e) => {
+          console.log('[SSE] New email event received:', e.data);
+          // Immediately refresh dashboard data
+          refreshData();
+        });
+
+        eventSource.addEventListener('heartbeat', () => {
+          setIsLive(true);
+        });
+
+        eventSource.onerror = () => {
+          setIsLive(false);
+          eventSource.close();
+          // Reconnect after 5 seconds
+          setTimeout(connectSSE, 5000);
+        };
+      } catch (e) {
+        console.warn('[SSE] EventSource not available, using polling only.');
+      }
+    };
+    connectSSE();
+
+    return () => {
+      if (pollTimerRef.current) clearInterval(pollTimerRef.current);
+      if (sseRef.current) sseRef.current.close();
+    };
+  }, [loadData, refreshData]);
 
   const handleSync = async () => {
     setIsSyncing(true);
     try {
       const res = await apiService.syncInbox();
-      await loadData();
+      await refreshData();
       showToast(res?.message || 'Inbox synced and re-indexed!');
     } catch { showToast('Error syncing inbox.'); }
     finally { setIsSyncing(false); }
@@ -85,6 +159,7 @@ export default function App() {
         onOpenSettings={() => setIsSettingsOpen(true)}
         onSync={handleSync}
         isSyncing={isSyncing}
+        isLive={isLive}
         lastSyncTime={stats?.last_sync || 'Just now'}
       />
 
