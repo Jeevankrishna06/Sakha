@@ -15,9 +15,13 @@ class Settings:
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     
-    # Gmail API Settings
+    # Gmail API Settings (OAuth)
     GMAIL_CREDENTIALS_PATH: str = os.getenv("GMAIL_CREDENTIALS_PATH", str(BASE_DIR / "credentials.json"))
     GMAIL_TOKEN_PATH: str = os.getenv("GMAIL_TOKEN_PATH", str(BASE_DIR / "token.json"))
+    
+    # Gmail IMAP Settings (App Password — simpler alternative to OAuth)
+    GMAIL_EMAIL: str = os.getenv("GMAIL_EMAIL", "")
+    GMAIL_APP_PASSWORD: str = os.getenv("GMAIL_APP_PASSWORD", "")
     
     # Vector Database & Embeddings
     CHROMA_PERSIST_DIR: str = os.getenv("CHROMA_PERSIST_DIR", str(BASE_DIR / "chroma_db"))

@@ -199,5 +199,30 @@ export const apiService = {
       message: '127 conversation threads parsed, cleaned, and indexed in ChromaDB.',
       details: { leads_processed: 6, chunks_indexed: 18 }
     };
+  },
+
+  // Connect Gmail via IMAP (email + App Password)
+  async connectGmail(email, appPassword) {
+    try {
+      const res = await fetch(`${BASE_URL}/gmail/connect`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, app_password: appPassword })
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, message: 'Backend is offline. Start the server first.' };
+    }
+  },
+
+  // Get Gmail connection status
+  async getGmailStatus() {
+    try {
+      const res = await fetch(`${BASE_URL}/gmail/status`);
+      if (res.ok) return await res.json();
+    } catch (e) {
+      console.warn('[API] Could not fetch Gmail status.');
+    }
+    return { authenticated: false, mode: 'Offline', auth_type: 'demo', email: '' };
   }
 };

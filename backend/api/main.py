@@ -46,6 +46,10 @@ class CreateDraftRequest(BaseModel):
 class ChatQueryRequest(BaseModel):
     query: str
 
+class GmailConnectRequest(BaseModel):
+    email: str
+    app_password: str
+
 # ----------------- Routes -----------------
 
 @app.on_event("startup")
@@ -183,6 +187,26 @@ def query_sales_copilot(payload: ChatQueryRequest):
             for c in chunks
         ]
     }
+
+@app.post("/gmail/connect")
+def connect_gmail(payload: GmailConnectRequest):
+    """
+    Connect to Gmail using email + App Password (IMAP).
+    This validates credentials and saves them for subsequent operations.
+    """
+    email_addr = payload.email.strip()
+    app_pw = payload.app_password.strip()
+
+    if not email_addr or not app_pw:
+        raise HTTPException(status_code=400, detail="Email and App Password are required")
+
+    result = gmail_client.configure_imap(email_addr, app_pw)
+    return result
+
+@app.get("/gmail/status")
+def gmail_status():
+    """Returns current Gmail connection status and auth mode."""
+    return gmail_client.get_status()
 
 @app.post("/sync")
 def trigger_inbox_sync():
