@@ -122,6 +122,11 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
                   ? { background: 'rgba(16,185,129,0.1)', color: '#10b981', border: '1px solid rgba(16,185,129,0.2)' }
                   : { background: 'rgba(255,255,255,0.05)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.06)' }
                 }
+              >
+                {isGmailConnected
+                  ? <><Wifi className="w-3 h-3" />Connected</>
+                  : <><WifiOff className="w-3 h-3" />Not Connected</>
+                }
               </div>
             </div>
 
