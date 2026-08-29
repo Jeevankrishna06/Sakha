@@ -1,47 +1,6 @@
 [
   {
     "id": "gmail-1",
-    "name": "Agoda Research",
-    "email": "noreply@agoda.com",
-    "company": "Agoda",
-    "role": "Key Contact",
-    "subject": "We'd love to hear from you!  🤩",
-    "urgency": 9,
-    "category": "Inbound Conversation",
-    "status": "Awaiting Response",
-    "last_contact": "Aug 26, 2026 11:23 PM",
-    "reason": "Prospect inquired about pricing or terms. Awaiting reply from our side.",
-    "next_action": "Send personalized follow-up to Agoda Research regarding We'd love to hear from you!  🤩.",
-    "thread": [
-      {
-        "id": "msg_515200",
-        "sender": "Agoda Research",
-        "sender_email": "noreply@agoda.com",
-        "date": "Aug 26, 2026 11:23 PM",
-        "body": "<!--build-once-->\r\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\">\r\n<head>\r\n    <link href=\"https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,700;1,300&display=swap\" rel=\"stylesheet\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\r\n    <meta http-equiv=\"Content-language\" content=\"en-US\" />\r\n    <title>KTC</title>\r\n    <style type=\"text/css\">\r\n        html, body { width: 100%; height: 100%; margin: 0; padding: 0; }\r\n        body, table, td, p, a, li, blockquote { -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }\r\n        img { height: auto; line-height: 100%; border: 0; outline: none; text-decoration: none; display: inline; -ms-interpolation-mode: bicubic; }\r\n        table { border-collapse: collapse !important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }\r\n        table td { mso-line-height-rule: exactly; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }\r\n        h1, h2, h3, h4, h5, h6, p { margin: 0; }\r\n        table { display: table; }\r\n        td { display: table-cell; }\r\n        #outlook a { padding: 0; }\r\n        .ExternalClass, .ReadMsgBody { width: 100%; }\r\n        .ExternalClass p { margin: 0; margin-bottom: 0; }\r\n        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: 100%; }\r\n        a { text-decoration: underline; }\r\n        a:hover { text-decoration: none; }\r\n        a:visited { color: #00adff; }\r\n        p[class=menu] a { text-decoration: none; }\r\n        p[class=menu] a:hover { text-decoration: underline; }\r\n        a[href^=tel] { color: inherit; text-decoration: underline; }\r\n        table[class=entry-left] a, table[class=entry-right] a { text-decoration: none; }\r\n        table[class=entry-left] a:hover, table[class=entry-right] a:hover { text-decoration: underline; }\r\n        div[class=visible-mobile] { display: none !important; }\r\n        .btn-coupon-disabled {\r\n            background: #ECEFF5 !important;\r\n        }\r\n        .text-coupon-disabled {\r\n            color: #CED0D4 !important;\r\n        }\r\n        /* Light Dark mode enabled */\r\n        :root {\r\n            color-scheme: ligth dark;\r\n            supported-colo",
-        "is_outbound": false,
-        "subject": "We'd love to hear from you!  🤩"
-      }
-    ],
-    "signals": {
-      "buying_intent": "Medium",
-      "response_lag_days": 1,
-      "unanswered_promise": false,
-      "last_sender_is_prospect": true,
-      "pricing_requested": true,
-      "demo_mentioned": false,
-      "thread_depth": 1
-    },
-    "draft": {
-      "subject": "Re: We'd love to hear from you!  🤩",
-      "body": "Hi Agoda Research,\n\nThank you for reaching out regarding We'd love to hear from you!  🤩.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
-      "tone": "Professional"
-    },
-    "deal_size": "",
-    "urgency_level": "Critical"
-  },
-  {
-    "id": "gmail-2",
     "name": "LinkedIn",
     "email": "messages-noreply@linkedin.com",
     "company": "Linkedin",
@@ -55,7 +14,7 @@
     "next_action": "Send personalized follow-up to LinkedIn regarding 22 people viewed your profile.",
     "thread": [
       {
-        "id": "msg_795848",
+        "id": "msg_794752",
         "sender": "LinkedIn",
         "sender_email": "messages-noreply@linkedin.com",
         "date": "Aug 27, 2026 12:02 AM",
@@ -82,7 +41,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-3",
+    "id": "gmail-2",
     "name": "Bindhushree S R",
     "email": "invitations@linkedin.com",
     "company": "Linkedin",
@@ -96,7 +55,7 @@
     "next_action": "Send personalized follow-up to Bindhushree S R regarding I want to connect.",
     "thread": [
       {
-        "id": "msg_986479",
+        "id": "msg_936368",
         "sender": "Bindhushree S R",
         "sender_email": "invitations@linkedin.com",
         "date": "Aug 27, 2026 06:02 AM",
@@ -105,7 +64,7 @@
         "subject": "I want to connect"
       },
       {
-        "id": "msg_496375",
+        "id": "msg_926824",
         "sender": "Reetu Nataraj",
         "sender_email": "invitations@linkedin.com",
         "date": "Aug 27, 2026 08:02 PM",
@@ -114,7 +73,7 @@
         "subject": "I want to connect"
       },
       {
-        "id": "msg_841562",
+        "id": "msg_54020",
         "sender": "Vishal Rajput",
         "sender_email": "invitations@linkedin.com",
         "date": "Aug 28, 2026 06:02 PM",
@@ -141,10 +100,10 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-4",
+    "id": "gmail-3",
     "name": "Unstop Events",
-    "email": "updates@unstop.events",
-    "company": "Unstop",
+    "email": "noreply@theproductspace.in",
+    "company": "Theproductspace",
     "role": "Key Contact",
     "subject": "Join the Official WhatsApp Group | AI Product Hackathon '26",
     "urgency": 8,
@@ -155,7 +114,7 @@
     "next_action": "Send personalized follow-up to Unstop Events regarding Join the Official WhatsApp Group | AI Product Hack.",
     "thread": [
       {
-        "id": "msg_227065",
+        "id": "msg_668140",
         "sender": "Unstop Events",
         "sender_email": "updates@unstop.email",
         "date": "Aug 27, 2026 07:55 AM",
@@ -164,7 +123,7 @@
         "subject": "Join the Official WhatsApp Group | AI Product Hackathon '26"
       },
       {
-        "id": "msg_957021",
+        "id": "msg_353898",
         "sender": "Sakshi | Product Space",
         "sender_email": "noreply@theproductspace.in",
         "date": "Aug 28, 2026 10:12 AM",
@@ -173,7 +132,7 @@
         "subject": "Join the Official WhatsApp Group | AI Product Hackathon '26"
       },
       {
-        "id": "msg_665981",
+        "id": "msg_406036",
         "sender": "Unstop Events",
         "sender_email": "updates@unstop.events",
         "date": "Aug 29, 2026 01:54 AM",
@@ -200,7 +159,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-5",
+    "id": "gmail-4",
     "name": "Google",
     "email": "noreply-accounts@google.com",
     "company": "Google",
@@ -214,7 +173,7 @@
     "next_action": "Send personalized follow-up to Google regarding You shared some Google Account data with Claude.",
     "thread": [
       {
-        "id": "msg_965553",
+        "id": "msg_304569",
         "sender": "Google",
         "sender_email": "noreply-accounts@google.com",
         "date": "Aug 27, 2026 01:59 AM",
@@ -223,7 +182,7 @@
         "subject": "You shared some Google Account data with Claude"
       },
       {
-        "id": "msg_61539",
+        "id": "msg_794357",
         "sender": "Google",
         "sender_email": "noreply-accounts@google.com",
         "date": "Aug 28, 2026 08:06 AM",
@@ -232,7 +191,7 @@
         "subject": "You shared some Google Account data with Claude"
       },
       {
-        "id": "msg_564266",
+        "id": "msg_81564",
         "sender": "Google",
         "sender_email": "noreply-accounts@google.com",
         "date": "Aug 28, 2026 10:21 PM",
@@ -259,7 +218,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-6",
+    "id": "gmail-5",
     "name": "Apple",
     "email": "News@InsideApple.Apple.com",
     "company": "Insideapple",
@@ -273,7 +232,7 @@
     "next_action": "Send personalized follow-up to Apple regarding Watch a special announcement from Apple..",
     "thread": [
       {
-        "id": "msg_542178",
+        "id": "msg_358760",
         "sender": "Apple",
         "sender_email": "News@InsideApple.Apple.com",
         "date": "Aug 27, 2026 10:41 AM",
@@ -300,7 +259,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-7",
+    "id": "gmail-6",
     "name": "LinkedIn",
     "email": "messages-noreply@linkedin.com",
     "company": "Linkedin",
@@ -314,7 +273,7 @@
     "next_action": "Send personalized follow-up to LinkedIn regarding 👤 You may know Haasini MS.",
     "thread": [
       {
-        "id": "msg_499122",
+        "id": "msg_597216",
         "sender": "LinkedIn",
         "sender_email": "messages-noreply@linkedin.com",
         "date": "Aug 28, 2026 12:02 AM",
@@ -341,7 +300,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-8",
+    "id": "gmail-7",
     "name": "LeetCode",
     "email": "no-reply@leetcode.com",
     "company": "Leetcode",
@@ -355,7 +314,7 @@
     "next_action": "Send personalized follow-up to LeetCode regarding LeetCode Weekly Digest.",
     "thread": [
       {
-        "id": "msg_391085",
+        "id": "msg_17152",
         "sender": "LeetCode",
         "sender_email": "no-reply@leetcode.com",
         "date": "Aug 28, 2026 09:04 AM",
@@ -382,7 +341,7 @@
     "urgency_level": "Critical"
   },
   {
-    "id": "gmail-9",
+    "id": "gmail-8",
     "name": "Himanshu Singh",
     "email": "himanshu.singh@theproductspace.co.in",
     "company": "Theproductspace",
@@ -396,7 +355,7 @@
     "next_action": "Send personalized follow-up to Himanshu Singh regarding Invitation from an unknown sender: AI Product Hack.",
     "thread": [
       {
-        "id": "msg_156966",
+        "id": "msg_439641",
         "sender": "Himanshu Singh",
         "sender_email": "himanshu.singh@theproductspace.co.in",
         "date": "Aug 28, 2026 10:01 AM",
@@ -423,7 +382,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-10",
+    "id": "gmail-9",
     "name": "duolingo",
     "email": "hello@duolingo.com",
     "company": "Duolingo",
@@ -437,7 +396,7 @@
     "next_action": "Send personalized follow-up to duolingo regarding Got 5 minutes? Time for a tiny French lesson..",
     "thread": [
       {
-        "id": "msg_583367",
+        "id": "msg_1532",
         "sender": "duolingo",
         "sender_email": "hello@duolingo.com",
         "date": "Aug 28, 2026 10:04 AM",
@@ -464,7 +423,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-11",
+    "id": "gmail-10",
     "name": "Vaibhav Sisinty",
     "email": "stayingahead@mail.beehiiv.com",
     "company": "Mail",
@@ -478,7 +437,7 @@
     "next_action": "Send personalized follow-up to Vaibhav Sisinty regarding 1200 rogue ai agents.",
     "thread": [
       {
-        "id": "msg_229780",
+        "id": "msg_346041",
         "sender": "Vaibhav Sisinty",
         "sender_email": "stayingahead@mail.beehiiv.com",
         "date": "Aug 28, 2026 12:51 PM",
@@ -505,7 +464,7 @@
     "urgency_level": "Critical"
   },
   {
-    "id": "gmail-12",
+    "id": "gmail-11",
     "name": "LinkedIn",
     "email": "updates-noreply@linkedin.com",
     "company": "Linkedin",
@@ -519,7 +478,7 @@
     "next_action": "Send personalized follow-up to LinkedIn regarding Manish Mazumder and others share their thoughts on.",
     "thread": [
       {
-        "id": "msg_145012",
+        "id": "msg_385452",
         "sender": "LinkedIn",
         "sender_email": "updates-noreply@linkedin.com",
         "date": "Aug 28, 2026 02:03 PM",
@@ -546,7 +505,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-13",
+    "id": "gmail-12",
     "name": "Anthropic",
     "email": "no-reply-aoNIiAU9ara1mSh3-0k_yA@mail.anthropic.com",
     "company": "Mail",
@@ -560,7 +519,7 @@
     "next_action": "Send personalized follow-up to Anthropic regarding Your secure link to Claude.ai is here | 2026-08-28.",
     "thread": [
       {
-        "id": "msg_884418",
+        "id": "msg_868363",
         "sender": "Anthropic",
         "sender_email": "no-reply-aoNIiAU9ara1mSh3-0k_yA@mail.anthropic.com",
         "date": "Aug 28, 2026 03:03 PM",
@@ -587,7 +546,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-14",
+    "id": "gmail-13",
     "name": "Truecaller",
     "email": "hello@updates.truecaller.com",
     "company": "Updates",
@@ -601,7 +560,7 @@
     "next_action": "Send personalized follow-up to Truecaller regarding ⚠️ Fix Caller ID now -- spam calls are reaching yo.",
     "thread": [
       {
-        "id": "msg_155131",
+        "id": "msg_712699",
         "sender": "Truecaller",
         "sender_email": "hello@updates.truecaller.com",
         "date": "Aug 29, 2026 12:02 AM",
@@ -628,7 +587,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-15",
+    "id": "gmail-14",
     "name": "Sakshi | Product Space",
     "email": "noreply@theproductspace.in",
     "company": "Theproductspace",
@@ -642,7 +601,7 @@
     "next_action": "Send personalized follow-up to Sakshi | Product Space regarding 1 Hour to Go: AI Product Hackathon Kickoff Call '2.",
     "thread": [
       {
-        "id": "msg_53334",
+        "id": "msg_420968",
         "sender": "Sakshi | Product Space",
         "sender_email": "noreply@theproductspace.in",
         "date": "Aug 29, 2026 02:31 AM",
@@ -669,7 +628,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-16",
+    "id": "gmail-15",
     "name": "Sakshi | Product Space",
     "email": "noreply@theproductspace.in",
     "company": "Theproductspace",
@@ -683,7 +642,7 @@
     "next_action": "Send personalized follow-up to Sakshi | Product Space regarding 30 Minutes to Go: AI Product Hackathon Kickoff Cal.",
     "thread": [
       {
-        "id": "msg_549491",
+        "id": "msg_500105",
         "sender": "Sakshi | Product Space",
         "sender_email": "noreply@theproductspace.in",
         "date": "Aug 29, 2026 03:01 AM",
@@ -710,7 +669,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-17",
+    "id": "gmail-16",
     "name": "Sakshi | Product Space",
     "email": "noreply@theproductspace.in",
     "company": "Theproductspace",
@@ -724,7 +683,7 @@
     "next_action": "Send personalized follow-up to Sakshi | Product Space regarding ❗ Session Started - AI Product Hackathon Kick-Off .",
     "thread": [
       {
-        "id": "msg_432876",
+        "id": "msg_141831",
         "sender": "Sakshi | Product Space",
         "sender_email": "noreply@theproductspace.in",
         "date": "Aug 29, 2026 03:31 AM",
@@ -751,7 +710,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-18",
+    "id": "gmail-17",
     "name": "Unstop Events",
     "email": "updates@unstop.events",
     "company": "Unstop",
@@ -765,7 +724,7 @@
     "next_action": "Send personalized follow-up to Unstop Events regarding ❗  Session Started  -  AI Product Hackathon Kick-O.",
     "thread": [
       {
-        "id": "msg_550323",
+        "id": "msg_938270",
         "sender": "Unstop Events",
         "sender_email": "updates@unstop.events",
         "date": "Aug 29, 2026 03:33 AM",
@@ -792,7 +751,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-19",
+    "id": "gmail-18",
     "name": "jeevan krishna",
     "email": "noreply@github.com",
     "company": "Github",
@@ -806,7 +765,7 @@
     "next_action": "Send personalized follow-up to jeevan krishna regarding Jeevankrishna06 invited you to Jeevankrishna06/Sak.",
     "thread": [
       {
-        "id": "msg_892310",
+        "id": "msg_963823",
         "sender": "jeevan krishna",
         "sender_email": "noreply@github.com",
         "date": "Aug 28, 2026 11:37 PM",
@@ -833,7 +792,7 @@
     "urgency_level": "Critical"
   },
   {
-    "id": "gmail-20",
+    "id": "gmail-19",
     "name": "Sakshi | Product Space",
     "email": "noreply@theproductspace.in",
     "company": "Theproductspace",
@@ -847,7 +806,7 @@
     "next_action": "Send personalized follow-up to Sakshi | Product Space regarding ❗Session Started: FREE Certification: Claude for P.",
     "thread": [
       {
-        "id": "msg_440187",
+        "id": "msg_652983",
         "sender": "Sakshi | Product Space",
         "sender_email": "noreply@theproductspace.in",
         "date": "Aug 29, 2026 06:38 AM",
@@ -874,7 +833,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-21",
+    "id": "gmail-20",
     "name": "Ollama",
     "email": "hello@ollama.com",
     "company": "Ollama",
@@ -888,7 +847,7 @@
     "next_action": "Send personalized follow-up to Ollama regarding GLM 5.3 & 5.3 Flash models are now available.",
     "thread": [
       {
-        "id": "msg_80666",
+        "id": "msg_492626",
         "sender": "Ollama",
         "sender_email": "hello@ollama.com",
         "date": "Aug 29, 2026 07:59 AM",
@@ -915,7 +874,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-22",
+    "id": "gmail-21",
     "name": "Google",
     "email": "no-reply@accounts.google.com",
     "company": "Accounts",
@@ -929,7 +888,7 @@
     "next_action": "Send personalized follow-up to Google regarding 2-Step Verification turned on.",
     "thread": [
       {
-        "id": "msg_9664",
+        "id": "msg_367392",
         "sender": "Google",
         "sender_email": "no-reply@accounts.google.com",
         "date": "Aug 29, 2026 09:48 AM",
@@ -956,7 +915,7 @@
     "urgency_level": "High"
   },
   {
-    "id": "gmail-23",
+    "id": "gmail-22",
     "name": "Google",
     "email": "no-reply@accounts.google.com",
     "company": "Accounts",
@@ -970,7 +929,7 @@
     "next_action": "Send personalized follow-up to Google regarding Security alert.",
     "thread": [
       {
-        "id": "msg_858958",
+        "id": "msg_601564",
         "sender": "Google",
         "sender_email": "no-reply@accounts.google.com",
         "date": "Aug 29, 2026 09:49 AM",
@@ -979,7 +938,7 @@
         "subject": "Security alert"
       },
       {
-        "id": "msg_442325",
+        "id": "msg_744366",
         "sender": "Google",
         "sender_email": "no-reply@accounts.google.com",
         "date": "Aug 29, 2026 09:49 AM",
@@ -1004,5 +963,46 @@
     },
     "deal_size": "",
     "urgency_level": "Critical"
+  },
+  {
+    "id": "gmail-23",
+    "name": "JEEVAN KRISHNA 25CI",
+    "email": "jeevankrishna25ci@rnsit.ac.in",
+    "company": "Rnsit",
+    "role": "Key Contact",
+    "subject": "",
+    "urgency": 7,
+    "category": "Inbound Conversation",
+    "status": "Awaiting Response",
+    "last_contact": "Aug 29, 2026 03:57 PM",
+    "reason": "Awaiting reply from our side.",
+    "next_action": "Send personalized follow-up to JEEVAN KRISHNA 25CI regarding .",
+    "thread": [
+      {
+        "id": "msg_483794",
+        "sender": "JEEVAN KRISHNA 25CI",
+        "sender_email": "jeevankrishna25ci@rnsit.ac.in",
+        "date": "Aug 29, 2026 03:57 PM",
+        "body": "Hello sathwik we would love to work with you for the hackathon\r\n",
+        "is_outbound": false,
+        "subject": ""
+      }
+    ],
+    "signals": {
+      "buying_intent": "Medium",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": true,
+      "pricing_requested": false,
+      "demo_mentioned": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: ",
+      "body": "Hi JEEVAN KRISHNA 25CI,\n\nThank you for reaching out regarding .\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "High"
   }
 ]
