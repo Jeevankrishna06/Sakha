@@ -22,7 +22,20 @@ class AnalysisChain:
         """
         thread = lead_data.get("thread", [])
         if not thread:
-            return {"response_lag_days": 0, "last_sender_is_prospect": False, "buying_intent": "Low"}
+            return {
+                "response_lag_days": 0,
+                "last_sender_is_prospect": False,
+                "buying_intent": "Low",
+                "pricing_requested": False,
+                "demo_mentioned": False,
+                "meeting_requested": False,
+                "call_scheduled": False,
+                "call_confirmed": False,
+                "call_rescheduled": False,
+                "chat": False,
+                "unanswered_promise": False,
+                "thread_depth": 0
+            }
 
         last_msg = thread[-1]
         last_sender_is_prospect = not last_msg.get("is_outbound", False)
@@ -31,9 +44,16 @@ class AnalysisChain:
         full_text = " ".join([m.get("body", "") for m in thread]).lower()
         
         # Pricing signal
-        has_pricing = any(k in full_text for k in ["pricing", "cost", "quote", "rate", "discount", "budget", "$"])
-        # Demo signal
-        has_demo = any(k in full_text for k in ["demo", "walkthrough", "presentation", "screen share", "call"])
+        has_pricing = any(k in full_text for k in ["pricing", "rupees", "rupee", "cost", "quote", "rate", "discount", "budget", "$", "₹"])
+        
+        # Meeting & Demo signals
+        has_meeting = any(k in full_text for k in ["meeting", "schedule a call", "set up a call", "calendar", "calendly", "zoom", "google meet", "free for a call", "time to talk", "meet"])
+        has_demo = any(k in full_text for k in ["demo", "walkthrough", "presentation", "screen share"])
+        has_call_scheduled = any(k in full_text for k in ["scheduled for", "invite sent", "calendar invite", "see you on", "call is set"])
+        has_call_confirmed = any(k in full_text for k in ["confirmed", "sounds good for the call", "looking forward to our call", "accepted the invitation"])
+        has_call_rescheduled = any(k in full_text for k in ["reschedule", "push the call", "move the meeting", "can we postpone", "different time"])
+        has_chat = any(k in full_text for k in ["chat", "quick question", "reach out", "touch base", "talk", "discuss"])
+        
         # Unanswered promise check in sales reps' emails
         has_promise = False
         for msg in thread:
@@ -46,6 +66,11 @@ class AnalysisChain:
             "last_sender_is_prospect": last_sender_is_prospect,
             "pricing_requested": has_pricing,
             "demo_mentioned": has_demo,
+            "meeting_requested": has_meeting and last_sender_is_prospect,
+            "call_scheduled": has_call_scheduled,
+            "call_confirmed": has_call_confirmed,
+            "call_rescheduled": has_call_rescheduled,
+            "chat": has_chat,
             "unanswered_promise": has_promise and last_sender_is_prospect,
             "thread_depth": len(thread)
         }
@@ -55,8 +80,6 @@ class AnalysisChain:
         Runs full AI analysis on a prospect conversation.
         """
         signals = self.calculate_deterministic_signals(lead_data)
-        prospect_name = lead_data.get("name", "Prospect")
-        company = lead_data.get("company", "Company")
         
         # Try LLM inference via Groq or Gemini if keys are configured
         if self.llm_provider == "groq" and self.groq_key:
@@ -94,8 +117,7 @@ class AnalysisChain:
 
         # Format context
         formatted_context = "\n\n".join([f"Source [{c.get('metadata', {}).get('name', 'Lead')} - {c.get('metadata', {}).get('company', '')}]:\n{c.get('text', '')}" for c in context_chunks])
-        
-        prompt = f"""You are Sakha, an elite AI sales copilot. Answer the sales question accurately using only the provided email conversation context.
+        prompt = f"""You are Sakha, an elite AI sales copilot. Answer the sales question accurately using only the provided email conversation context. Provide structured output with executive summary and conversation details.
 
 Context:
 {formatted_context}
@@ -105,6 +127,7 @@ Question:
 
 Provide a concise, direct, executive-ready sales summary with clear actionable next steps."""
 
+        # 1. Groq LLM option
         if self.llm_provider == "groq" and self.groq_key:
             try:
                 from groq import Groq
@@ -122,7 +145,41 @@ Provide a concise, direct, executive-ready sales summary with clear actionable n
             except Exception as e:
                 print(f"[AnalysisChain] Groq chat error: {e}")
 
-        # Smart deterministic synthesis
+        # 2. Gemini LLM option
+        if self.llm_provider == "gemini" and self.gemini_key:
+            try:
+                try:
+                    from google import genai
+                    from google.genai import types
+                    client = genai.Client(api_key=self.gemini_key)
+                    for model_name in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.5-pro", "gemini-1.5-flash"]:
+                        try:
+                            resp = client.models.generate_content(
+                                model=model_name,
+                                contents=prompt,
+                                config=types.GenerateContentConfig(
+                                    temperature=0.2
+                                )
+                            )
+                            if resp and resp.text:
+                                return resp.text.strip()
+                        except Exception:
+                            continue
+                except ImportError:
+                    import google.generativeai as legacy_genai
+                    legacy_genai.configure(api_key=self.gemini_key)
+                    for model_name in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]:
+                        try:
+                            model = legacy_genai.GenerativeModel(model_name)
+                            resp = model.generate_content(prompt)
+                            if resp and resp.text:
+                                return resp.text.strip()
+                        except Exception:
+                            continue
+            except Exception as e:
+                print(f"[AnalysisChain] Gemini chat error: {e}")
+
+        # Smart deterministic synthesis fallback
         lead_names = list(set([c.get("metadata", {}).get("name", "") for c in context_chunks if c.get("metadata", {}).get("name")]))
         names_str = ", ".join(lead_names) if lead_names else "identified prospects"
         return f"Based on your recent inbox conversations, {names_str} match your query:\n\n" + "\n".join([f"• **{c.get('metadata', {}).get('name')} ({c.get('metadata', {}).get('company')}):** {c.get('text', '')[:180]}..." for c in context_chunks[:3]])
@@ -163,7 +220,7 @@ Provide a concise, direct, executive-ready sales summary with clear actionable n
                             {"role": "user", "content": prompt}
                         ],
                         response_format={"type": "json_object"},
-                        temperature=0.3
+                        temperature=0.5
                     )
                     content = resp.choices[0].message.content.strip()
                     # Strip any markdown fences if present
@@ -181,16 +238,52 @@ Provide a concise, direct, executive-ready sales summary with clear actionable n
 
     def _call_gemini(self, lead_data: Dict[str, Any], signals: Dict[str, Any], custom_instructions: Optional[str], tone: str) -> Optional[Dict[str, Any]]:
         try:
-            import google.generativeai as genai
-            genai.configure(api_key=self.gemini_key)
-            model = genai.GenerativeModel('gemini-1.5-flash')
             prompt = self._build_prompt(lead_data, signals, custom_instructions, tone)
-            resp = model.generate_content(prompt + "\n\nOutput strictly valid JSON with no markdown formatting.")
-            text = resp.text.strip()
-            if text.startswith("```"):
-                text = re.sub(r"^```(?:json)?\n", "", text)
-                text = re.sub(r"\n```$", "", text)
-            return json.loads(text)
+            
+            # 1. Try modern google-genai SDK
+            try:
+                from google import genai
+                from google.genai import types
+                client = genai.Client(api_key=self.gemini_key)
+                system_instruction = "You are Sakha, a world-class AI sales intelligence agent. Output strictly valid JSON matching the schema."
+                
+                for model_name in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.5-pro", "gemini-1.5-flash"]:
+                    try:
+                        resp = client.models.generate_content(
+                            model=model_name,
+                            contents=prompt,
+                            config=types.GenerateContentConfig(
+                                system_instruction=system_instruction,
+                                response_mime_type="application/json",
+                                temperature=0.5,
+                            )
+                        )
+                        text = resp.text.strip() if resp and resp.text else ""
+                        if text.startswith("```"):
+                            text = re.sub(r"^```(?:json)?\n", "", text)
+                            text = re.sub(r"\n```$", "", text)
+                        parsed = json.loads(text)
+                        return self._sanitize_dict(parsed)
+                    except Exception as model_err:
+                        print(f"[AnalysisChain] Gemini model {model_name} attempt error: {model_err}")
+                        continue
+            except ImportError:
+                # 2. Fallback to legacy google.generativeai if google-genai is not installed
+                import google.generativeai as legacy_genai
+                legacy_genai.configure(api_key=self.gemini_key)
+                for model_name in ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash']:
+                    try:
+                        model = legacy_genai.GenerativeModel(model_name)
+                        resp = model.generate_content(prompt + "\n\nOutput strictly valid JSON with no markdown formatting.")
+                        text = resp.text.strip() if resp and resp.text else ""
+                        if text.startswith("```"):
+                            text = re.sub(r"^```(?:json)?\n", "", text)
+                            text = re.sub(r"\n```$", "", text)
+                        parsed = json.loads(text)
+                        return self._sanitize_dict(parsed)
+                    except Exception:
+                        continue
+            return None
         except Exception as e:
             print(f"[AnalysisChain] Gemini execution error: {e}")
             return None
@@ -226,14 +319,29 @@ Return JSON with exactly these keys:
 
         if signals.get("unanswered_promise"):
             score += 3
-            reasons.append("Unanswered promise detected in thread — immediate follow-up required.")
+            reasons.append("Unanswered promise detected in thread - immediate follow-up required.")
+            
+        if signals.get("meeting_requested"):
+            score += 4
+            reasons.append("Meeting or call was requested by the prospect.")
         elif signals.get("pricing_requested"):
             score += 2
             reasons.append("Prospect inquired about pricing or terms.")
-        
-        if signals.get("demo_mentioned"):
+        elif signals.get("call_scheduled"):
+            score += 3
+            reasons.append("Call was scheduled in the thread.")
+        elif signals.get("call_confirmed"):
+            score += 2
+            reasons.append("Call was confirmed by the prospect.")   
+        elif signals.get("call_rescheduled"):
+            score += 2
+            reasons.append("Call was rescheduled by the prospect.")   
+        elif signals.get("demo_mentioned"):
             score += 1
             reasons.append("Demo, presentation, or review call discussed.")
+        elif signals.get("chat"):
+            score += 1
+            reasons.append("Chat or inquiry was initiated by the prospect.")
 
         if signals.get("last_sender_is_prospect"):
             score += 2
@@ -244,7 +352,7 @@ Return JSON with exactly these keys:
         # Bound score between 1 and 10
         score = max(1, min(10, score))
         
-        level = "Critical" if score >= 9 else ("High" if score >= 7 else ("Medium" if score >= 4 else "Low"))
+        level = "Critical" if score >= 8.5 else ("High" if score >= 7.5 else ("Medium" if score >= 4 else "Low"))
         
         prospect_name = lead_data.get("name", "Prospect")
         company = lead_data.get("company", "Company")

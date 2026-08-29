@@ -42,6 +42,9 @@ def get_lead_by_id(lead_id: str) -> Optional[Dict[str, Any]]:
     for l in leads:
         if str(l.get("id")) == str(lead_id):
             return l
+    for l in get_demo_leads():
+        if str(l.get("id")) == str(lead_id):
+            return l
     return None
 
 def set_current_leads(leads: List[Dict[str, Any]]) -> None:
