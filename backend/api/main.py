@@ -1,12 +1,15 @@
 """
 FastAPI Backend Application for Sakha — AI Sales Follow-Up Agent.
-Provides REST API endpoints for prioritized prospects, lead details,
-interactive RAG sales intelligence chat, draft creation, and sync operations.
+Provides unified REST API endpoints and full-stack integration with the React Dashboard.
 """
 
 from typing import Optional, Dict, Any, List
-from fastapi import FastAPI, HTTPException, Body
+import os
+from pathlib import Path
+from fastapi import FastAPI, APIRouter, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from backend.config import settings
@@ -20,7 +23,7 @@ from backend.ingestion.run_pipeline import run_ingestion_pipeline
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
-    description="Backend API connecting Gmail RAG pipeline with React Dashboard"
+    description="Backend API and Integrated React UI for Sakha AI Sales Follow-Up Agent"
 )
 
 # Enable CORS for frontend development
@@ -50,17 +53,10 @@ class GmailConnectRequest(BaseModel):
     email: str
     app_password: str
 
-# ----------------- Routes -----------------
+# ----------------- Core API Router -----------------
+api_router = APIRouter()
 
-@app.on_event("startup")
-async def startup_event():
-    """Seed ChromaDB with demo data on startup."""
-    try:
-        run_ingestion_pipeline()
-    except Exception as e:
-        print(f"[API] Startup indexing notice: {e}")
-
-@app.get("/health")
+@api_router.get("/health")
 def health_check():
     """Returns application status, LLM engine, and Gmail connection state."""
     gmail_status = gmail_client.get_status()
@@ -72,7 +68,7 @@ def health_check():
         "gmail": gmail_status
     }
 
-@app.get("/stats")
+@api_router.get("/stats")
 def get_dashboard_stats():
     """Returns aggregated executive dashboard metrics."""
     leads = get_all_leads()
@@ -94,14 +90,10 @@ def get_dashboard_stats():
         "is_live_gmail": gmail_client.is_authenticated
     }
 
-@app.get("/leads")
+@api_router.get("/leads")
 def list_leads(urgency_min: Optional[int] = None, search: Optional[str] = None):
-    """
-    Returns prioritized prospects sorted by urgency score.
-    """
+    """Returns prioritized prospects sorted by urgency score."""
     leads = get_all_leads()
-    
-    # Sort descending by urgency score
     sorted_leads = sorted(leads, key=lambda x: x.get("urgency", 0), reverse=True)
     
     if urgency_min is not None:
@@ -116,24 +108,21 @@ def list_leads(urgency_min: Optional[int] = None, search: Optional[str] = None):
         
     return sorted_leads
 
-@app.get("/lead/{lead_id}")
+@api_router.get("/lead/{lead_id}")
 def get_lead_details(lead_id: str):
     """Returns complete prospect profile, conversation thread, and AI recommendations."""
     lead = get_lead_by_id(lead_id)
     if not lead:
         raise HTTPException(status_code=404, detail="Lead not found")
         
-    # Re-evaluate dynamic signals
     signals = analysis_chain.calculate_deterministic_signals(lead)
     lead_copy = dict(lead)
     lead_copy["signals"] = {**lead.get("signals", {}), **signals}
     return lead_copy
 
-@app.post("/draft/{lead_id}")
+@api_router.post("/draft/{lead_id}")
 def create_gmail_draft_for_lead(lead_id: str, request: Optional[CreateDraftRequest] = None):
-    """
-    Creates a real or simulated Gmail draft for the prospect.
-    """
+    """Creates a real or simulated Gmail draft for the prospect."""
     lead = get_lead_by_id(lead_id)
     if not lead:
         raise HTTPException(status_code=404, detail="Lead not found")
@@ -145,11 +134,9 @@ def create_gmail_draft_for_lead(lead_id: str, request: Optional[CreateDraftReque
     result = gmail_client.create_draft(to_email=to_email, subject=subject, body_text=body_text)
     return result
 
-@app.post("/draft/generate")
+@api_router.post("/draft/generate")
 def generate_custom_draft(payload: GenerateDraftRequest):
-    """
-    Dynamically generates or regenerates a draft using specified tone and custom instructions.
-    """
+    """Dynamically generates or regenerates a draft using specified tone and custom instructions."""
     lead = get_lead_by_id(payload.lead_id)
     if not lead:
         raise HTTPException(status_code=404, detail="Lead not found")
@@ -159,22 +146,17 @@ def generate_custom_draft(payload: GenerateDraftRequest):
         tone=payload.tone or "Professional",
         custom_prompt=payload.custom_instructions
     )
-    # Cache generated draft
     update_lead_draft(payload.lead_id, draft)
     return draft
 
-@app.post("/chat")
+@api_router.post("/chat")
 def query_sales_copilot(payload: ChatQueryRequest):
-    """
-    Answers sales inquiries using RAG retrieval over indexed conversation chunks.
-    """
+    """Answers sales inquiries using RAG retrieval over indexed conversation chunks."""
     query = payload.query.strip()
     if not query:
         raise HTTPException(status_code=400, detail="Query cannot be empty")
         
-    # 1. Retrieve context
     chunks = rag_retriever.query_inbox(query, top_k=4)
-    # 2. Synthesize response
     answer = analysis_chain.answer_rag_query(query, chunks)
     
     return {
@@ -191,12 +173,9 @@ def query_sales_copilot(payload: ChatQueryRequest):
         ]
     }
 
-@app.post("/gmail/connect")
+@api_router.post("/gmail/connect")
 def connect_gmail(payload: GmailConnectRequest):
-    """
-    Connect to Gmail using email + App Password (IMAP),
-    then immediately ingests, analyzes, and indexes real emails.
-    """
+    """Connects to Gmail via IMAP and triggers ingestion pipeline."""
     email_addr = payload.email.strip()
     app_pw = payload.app_password.strip()
 
@@ -205,7 +184,6 @@ def connect_gmail(payload: GmailConnectRequest):
 
     result = gmail_client.configure_imap(email_addr, app_pw)
     if result.get("success"):
-        # Automatically pull and analyze real emails!
         try:
             pipeline_result = run_ingestion_pipeline()
             result["pipeline"] = pipeline_result
@@ -215,12 +193,12 @@ def connect_gmail(payload: GmailConnectRequest):
             
     return result
 
-@app.get("/gmail/status")
+@api_router.get("/gmail/status")
 def gmail_status():
     """Returns current Gmail connection status and auth mode."""
     return gmail_client.get_status()
 
-@app.post("/sync")
+@api_router.post("/sync")
 def trigger_inbox_sync():
     """Manually triggers Gmail ingestion, AI analysis, and local re-indexing."""
     result = run_ingestion_pipeline()
@@ -229,6 +207,43 @@ def trigger_inbox_sync():
         "message": f"Synced {result.get('leads_processed', 0)} conversation threads from {result.get('auth_mode', 'Gmail')}",
         "details": result
     }
+
+# Include router on both root and /api prefixes so all paths are supported
+app.include_router(api_router, prefix="")
+app.include_router(api_router, prefix="/api")
+
+# ----------------- Integrated Frontend Static Mounting -----------------
+FRONTEND_DIST = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
+
+if FRONTEND_DIST.exists():
+    # Mount built assets
+    assets_dir = FRONTEND_DIST / "assets"
+    if assets_dir.exists():
+        app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="frontend-assets")
+    
+    # Catch-all SPA route
+    @app.get("/{full_path:path}")
+    def serve_frontend_spa(full_path: str):
+        # Allow API docs and OpenAPI schema through
+        if full_path.startswith("docs") or full_path.startswith("openapi.json") or full_path.startswith("redoc"):
+            raise HTTPException(status_code=404, detail="Not Found")
+        
+        target_file = FRONTEND_DIST / full_path
+        if target_file.exists() and target_file.is_file():
+            return FileResponse(str(target_file))
+        
+        index_file = FRONTEND_DIST / "index.html"
+        if index_file.exists():
+            return FileResponse(str(index_file))
+        raise HTTPException(status_code=404, detail="Frontend build index.html not found")
+
+@app.on_event("startup")
+async def startup_event():
+    """Seed ChromaDB with demo/cached data on startup."""
+    try:
+        run_ingestion_pipeline()
+    except Exception as e:
+        print(f"[API] Startup indexing notice: {e}")
 
 if __name__ == "__main__":
     import uvicorn
