@@ -192,6 +192,8 @@ Provide a concise, direct, executive-ready sales summary with clear actionable n
         text = text.replace('\u2018', "'").replace('\u2019', "'").replace('\u201a', "'").replace('\u201b', "'")
         text = text.replace('\u201c', '"').replace('\u201d', '"').replace('\u201e', '"').replace('\u201f', '"')
         text = text.replace('\u2026', '...')
+        # Encode to clean ascii ignoring unencodable emojis for clean display
+        text = text.encode("ascii", "ignore").decode("ascii")
         return text
 
     def _sanitize_dict(self, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -206,113 +208,102 @@ Provide a concise, direct, executive-ready sales summary with clear actionable n
         return result
 
     def _call_groq(self, lead_data: Dict[str, Any], signals: Dict[str, Any], custom_instructions: Optional[str], tone: str) -> Optional[Dict[str, Any]]:
-        try:
-            from groq import Groq
-            client = Groq(api_key=self.groq_key)
-            prompt = self._build_prompt(lead_data, signals, custom_instructions, tone)
-            
-            for model_name in ["qwen/qwen3.6-27b", "openai/gpt-oss-120b", "groq/compound"]:
-                try:
-                    resp = client.chat.completions.create(
-                        model=model_name,
-                        messages=[
-                            {"role": "system", "content": "You are Sakha, a world-class AI sales intelligence agent. Output strictly valid JSON matching the schema."},
-                            {"role": "user", "content": prompt}
-                        ],
-                        response_format={"type": "json_object"},
-                        temperature=0.5
-                    )
-                    content = resp.choices[0].message.content.strip()
-                    # Strip any markdown fences if present
+        if not self.groq_key:
+            return None
+        import requests
+        prompt = self._build_prompt(lead_data, signals, custom_instructions, tone)
+        headers = {
+            "Authorization": f"Bearer {self.groq_key}",
+            "Content-Type": "application/json"
+        }
+        
+        for model_name in ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "qwen/qwen3.6-27b"]:
+            try:
+                payload = {
+                    "model": model_name,
+                    "messages": [
+                        {"role": "system", "content": f"You are Sakha, an elite AI sales copilot. Generate an authentic, tailored email follow-up matching the '{tone}' tone exactly. Output strictly valid JSON."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    "response_format": {"type": "json_object"},
+                    "temperature": 0.4
+                }
+                res = requests.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload, timeout=1.2)
+                if res.status_code == 200:
+                    content = res.json()["choices"][0]["message"]["content"].strip()
                     if content.startswith("```"):
                         content = re.sub(r"^```(?:json)?\n", "", content)
                         content = re.sub(r"\n```$", "", content)
                     parsed = json.loads(content)
                     return self._sanitize_dict(parsed)
-                except Exception:
-                    continue
-            return None
-        except Exception as e:
-            print(f"[AnalysisChain] Groq execution error: {e}")
-            return None
+            except Exception:
+                continue
+        return None
 
     def _call_gemini(self, lead_data: Dict[str, Any], signals: Dict[str, Any], custom_instructions: Optional[str], tone: str) -> Optional[Dict[str, Any]]:
-        try:
-            prompt = self._build_prompt(lead_data, signals, custom_instructions, tone)
-            
-            # 1. Try modern google-genai SDK
+        if not self.gemini_key:
+            return None
+        import requests
+        prompt = self._build_prompt(lead_data, signals, custom_instructions, tone)
+        
+        for model_name in ["gemini-flash-latest", "gemini-2.5-flash", "gemini-1.5-flash"]:
             try:
-                from google import genai
-                from google.genai import types
-                client = genai.Client(api_key=self.gemini_key)
-                system_instruction = "You are Sakha, a world-class AI sales intelligence agent. Output strictly valid JSON matching the schema."
-                
-                for model_name in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.5-pro", "gemini-1.5-flash"]:
-                    try:
-                        resp = client.models.generate_content(
-                            model=model_name,
-                            contents=prompt,
-                            config=types.GenerateContentConfig(
-                                system_instruction=system_instruction,
-                                response_mime_type="application/json",
-                                temperature=0.5,
-                            )
-                        )
-                        text = resp.text.strip() if resp and resp.text else ""
-                        if text.startswith("```"):
-                            text = re.sub(r"^```(?:json)?\n", "", text)
-                            text = re.sub(r"\n```$", "", text)
-                        parsed = json.loads(text)
-                        return self._sanitize_dict(parsed)
-                    except Exception as model_err:
-                        print(f"[AnalysisChain] Gemini model {model_name} attempt error: {model_err}")
-                        continue
-            except ImportError:
-                # 2. Fallback to legacy google.generativeai if google-genai is not installed
-                import google.generativeai as legacy_genai
-                legacy_genai.configure(api_key=self.gemini_key)
-                for model_name in ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash']:
-                    try:
-                        model = legacy_genai.GenerativeModel(model_name)
-                        resp = model.generate_content(prompt + "\n\nOutput strictly valid JSON with no markdown formatting.")
-                        text = resp.text.strip() if resp and resp.text else ""
-                        if text.startswith("```"):
-                            text = re.sub(r"^```(?:json)?\n", "", text)
-                            text = re.sub(r"\n```$", "", text)
-                        parsed = json.loads(text)
-                        return self._sanitize_dict(parsed)
-                    except Exception:
-                        continue
-            return None
-        except Exception as e:
-            print(f"[AnalysisChain] Gemini execution error: {e}")
-            return None
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={self.gemini_key}"
+                payload = {
+                    "contents": [{"parts": [{"text": prompt + "\n\nOutput strictly valid JSON with keys: urgency, urgency_level, reason, next_action, draft_subject, draft_message"}]}],
+                    "generationConfig": {"temperature": 0.4}
+                }
+                res = requests.post(url, json=payload, timeout=1.2)
+                if res.status_code == 200:
+                    data = res.json()
+                    text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+                    if text.startswith("```"):
+                        text = re.sub(r"^```(?:json)?\n", "", text)
+                        text = re.sub(r"\n```$", "", text)
+                    parsed = json.loads(text)
+                    return self._sanitize_dict(parsed)
+            except Exception:
+                continue
+        return None
 
     def _build_prompt(self, lead_data: Dict[str, Any], signals: Dict[str, Any], custom_instructions: Optional[str], tone: str) -> str:
-        return f"""Analyze this sales conversation:
-Prospect: {lead_data.get('name')} ({lead_data.get('company')})
-Email: {lead_data.get('email')}
-Tone Requested: {tone}
+        tone_guidelines = {
+            "Short & Direct": "Keep the email to 2-3 sentences maximum. Be ultra-concise, zero fluff, straight to the point, and end with a clear binary question or single next step.",
+            "Warm & Friendly": "Use an appreciative, relationship-driven, enthusiastic, and warm tone. Greet warmly (e.g. 'Hope you are having a wonderful week!'), express gratitude, and offer help supportively.",
+            "Urgent / Action-Oriented": "Use a fast-paced, action-oriented, time-sensitive tone. Highlight timeline preservation, upcoming deadlines, or securing terms promptly. Propose an immediate 10-minute sync today or tomorrow.",
+            "Professional": "Use a polished, formal corporate executive tone. Focus on structured value, professional courtesy, and clear next steps."
+        }
+        
+        guideline = tone_guidelines.get(tone, "Write a professional, context-aware follow-up email.")
+        
+        return f"""Analyze this prospect email thread and compose a tailored follow-up draft:
+Prospect Name: {lead_data.get('name')}
+Company: {lead_data.get('company')}
+Email Address: {lead_data.get('email')}
+Tone Requested: {tone} ({guideline})
 Custom Rep Instructions: {custom_instructions or 'None'}
 
-Conversation Thread:
+Conversation Thread Context:
 {json.dumps(lead_data.get('thread', []), indent=2)}
 
-Computed Signals:
+Detected Signals:
 {json.dumps(signals, indent=2)}
 
-Return JSON with exactly these keys:
+Tone Requirement:
+{guideline}
+
+Output strictly valid JSON with exactly these keys:
 {{
   "urgency": <integer 1-10>,
   "urgency_level": <"Critical"|"High"|"Medium"|"Low">,
-  "reason": "<one concise paragraph explaining why this prospect requires action>",
+  "reason": "<one concise sentence explaining why this prospect requires follow-up>",
   "next_action": "<one specific sentence tactical next action>",
-  "draft_subject": "<compelling contextual email subject>",
-  "draft_message": "<personalized follow-up email body ready to send>"
+  "draft_subject": "<contextual Re: subject line>",
+  "draft_message": "<full email body crafted in the requested {tone} tone>"
 }}"""
 
     def _heuristic_analysis(self, lead_data: Dict[str, Any], signals: Dict[str, Any], custom_instructions: Optional[str], tone: str) -> Dict[str, Any]:
-        """Provides expert deterministic analysis and urgency scoring."""
+        """Provides expert deterministic analysis and rich tone-specific drafts."""
         # Calculate dynamic urgency score (1-10)
         score = 5
         reasons = []
@@ -349,39 +340,70 @@ Return JSON with exactly these keys:
         else:
             score -= 1
 
-        # Bound score between 1 and 10
         score = max(1, min(10, score))
-        
         level = "Critical" if score >= 8.5 else ("High" if score >= 7.5 else ("Medium" if score >= 4 else "Low"))
         
         prospect_name = lead_data.get("name", "Prospect")
         company = lead_data.get("company", "Company")
         subject = lead_data.get("subject", "our discussion")
+        clean_subject = subject.replace("Re:", "").replace("RE:", "").strip()
         
-        reason_text = " ".join(reasons) if reasons else f"Recent message thread regarding '{subject[:60]}' with {prospect_name}."
-        next_action_text = f"Send personalized follow-up to {prospect_name} regarding {subject[:50]}." if signals.get("last_sender_is_prospect") else f"Check in with {prospect_name} to confirm receipt and maintain momentum."
+        reason_text = " ".join(reasons) if reasons else f"Active message thread regarding '{clean_subject[:60]}' with {prospect_name}."
+        next_action_text = f"Send personalized follow-up to {prospect_name} regarding {clean_subject[:50]}." if signals.get("last_sender_is_prospect") else f"Check in with {prospect_name} to confirm receipt and maintain momentum."
 
         name = prospect_name.split()[0]
         
-        # Tone adjustments
+        # Distinct, rich templates for each tone:
         if tone == "Short & Direct":
-            body = f"Hi {name},\n\nFollowing up on {subject}. Let me know if you are free for a brief sync tomorrow to discuss next steps.\n\nBest regards,\nSathwik"
+            body = (
+                f"Hi {name},\n\n"
+                f"Following up on {clean_subject} for {company}.\n\n"
+                f"Are you free for a quick 5-minute sync tomorrow at 11:00 AM to review next steps?\n\n"
+                f"Best,\n"
+                f"Sathwik"
+            )
         elif tone == "Warm & Friendly":
-            body = f"Hi {name},\n\nHope your week is going great!\n\nI wanted to check in regarding {subject} and see how things are progressing on your side. Would love to answer any questions you might have.\n\nWarm regards,\nSathwik"
+            body = (
+                f"Hi {name},\n\n"
+                f"Hope you are having a wonderful week!\n\n"
+                f"I wanted to check in regarding our conversation on {clean_subject}. We would love to partner with {company} and make sure all your questions are answered.\n\n"
+                f"Please let me know if you would like to jump on a quick call this week, or if I can share any additional information.\n\n"
+                f"Warm regards,\n"
+                f"Sathwik"
+            )
         elif tone == "Urgent / Action-Oriented":
-            body = f"Hi {name},\n\nFollowing up right away on {subject} so we can keep things moving on schedule. Please let me know your availability for a quick call today.\n\nBest regards,\nSathwik"
-        else:
-            body = f"Hi {name},\n\nThank you for reaching out regarding {subject}.\n\nPlease let me know if you have any questions or if you'd like to schedule time this week to review next steps.\n\nBest regards,\nSathwik"
+            body = (
+                f"Hi {name},\n\n"
+                f"Following up right away on {clean_subject} so we don't hold up your timeline for {company}.\n\n"
+                f"I have everything ready on our end—could we do a brief 10-minute call today or tomorrow morning to lock in next steps?\n\n"
+                f"Best regards,\n"
+                f"Sathwik"
+            )
+        else:  # Professional (Default)
+            body = (
+                f"Hi {name},\n\n"
+                f"Thank you for your time regarding {clean_subject}.\n\n"
+                f"I am following up to review our discussion for {company} and address any questions your team may have as we move forward.\n\n"
+                f"Please let me know your availability this week for a brief review session.\n\n"
+                f"Best regards,\n"
+                f"Sathwik"
+            )
 
         if custom_instructions:
-            body = f"Hi {name},\n\n{custom_instructions}\n\nLooking forward to hearing from you.\n\nBest regards,\nSathwik"
+            body = (
+                f"Hi {name},\n\n"
+                f"{custom_instructions}\n\n"
+                f"Looking forward to hearing from you.\n\n"
+                f"Best regards,\n"
+                f"Sathwik"
+            )
 
         return {
             "urgency": score,
             "urgency_level": level,
             "reason": reason_text,
             "next_action": next_action_text,
-            "draft_subject": f"Re: {subject}",
+            "draft_subject": f"Re: {clean_subject}",
             "draft_message": body,
             "signals": signals
         }
