@@ -19,46 +19,92 @@ from backend.data.demo_leads import get_demo_leads
 
 
 def _decode_header_value(val):
-    """Decode an RFC 2047 encoded email header value."""
+    """Decode an RFC 2047 encoded email header value safely."""
     if val is None:
         return ""
-    parts = decode_header(val)
-    result = []
-    for data, charset in parts:
-        if isinstance(data, bytes):
-            result.append(data.decode(charset or "utf-8", errors="replace"))
-        else:
-            result.append(str(data))
-    text = " ".join(result)
-    # Sanitize unusual quotes and dashes
-    text = text.replace('\u2011', '-').replace('\u2012', '-').replace('\u2013', '-').replace('\u2014', '--')
-    text = text.replace('\u2018', "'").replace('\u2019', "'").replace('\u201c', '"').replace('\u201d', '"')
-    return text
+    try:
+        parts = decode_header(val)
+        result = []
+        for data, charset in parts:
+            if isinstance(data, bytes):
+                result.append(data.decode(charset or "utf-8", errors="replace"))
+            else:
+                result.append(str(data))
+        text = " ".join(result)
+        # Normalize non-standard unicode dashes and quotes
+        text = text.replace('\u2011', '-').replace('\u2012', '-').replace('\u2013', '-').replace('\u2014', '--')
+        text = text.replace('\u2018', "'").replace('\u2019', "'").replace('\u201c', '"').replace('\u201d', '"')
+        text = text.replace('\u2026', '...')
+        # Remove unencodable high-range emojis for clean display
+        text = text.encode("ascii", "ignore").decode("ascii")
+        return text.strip()
+    except Exception:
+        return str(val) if val else ""
+
+
+def _clean_html_text(html_content: str) -> str:
+    """Converts HTML email body to clean, readable plain text without code or CSS."""
+    if not html_content:
+        return ""
+    import html
+    import re
+    # 1. Strip script and style blocks
+    text = re.sub(r"<(style|script|head|meta|link)[^>]*>.*?</\1>", "", html_content, flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
+    # 2. Convert block separators to newlines
+    text = re.sub(r"<(br|p|div|tr|h[1-6])[^>]*>", "\n", text, flags=re.IGNORECASE)
+    # 3. Strip remaining HTML tags
+    text = re.sub(r"<[^>]+>", " ", text)
+    # 4. Unescape HTML entities
+    text = html.unescape(text)
+    # 5. Normalize whitespace and clean lines
+    clean_lines = []
+    for line in text.splitlines():
+        line = re.sub(r"[ \t]+", " ", line).strip()
+        # Filter out common tracking / newsletter noise lines
+        if line and not any(noise in line.lower() for noise in ["view in browser", "unsubscribe here", "click here to unsubscribe"]):
+            clean_lines.append(line)
+    
+    result = "\n".join(clean_lines)
+    # Deduplicate excessive newlines
+    result = re.sub(r"\n{3,}", "\n\n", result)
+    return result.strip()
 
 
 def _extract_body(msg):
     """Extract plain text body from an email.message.Message object."""
+    body_plain = ""
+    body_html = ""
+    
     if msg.is_multipart():
         for part in msg.walk():
             ct = part.get_content_type()
             cd = str(part.get("Content-Disposition", ""))
-            if ct == "text/plain" and "attachment" not in cd:
+            if "attachment" in cd.lower():
+                continue
+            if ct == "text/plain" and not body_plain:
                 payload = part.get_payload(decode=True)
                 if payload:
-                    return payload.decode("utf-8", errors="replace")
-        # Fallback: try text/html
-        for part in msg.walk():
-            ct = part.get_content_type()
-            if ct == "text/html":
+                    body_plain = payload.decode("utf-8", errors="replace")
+            elif ct == "text/html" and not body_html:
                 payload = part.get_payload(decode=True)
                 if payload:
-                    import re
-                    html = payload.decode("utf-8", errors="replace")
-                    return re.sub(r"<[^>]+>", "", html).strip()
+                    body_html = payload.decode("utf-8", errors="replace")
     else:
         payload = msg.get_payload(decode=True)
         if payload:
-            return payload.decode("utf-8", errors="replace")
+            raw = payload.decode("utf-8", errors="replace")
+            if msg.get_content_type() == "text/html":
+                body_html = raw
+            else:
+                body_plain = raw
+
+    if body_plain:
+        # Normalize whitespace
+        lines = [l.strip() for l in body_plain.splitlines() if l.strip()]
+        return "\n".join(lines[:40])
+    elif body_html:
+        return _clean_html_text(body_html)[:2500]
     return ""
 
 
@@ -244,21 +290,21 @@ class GmailClient:
         # ── Demo mode ──
         return get_demo_leads()
 
-    def _fetch_imap_threads(self, max_threads: int = 20) -> List[Dict[str, Any]]:
-        """Fetch recent emails via IMAP using fast batch fetching and convert to lead-like format."""
+    def _fetch_imap_threads(self, max_threads: int = 25) -> List[Dict[str, Any]]:
+        """Fetch recent emails via IMAP using optimized batch fetching and clean prospect extraction."""
         try:
             imap = imaplib.IMAP4_SSL("imap.gmail.com")
             imap.login(self.gmail_email, self.gmail_app_password)
-            imap.select("INBOX")
+            imap.select("INBOX", readonly=True)
 
-            # Search for all emails
+            # Search for latest email IDs
             status, data = imap.search(None, "ALL")
             if status != "OK" or not data or not data[0]:
                 imap.logout()
                 return get_demo_leads()
 
             email_ids = data[0].split()
-            # Pick the top N most recent emails
+            # Pick top N most recent emails
             recent_ids = email_ids[-max_threads:] if len(email_ids) > max_threads else email_ids
             recent_ids_str = ",".join([i.decode() if isinstance(i, bytes) else str(i) for i in recent_ids])
 
@@ -270,6 +316,7 @@ class GmailClient:
                 return get_demo_leads()
 
             thread_map = {}  # group by clean subject line
+            sender_display = settings.sender_display_name
 
             for item in fetch_data:
                 if not isinstance(item, tuple) or len(item) < 2:
@@ -348,6 +395,24 @@ class GmailClient:
                 domain_part = contact_email.split("@")[1].split(".")[0].capitalize() if "@" in contact_email else "Enterprise"
                 company_name = domain_part if domain_part not in ["Gmail", "Yahoo", "Outlook", "Hotmail", "Icloud"] else f"{contact_name}'s Team"
 
+                # Intelligent category classification
+                subj_lower = subj.lower()
+                body_sample = (msgs[-1]["body"] if msgs else "").lower()
+                combined_text = f"{subj_lower} {body_sample}"
+                
+                if any(k in combined_text for k in ["meeting", "scheduled", "calendar", "call", "zoom", "meet"]):
+                    category = "Meeting / Call"
+                elif any(k in combined_text for k in ["pricing", "proposal", "contract", "quote", "cost", "invoice"]):
+                    category = "Pricing & Terms"
+                elif any(k in combined_text for k in ["demo", "walkthrough", "presentation", "trial"]):
+                    category = "Product Demo"
+                elif any(k in combined_text for k in ["connect", "introduction", "partnership", "collaborate", "hackathon", "event"]):
+                    category = "Partnership / Event"
+                else:
+                    category = "Inbound Discussion"
+
+                is_awaiting = not msgs[-1]["is_outbound"] if msgs else False
+
                 threads.append({
                     "id": f"gmail-{idx+1}",
                     "name": contact_name,
@@ -355,21 +420,21 @@ class GmailClient:
                     "company": company_name,
                     "role": "Key Contact",
                     "subject": subj,
-                    "urgency": 6,
-                    "category": "Inbound Conversation",
-                    "status": "Awaiting Response" if not msgs[-1]["is_outbound"] else "Active",
+                    "urgency": 7 if is_awaiting else 5,
+                    "category": category,
+                    "status": "Awaiting Response" if is_awaiting else "Active",
                     "last_contact": thread_data["latest_date"],
-                    "reason": f"Active thread with {len(msgs)} messages discussing '{subj[:80]}'",
-                    "next_action": f"Review message from {contact_name} and send follow-up.",
+                    "reason": f"Active thread with {len(msgs)} message(s) regarding '{subj[:70]}'",
+                    "next_action": f"Send personalized follow-up to {contact_name} regarding {subj[:45]}." if is_awaiting else f"Follow up with {contact_name} to maintain momentum.",
                     "thread": msgs,
                     "signals": {
-                        "buying_intent": "High" if any(k in subj.lower() for k in ["pricing", "demo", "proposal", "contract", "plan", "quote"]) else "Medium",
+                        "buying_intent": "High" if any(k in combined_text for k in ["pricing", "demo", "proposal", "contract", "cost"]) else "Medium",
                         "response_lag_days": 1,
                         "unanswered_promise": False
                     },
                     "draft": {
                         "subject": f"Re: {subj}",
-                        "body": f"Hi {contact_name},\n\nThank you for reaching out regarding {subj}.\n\nI wanted to follow up and see if you had any questions or if we should schedule a brief call this week.\n\nBest regards,\nSathwik",
+                        "body": f"Hi {contact_name.split()[0]},\n\nThank you for reaching out regarding {subj}.\n\nI am following up to review our discussion for {company_name} and address any questions your team may have as we move forward.\n\nPlease let me know your availability this week for a brief review session.\n\nBest regards,\n{sender_display}",
                         "tone": "Professional"
                     },
                     "deal_size": ""
