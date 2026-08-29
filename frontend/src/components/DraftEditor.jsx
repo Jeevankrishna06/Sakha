@@ -75,14 +75,14 @@ export default function DraftEditor({ lead, onDraftCreated, showToast }) {
       {/* Section header */}
       <div className="flex items-center justify-between pb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4" style={{ color: '#00d084' }} />
-          <h4 className="text-xs font-bold uppercase tracking-widest" style={{ color: '#c9d1e0' }}>
+          <Sparkles className="w-4 h-4" style={{ color: '#6366f1' }} />
+          <h4 className="text-xs font-bold uppercase tracking-widest" style={{ color: '#e8ecf4' }}>
             Personalized Draft
           </h4>
         </div>
         <span
           className="text-[10px] font-semibold px-2 py-0.5 rounded-lg"
-          style={{ background: 'rgba(0,208,132,0.08)', color: '#00d084', border: '1px solid rgba(0,208,132,0.2)' }}
+          style={{ background: 'rgba(34,211,238,0.1)', color: '#22d3ee', border: '1px solid rgba(34,211,238,0.2)' }}
         >
           Context-Aware RAG
         </span>
@@ -90,7 +90,7 @@ export default function DraftEditor({ lead, onDraftCreated, showToast }) {
 
       {/* Tone pills */}
       <div>
-        <label className="block text-[10px] font-semibold uppercase tracking-widest mb-2" style={{ color: '#4a5568' }}>
+        <label className="block text-[10px] font-semibold uppercase tracking-widest mb-2" style={{ color: '#94a3b8' }}>
           Tone
         </label>
         <div className="grid grid-cols-4 gap-1.5">
@@ -103,10 +103,21 @@ export default function DraftEditor({ lead, onDraftCreated, showToast }) {
                 disabled={isRegenerating}
                 className="py-2 rounded-xl text-xs font-semibold transition-all active:scale-95 disabled:opacity-40"
                 style={{
-                  background: active ? 'rgba(0,208,132,0.12)' : 'rgba(255,255,255,0.04)',
-                  color: active ? '#00d084' : '#8b98b4',
-                  border: `1px solid ${active ? 'rgba(0,208,132,0.35)' : 'rgba(255,255,255,0.07)'}`,
-                  boxShadow: active ? '0 0 16px rgba(0,208,132,0.1)' : ''
+                  background: active ? 'linear-gradient(180deg, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0.05) 100%)' : 'rgba(255,255,255,0.035)',
+                  backdropFilter: 'blur(20px)',
+                  color: active ? '#6366f1' : '#94a3b8',
+                  border: `1px solid ${active ? 'rgba(99,102,241,0.5)' : 'rgba(255,255,255,0.06)'}`,
+                  boxShadow: active ? '0 0 16px rgba(99,102,241,0.2), inset 0 1px 0 rgba(255,255,255,0.1)' : 'inset 0 1px 0 rgba(255,255,255,0.02)'
+                }}
+                onMouseEnter={e => {
+                  if (!e.currentTarget.disabled && !active) {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!e.currentTarget.disabled && !active) {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.035)';
+                  }
                 }}
               >
                 <span className="block text-base leading-none mb-0.5">{t.icon}</span>
@@ -119,21 +130,25 @@ export default function DraftEditor({ lead, onDraftCreated, showToast }) {
 
       {/* Recipient / subject */}
       <div
-        className="rounded-xl overflow-hidden"
-        style={{ border: '1px solid rgba(255,255,255,0.07)', background: 'rgba(255,255,255,0.02)' }}
+        className="rounded-xl overflow-hidden shadow-inner"
+        style={{
+          border: '1px solid rgba(255,255,255,0.06)',
+          background: 'rgba(255,255,255,0.02)',
+          backdropFilter: 'blur(20px)'
+        }}
       >
-        <div className="flex items-center gap-3 px-3 py-2.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-          <span className="text-[11px] font-semibold w-14 shrink-0" style={{ color: '#4a5568' }}>To:</span>
-          <span className="text-xs font-mono" style={{ color: '#8b98b4' }}>{lead.email}</span>
+        <div className="flex items-center gap-3 px-3 py-2.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <span className="text-[11px] font-semibold w-14 shrink-0" style={{ color: '#475569' }}>To:</span>
+          <span className="text-xs font-mono" style={{ color: '#94a3b8' }}>{lead.email}</span>
         </div>
         <div className="flex items-center gap-3 px-3 py-2.5">
-          <span className="text-[11px] font-semibold w-14 shrink-0" style={{ color: '#4a5568' }}>Subject:</span>
+          <span className="text-[11px] font-semibold w-14 shrink-0" style={{ color: '#475569' }}>Subject:</span>
           <input
             type="text"
             value={subject}
             onChange={e => setSubject(e.target.value)}
             className="flex-1 bg-transparent text-xs focus:outline-none"
-            style={{ color: '#f0f4fc' }}
+            style={{ color: '#e8ecf4' }}
           />
         </div>
       </div>
@@ -148,26 +163,34 @@ export default function DraftEditor({ lead, onDraftCreated, showToast }) {
           placeholder="AI follow-up draft will appear here…"
           className="w-full rounded-xl p-4 text-xs leading-relaxed resize-none focus:outline-none transition-all disabled:opacity-50"
           style={{
-            background: 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(255,255,255,0.07)',
-            color: '#c9d1e0',
-            fontFamily: 'inherit'
+            background: 'rgba(255,255,255,0.02)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255,255,255,0.06)',
+            color: '#e8ecf4',
+            fontFamily: 'inherit',
+            boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2)'
           }}
-          onFocus={e => { e.currentTarget.style.border = '1px solid rgba(0,208,132,0.3)'; }}
-          onBlur={e => { e.currentTarget.style.border = '1px solid rgba(255,255,255,0.07)'; }}
+          onFocus={e => {
+            e.currentTarget.style.border = '1px solid rgba(99,102,241,0.5)';
+            e.currentTarget.style.boxShadow = '0 0 12px rgba(99,102,241,0.2), inset 0 2px 4px rgba(0,0,0,0.2)';
+          }}
+          onBlur={e => {
+            e.currentTarget.style.border = '1px solid rgba(255,255,255,0.06)';
+            e.currentTarget.style.boxShadow = 'inset 0 2px 4px rgba(0,0,0,0.2)';
+          }}
         />
         {isRegenerating && (
           <div
             className="absolute inset-0 rounded-xl flex flex-col items-center justify-center gap-3"
-            style={{ background: 'rgba(13,17,23,0.85)', backdropFilter: 'blur(8px)' }}
+            style={{ background: 'rgba(5,8,16,0.7)', backdropFilter: 'blur(8px)' }}
           >
             <div
-              className="w-10 h-10 rounded-full flex items-center justify-center"
-              style={{ background: 'rgba(0,208,132,0.1)', border: '1px solid rgba(0,208,132,0.3)' }}
+              className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg"
+              style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)' }}
             >
-              <RefreshCw className="w-5 h-5 animate-spin" style={{ color: '#00d084' }} />
+              <RefreshCw className="w-5 h-5 animate-spin" style={{ color: '#6366f1' }} />
             </div>
-            <span className="text-xs font-semibold" style={{ color: '#00d084' }}>
+            <span className="text-xs font-semibold" style={{ color: '#6366f1' }}>
               Regenerating with <em>{tone}</em> tone…
             </span>
           </div>
@@ -183,35 +206,53 @@ export default function DraftEditor({ lead, onDraftCreated, showToast }) {
           placeholder="Custom instruction (e.g. 'Mention 10% pilot discount if signed by Friday')…"
           className="flex-1 px-3.5 py-2.5 rounded-xl text-xs focus:outline-none transition-all"
           style={{
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.07)',
-            color: '#f0f4fc'
+            background: 'rgba(255,255,255,0.035)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255,255,255,0.06)',
+            color: '#e8ecf4',
+            boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)'
           }}
-          onFocus={e => { e.currentTarget.style.border = '1px solid rgba(0,208,132,0.3)'; }}
-          onBlur={e => { e.currentTarget.style.border = '1px solid rgba(255,255,255,0.07)'; }}
+          onFocus={e => {
+            e.currentTarget.style.border = '1px solid rgba(99,102,241,0.5)';
+            e.currentTarget.style.boxShadow = '0 0 10px rgba(99,102,241,0.15), inset 0 1px 2px rgba(0,0,0,0.1)';
+          }}
+          onBlur={e => {
+            e.currentTarget.style.border = '1px solid rgba(255,255,255,0.06)';
+            e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.1)';
+          }}
         />
         <button
           type="submit"
           disabled={isRegenerating || !customPrompt.trim()}
-          className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all active:scale-95 disabled:opacity-40"
-          style={{ background: 'rgba(255,255,255,0.07)', color: '#c9d1e0', border: '1px solid rgba(255,255,255,0.1)' }}
-          onMouseEnter={e => { if (!e.currentTarget.disabled) e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; }}
+          className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all active:scale-95 disabled:opacity-40 shadow-sm"
+          style={{
+            background: 'rgba(255,255,255,0.035)',
+            backdropFilter: 'blur(20px)',
+            color: '#e8ecf4',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}
+          onMouseEnter={e => { if (!e.currentTarget.disabled) e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.035)'; }}
         >
-          <Wand2 className="w-3.5 h-3.5" style={{ color: '#00d084' }} />
+          <Wand2 className="w-3.5 h-3.5" style={{ color: '#6366f1' }} />
           Apply
         </button>
       </form>
 
       {/* Human-in-the-loop notice */}
       <div
-        className="flex items-start gap-3 px-3.5 py-3 rounded-xl text-[11px]"
-        style={{ background: 'rgba(0,208,132,0.04)', border: '1px solid rgba(0,208,132,0.1)', color: '#4a5568' }}
+        className="flex items-start gap-3 px-3.5 py-3 rounded-xl text-[11px] shadow-sm"
+        style={{
+          background: 'rgba(16,185,129,0.05)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(16,185,129,0.15)',
+          color: '#94a3b8'
+        }}
       >
-        <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" style={{ color: '#00d084' }} />
+        <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" style={{ color: '#10b981' }} />
         <span>
-          <strong style={{ color: '#8b98b4' }}>Human-in-the-Loop:</strong> Sakha creates an editable draft in your Gmail.
-          It will <strong>never</strong> send emails automatically.
+          <strong style={{ color: '#e8ecf4' }}>Human-in-the-Loop:</strong> Sakha creates an editable draft in your Gmail.
+          It will <strong style={{ color: '#e8ecf4' }}>never</strong> send emails automatically.
         </span>
       </div>
 
@@ -219,14 +260,19 @@ export default function DraftEditor({ lead, onDraftCreated, showToast }) {
       <div className="flex items-center justify-between gap-3 pt-1">
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all active:scale-95"
-          style={{ background: 'rgba(255,255,255,0.05)', color: '#c9d1e0', border: '1px solid rgba(255,255,255,0.08)' }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.09)'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all active:scale-95 shadow-sm"
+          style={{
+            background: 'rgba(255,255,255,0.035)',
+            backdropFilter: 'blur(20px)',
+            color: '#e8ecf4',
+            border: '1px solid rgba(255,255,255,0.08)'
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.035)'; }}
         >
           {copied
-            ? <><Check className="w-4 h-4" style={{ color: '#00d084' }} /><span style={{ color: '#00d084' }}>Copied!</span></>
-            : <><Copy className="w-4 h-4" />Copy</>
+            ? <><Check className="w-4 h-4" style={{ color: '#10b981' }} /><span style={{ color: '#10b981' }}>Copied!</span></>
+            : <><Copy className="w-4 h-4" style={{ color: '#94a3b8' }} />Copy</>
           }
         </button>
 
@@ -236,8 +282,15 @@ export default function DraftEditor({ lead, onDraftCreated, showToast }) {
               href={createdDraftInfo.gmail_link}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all"
-              style={{ background: 'rgba(255,255,255,0.05)', color: '#00d084', border: '1px solid rgba(0,208,132,0.2)' }}
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-sm"
+              style={{
+                background: 'rgba(34,211,238,0.05)',
+                backdropFilter: 'blur(20px)',
+                color: '#22d3ee',
+                border: '1px solid rgba(34,211,238,0.2)'
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(34,211,238,0.1)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(34,211,238,0.05)'; }}
             >
               Open Gmail <ExternalLink className="w-3.5 h-3.5" />
             </a>
@@ -248,11 +301,12 @@ export default function DraftEditor({ lead, onDraftCreated, showToast }) {
             disabled={isCreatingDraft}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white transition-all active:scale-95 disabled:opacity-50"
             style={{
-              background: 'linear-gradient(135deg, #00d084, #00a86b)',
-              boxShadow: '0 4px 20px rgba(0,208,132,0.25)'
+              background: 'linear-gradient(135deg, #6366f1, #22d3ee)',
+              boxShadow: '0 4px 15px rgba(99,102,241,0.3), inset 0 1px 0 rgba(255,255,255,0.2)',
+              border: 'none'
             }}
-            onMouseEnter={e => { if (!e.currentTarget.disabled) e.currentTarget.style.boxShadow = '0 6px 28px rgba(0,208,132,0.4)'; }}
-            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,208,132,0.25)'; }}
+            onMouseEnter={e => { if (!e.currentTarget.disabled) e.currentTarget.style.boxShadow = '0 6px 20px rgba(34,211,238,0.4), inset 0 1px 0 rgba(255,255,255,0.2)'; }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 4px 15px rgba(99,102,241,0.3), inset 0 1px 0 rgba(255,255,255,0.2)'; }}
           >
             {isCreatingDraft
               ? <><RefreshCw className="w-4 h-4 animate-spin" />Creating…</>

@@ -58,40 +58,41 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
-      style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(12px)' }}
+      style={{ background: 'rgba(5,8,16,0.8)', backdropFilter: 'blur(20px)' }}
       onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
-        className="w-full max-w-xl rounded-3xl flex flex-col overflow-hidden animate-slideUp"
+        className="w-full max-w-xl rounded-2xl flex flex-col overflow-hidden animate-slideUp"
         style={{
-          background: 'rgba(13,17,23,0.98)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          boxShadow: '0 30px 100px rgba(0,0,0,0.8)'
+          background: 'rgba(5,8,16,0.6)',
+          border: '1px solid rgba(255,255,255,0.06)',
+          boxShadow: '0 30px 100px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05)',
+          backdropFilter: 'blur(24px)'
         }}
       >
         {/* Header */}
         <div
           className="flex items-center justify-between px-6 py-4 shrink-0"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
         >
           <div className="flex items-center gap-3">
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
+              style={{ background: 'rgba(255,255,255,0.035)', border: '1px solid rgba(255,255,255,0.06)' }}
             >
-              <Settings className="w-4 h-4" style={{ color: '#8b98b4' }} />
+              <Settings className="w-4 h-4" style={{ color: '#94a3b8' }} />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white">Settings</h3>
-              <p className="text-[11px]" style={{ color: '#4a5568' }}>Gmail, AI Engine & Vector DB</p>
+              <h3 className="text-sm font-bold text-[#e8ecf4]">Settings</h3>
+              <p className="text-[11px]" style={{ color: '#94a3b8' }}>Gmail, AI Engine & Vector DB</p>
             </div>
           </div>
           <button
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-xl transition-all"
-            style={{ background: 'rgba(255,255,255,0.05)', color: '#8b98b4', border: '1px solid rgba(255,255,255,0.08)' }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = '#fff'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#8b98b4'; }}
+            style={{ background: 'rgba(255,255,255,0.035)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.06)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#e8ecf4'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.035)'; e.currentTarget.style.color = '#94a3b8'; }}
           >
             <X className="w-4 h-4" />
           </button>
@@ -104,27 +105,22 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
               Gmail Connection (Email + App Password)
           ═══════════════════════════════════════════ */}
           <div
-            className="rounded-2xl p-5 space-y-4"
-            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
+            className="rounded-2xl p-5 space-y-4 relative overflow-hidden"
+            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02)' }}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between relative z-10">
               <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4" style={{ color: '#00d084' }} />
-                <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#f0f4fc' }}>
+                <Mail className="w-4 h-4" style={{ color: isGmailConnected ? '#10b981' : '#94a3b8' }} />
+                <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#e8ecf4' }}>
                   Gmail Connection
                 </span>
               </div>
               {/* Status badge */}
               <div
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold backdrop-blur-md"
                 style={isGmailConnected
-                  ? { background: 'rgba(0,208,132,0.1)', color: '#00d084', border: '1px solid rgba(0,208,132,0.25)' }
-                  : { background: 'rgba(255,255,255,0.05)', color: '#4a5568', border: '1px solid rgba(255,255,255,0.07)' }
-                }
-              >
-                {isGmailConnected
-                  ? <><Wifi className="w-3 h-3" />Connected</>
-                  : <><WifiOff className="w-3 h-3" />Not Connected</>
+                  ? { background: 'rgba(16,185,129,0.1)', color: '#10b981', border: '1px solid rgba(16,185,129,0.2)' }
+                  : { background: 'rgba(255,255,255,0.05)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.06)' }
                 }
               </div>
             </div>
@@ -132,15 +128,15 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
             {/* Show current status if connected */}
             {isGmailConnected && (
               <div
-                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs"
-                style={{ background: 'rgba(0,208,132,0.06)', border: '1px solid rgba(0,208,132,0.15)' }}
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs backdrop-blur-md relative z-10"
+                style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.15)' }}
               >
-                <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: '#00d084' }} />
+                <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: '#10b981' }} />
                 <div>
-                  <span className="font-semibold" style={{ color: '#00d084' }}>
+                  <span className="font-semibold" style={{ color: '#10b981' }}>
                     {gmailStatus?.mode}
                   </span>
-                  <span className="ml-2" style={{ color: '#4a5568' }}>
+                  <span className="ml-2" style={{ color: '#94a3b8' }}>
                     — Real emails will be fetched on sync
                   </span>
                 </div>
@@ -148,8 +144,8 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
             )}
 
             {/* Email input */}
-            <div className="space-y-1.5">
-              <label className="block text-[11px] font-semibold" style={{ color: '#8b98b4' }}>
+            <div className="space-y-1.5 relative z-10">
+              <label className="block text-[11px] font-semibold" style={{ color: '#94a3b8' }}>
                 Gmail Address
               </label>
               <input
@@ -157,22 +153,22 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
                 value={gmailEmail}
                 onChange={e => setGmailEmail(e.target.value)}
                 placeholder="you@gmail.com"
-                className="w-full px-3.5 py-2.5 rounded-xl text-sm focus:outline-none transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl text-sm focus:outline-none transition-all backdrop-blur-md"
                 style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  color: '#f0f4fc'
+                  background: 'rgba(255,255,255,0.035)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  color: '#e8ecf4'
                 }}
-                onFocus={e => { e.currentTarget.style.border = '1px solid rgba(0,208,132,0.4)'; }}
-                onBlur={e => { e.currentTarget.style.border = '1px solid rgba(255,255,255,0.08)'; }}
+                onFocus={e => { e.currentTarget.style.border = '1px solid rgba(99,102,241,0.4)'; e.currentTarget.style.background = 'rgba(99,102,241,0.05)'; }}
+                onBlur={e => { e.currentTarget.style.border = '1px solid rgba(255,255,255,0.06)'; e.currentTarget.style.background = 'rgba(255,255,255,0.035)'; }}
               />
             </div>
 
             {/* App Password input */}
-            <div className="space-y-1.5">
-              <label className="block text-[11px] font-semibold" style={{ color: '#8b98b4' }}>
+            <div className="space-y-1.5 relative z-10">
+              <label className="block text-[11px] font-semibold" style={{ color: '#94a3b8' }}>
                 App Password
-                <span className="font-normal ml-1" style={{ color: '#4a5568' }}>(not your regular password)</span>
+                <span className="font-normal ml-1" style={{ color: '#475569' }}>(not your regular password)</span>
               </label>
               <div className="relative">
                 <input
@@ -180,20 +176,22 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
                   value={gmailAppPassword}
                   onChange={e => setGmailAppPassword(e.target.value)}
                   placeholder="xxxx xxxx xxxx xxxx"
-                  className="w-full px-3.5 py-2.5 pr-10 rounded-xl text-sm focus:outline-none transition-all font-mono"
+                  className="w-full px-3.5 py-2.5 pr-10 rounded-xl text-sm focus:outline-none transition-all font-mono backdrop-blur-md"
                   style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    color: '#f0f4fc'
+                    background: 'rgba(255,255,255,0.035)',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    color: '#e8ecf4'
                   }}
-                  onFocus={e => { e.currentTarget.style.border = '1px solid rgba(0,208,132,0.4)'; }}
-                  onBlur={e => { e.currentTarget.style.border = '1px solid rgba(255,255,255,0.08)'; }}
+                  onFocus={e => { e.currentTarget.style.border = '1px solid rgba(99,102,241,0.4)'; e.currentTarget.style.background = 'rgba(99,102,241,0.05)'; }}
+                  onBlur={e => { e.currentTarget.style.border = '1px solid rgba(255,255,255,0.06)'; e.currentTarget.style.background = 'rgba(255,255,255,0.035)'; }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
-                  style={{ color: '#4a5568' }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors"
+                  style={{ color: '#475569' }}
+                  onMouseEnter={e => e.currentTarget.style.color = '#94a3b8'}
+                  onMouseLeave={e => e.currentTarget.style.color = '#475569'}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -202,18 +200,18 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
 
             {/* How to get App Password help */}
             <div
-              className="flex items-start gap-2.5 px-3.5 py-2.5 rounded-xl text-[11px]"
-              style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.15)', color: '#8b98b4' }}
+              className="flex items-start gap-2.5 px-3.5 py-2.5 rounded-xl text-[11px] relative z-10 backdrop-blur-md"
+              style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.15)', color: '#94a3b8' }}
             >
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" style={{ color: '#f59e0b' }} />
               <div className="space-y-1">
                 <div>
                   <strong style={{ color: '#f59e0b' }}>How to get an App Password:</strong>
                 </div>
-                <ol className="list-decimal ml-4 space-y-0.5" style={{ color: '#4a5568' }}>
-                  <li>Go to <a href="https://myaccount.google.com/security" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: '#3b82f6' }}>myaccount.google.com/security</a></li>
-                  <li>Enable <strong style={{ color: '#8b98b4' }}>2-Step Verification</strong> if not already on</li>
-                  <li>Search for <strong style={{ color: '#8b98b4' }}>App Passwords</strong> in the search bar</li>
+                <ol className="list-decimal ml-4 space-y-0.5" style={{ color: '#94a3b8' }}>
+                  <li>Go to <a href="https://myaccount.google.com/security" target="_blank" rel="noopener noreferrer" className="underline transition-colors hover:text-[#22d3ee]" style={{ color: '#6366f1' }}>myaccount.google.com/security</a></li>
+                  <li>Enable <strong style={{ color: '#e8ecf4' }}>2-Step Verification</strong> if not already on</li>
+                  <li>Search for <strong style={{ color: '#e8ecf4' }}>App Passwords</strong> in the search bar</li>
                   <li>Create a new app password (name it "Sakha")</li>
                   <li>Copy the 16-character code and paste it above</li>
                 </ol>
@@ -225,13 +223,13 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
               type="button"
               onClick={handleConnectGmail}
               disabled={isConnecting || !gmailEmail.trim() || !gmailAppPassword.trim()}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all active:scale-95 disabled:opacity-40"
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all active:scale-95 disabled:opacity-40 relative z-10"
               style={{
-                background: 'linear-gradient(135deg, #00d084, #00a86b)',
-                boxShadow: '0 4px 20px rgba(0,208,132,0.2)'
+                background: 'linear-gradient(135deg, #10b981, #059669)',
+                boxShadow: '0 4px 20px rgba(16,185,129,0.2), inset 0 1px 0 rgba(255,255,255,0.2)'
               }}
-              onMouseEnter={e => { if (!e.currentTarget.disabled) e.currentTarget.style.boxShadow = '0 6px 28px rgba(0,208,132,0.35)'; }}
-              onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,208,132,0.2)'; }}
+              onMouseEnter={e => { if (!e.currentTarget.disabled) e.currentTarget.style.boxShadow = '0 6px 28px rgba(16,185,129,0.35), inset 0 1px 0 rgba(255,255,255,0.2)'; }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 4px 20px rgba(16,185,129,0.2), inset 0 1px 0 rgba(255,255,255,0.2)'; }}
             >
               {isConnecting
                 ? <><Loader2 className="w-4 h-4 animate-spin" />Connecting...</>
@@ -245,16 +243,16 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
           ═══════════════════════════════════════════ */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <Cpu className="w-4 h-4" style={{ color: '#a855f7' }} />
-              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#f0f4fc' }}>
+              <Cpu className="w-4 h-4" style={{ color: '#6366f1' }} />
+              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#e8ecf4' }}>
                 AI Engine
               </span>
             </div>
 
             <div className="grid grid-cols-3 gap-2">
               {[
-                { id: 'groq', label: 'Groq', sub: 'Ultra-Fast', color: '#00d084' },
-                { id: 'gemini', label: 'Gemini', sub: 'Google AI', color: '#3b82f6' },
+                { id: 'groq', label: 'Groq', sub: 'Ultra-Fast', color: '#10b981' },
+                { id: 'gemini', label: 'Gemini', sub: 'Google AI', color: '#6366f1' },
                 { id: 'mock', label: 'Local', sub: 'Offline', color: '#f59e0b' }
               ].map(p => {
                 const active = llmProvider === p.id;
@@ -263,15 +261,15 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
                     type="button"
                     key={p.id}
                     onClick={() => setLlmProvider(p.id)}
-                    className="p-3 rounded-xl text-left transition-all"
+                    className="p-3 rounded-xl text-left transition-all backdrop-blur-sm"
                     style={{
-                      background: active ? `${p.color}15` : 'rgba(255,255,255,0.03)',
-                      border: `1px solid ${active ? `${p.color}55` : 'rgba(255,255,255,0.07)'}`,
-                      boxShadow: active ? `0 0 20px ${p.color}15` : ''
+                      background: active ? `${p.color}15` : 'rgba(255,255,255,0.02)',
+                      border: `1px solid ${active ? p.color : 'rgba(255,255,255,0.06)'}`,
+                      boxShadow: active ? `0 0 20px ${p.color}15, inset 0 1px 0 rgba(255,255,255,0.05)` : 'inset 0 1px 0 rgba(255,255,255,0.02)'
                     }}
                   >
-                    <div className="text-xs font-bold" style={{ color: active ? p.color : '#c9d1e0' }}>{p.label}</div>
-                    <span className="text-[10px]" style={{ color: active ? `${p.color}aa` : '#4a5568' }}>{p.sub}</span>
+                    <div className="text-xs font-bold" style={{ color: active ? p.color : '#e8ecf4' }}>{p.label}</div>
+                    <span className="text-[10px]" style={{ color: active ? `${p.color}aa` : '#94a3b8' }}>{p.sub}</span>
                   </button>
                 );
               })}
@@ -281,30 +279,34 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
           {/* API Key inputs */}
           {llmProvider === 'groq' && (
             <div className="space-y-1.5">
-              <label className="text-[11px] font-semibold" style={{ color: '#8b98b4' }}>Groq API Key</label>
+              <label className="text-[11px] font-semibold" style={{ color: '#94a3b8' }}>Groq API Key</label>
               <input
                 type="password"
                 value={groqKey}
                 onChange={e => setGroqKey(e.target.value)}
                 placeholder="gsk_..."
-                className="w-full px-3.5 py-2.5 rounded-xl text-sm font-mono focus:outline-none"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#f0f4fc' }}
+                className="w-full px-3.5 py-2.5 rounded-xl text-sm font-mono focus:outline-none transition-all backdrop-blur-sm"
+                style={{ background: 'rgba(255,255,255,0.035)', border: '1px solid rgba(255,255,255,0.06)', color: '#e8ecf4' }}
+                onFocus={e => { e.currentTarget.style.border = '1px solid rgba(99,102,241,0.4)'; e.currentTarget.style.background = 'rgba(99,102,241,0.05)'; }}
+                onBlur={e => { e.currentTarget.style.border = '1px solid rgba(255,255,255,0.06)'; e.currentTarget.style.background = 'rgba(255,255,255,0.035)'; }}
               />
-              <span className="text-[10px]" style={{ color: '#4a5568' }}>Leave blank to use .env key</span>
+              <span className="text-[10px]" style={{ color: '#475569' }}>Leave blank to use .env key</span>
             </div>
           )}
           {llmProvider === 'gemini' && (
             <div className="space-y-1.5">
-              <label className="text-[11px] font-semibold" style={{ color: '#8b98b4' }}>Gemini API Key</label>
+              <label className="text-[11px] font-semibold" style={{ color: '#94a3b8' }}>Gemini API Key</label>
               <input
                 type="password"
                 value={geminiKey}
                 onChange={e => setGeminiKey(e.target.value)}
                 placeholder="AIzaSy..."
-                className="w-full px-3.5 py-2.5 rounded-xl text-sm font-mono focus:outline-none"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#f0f4fc' }}
+                className="w-full px-3.5 py-2.5 rounded-xl text-sm font-mono focus:outline-none transition-all backdrop-blur-sm"
+                style={{ background: 'rgba(255,255,255,0.035)', border: '1px solid rgba(255,255,255,0.06)', color: '#e8ecf4' }}
+                onFocus={e => { e.currentTarget.style.border = '1px solid rgba(99,102,241,0.4)'; e.currentTarget.style.background = 'rgba(99,102,241,0.05)'; }}
+                onBlur={e => { e.currentTarget.style.border = '1px solid rgba(255,255,255,0.06)'; e.currentTarget.style.background = 'rgba(255,255,255,0.035)'; }}
               />
-              <span className="text-[10px]" style={{ color: '#4a5568' }}>Leave blank to use .env key</span>
+              <span className="text-[10px]" style={{ color: '#475569' }}>Leave blank to use .env key</span>
             </div>
           )}
 
@@ -312,12 +314,12 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
               Vector Store Info
           ═══════════════════════════════════════════ */}
           <div
-            className="rounded-2xl p-4 space-y-2"
-            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
+            className="rounded-2xl p-4 space-y-2 backdrop-blur-sm"
+            style={{ background: 'rgba(34,211,238,0.03)', border: '1px solid rgba(34,211,238,0.1)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02)' }}
           >
             <div className="flex items-center gap-2">
-              <Database className="w-4 h-4" style={{ color: '#3b82f6' }} />
-              <span className="text-xs font-bold" style={{ color: '#f0f4fc' }}>Local RAG Stack</span>
+              <Database className="w-4 h-4" style={{ color: '#22d3ee' }} />
+              <span className="text-xs font-bold" style={{ color: '#e8ecf4' }}>Local RAG Stack</span>
             </div>
             <div className="grid grid-cols-2 gap-2 text-[11px]">
               {[
@@ -326,8 +328,8 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
                 ['Cost', '$0.00 (Local)'],
                 ['Capacity', '1000+ Threads']
               ].map(([k, v]) => (
-                <div key={k} style={{ color: '#4a5568' }}>
-                  {k}: <strong className="font-mono" style={{ color: '#8b98b4' }}>{v}</strong>
+                <div key={k} style={{ color: '#94a3b8' }}>
+                  {k}: <strong className="font-mono" style={{ color: '#22d3ee' }}>{v}</strong>
                 </div>
               ))}
             </div>
@@ -339,7 +341,9 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
               type="button"
               onClick={onClose}
               className="px-4 py-2.5 rounded-xl text-xs font-semibold transition-all"
-              style={{ background: 'rgba(255,255,255,0.05)', color: '#c9d1e0', border: '1px solid rgba(255,255,255,0.08)' }}
+              style={{ background: 'rgba(255,255,255,0.035)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.06)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#e8ecf4'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.035)'; e.currentTarget.style.color = '#94a3b8'; }}
             >
               Cancel
             </button>
@@ -347,9 +351,11 @@ export default function SettingsModal({ isOpen, onClose, showToast }) {
               type="submit"
               className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold text-white transition-all active:scale-95"
               style={{
-                background: 'linear-gradient(135deg, #00d084, #00a86b)',
-                boxShadow: '0 4px 16px rgba(0,208,132,0.2)'
+                background: 'linear-gradient(135deg, #6366f1, #22d3ee)',
+                boxShadow: '0 4px 16px rgba(99,102,241,0.25), inset 0 1px 0 rgba(255,255,255,0.2)'
               }}
+              onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 6px 24px rgba(99,102,241,0.4), inset 0 1px 0 rgba(255,255,255,0.2)'; }}
+              onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(99,102,241,0.25), inset 0 1px 0 rgba(255,255,255,0.2)'; }}
             >
               <Save className="w-3.5 h-3.5" />
               Save Changes

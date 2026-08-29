@@ -152,7 +152,7 @@ export default function App() {
   }, [leads, searchQuery, selectedCategory, sortBy]);
 
   return (
-    <div style={{ minHeight: '100vh', background: '#06090f', color: '#f0f4fc', fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#050810', color: '#e8ecf4', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
       <Navbar
         onOpenChat={() => setIsChatOpen(true)}
@@ -163,39 +163,52 @@ export default function App() {
         lastSyncTime={stats?.last_sync || 'Just now'}
       />
 
-      <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '24px 20px 40px', width: '100%' }}>
+      <main style={{ maxWidth: '1320px', margin: '0 auto', padding: '28px 24px 48px', width: '100%' }}>
 
         {/* ── Hero Banner ── */}
         <div
-          className="relative rounded-3xl overflow-hidden mb-8 p-6 sm:p-8"
-          style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.07)' }}
+          className="relative rounded-2xl overflow-hidden mb-8 p-7 sm:p-10"
+          style={{
+            background: 'linear-gradient(135deg, rgba(99,102,241,0.06) 0%, rgba(34,211,238,0.04) 50%, rgba(16,185,129,0.03) 100%)',
+            border: '1px solid rgba(99,102,241,0.15)',
+            boxShadow: '0 0 60px rgba(99,102,241,0.06), inset 0 1px 0 rgba(255,255,255,0.04)'
+          }}
         >
           {/* Aurora blobs */}
-          <div className="aurora-blob" style={{ width: 320, height: 320, top: -80, left: -60, background: 'rgba(0,208,132,0.08)', animationDelay: '0s' }} />
-          <div className="aurora-blob" style={{ width: 240, height: 240, top: -40, right: 80, background: 'rgba(59,130,246,0.06)', animationDelay: '-4s' }} />
-          <div className="aurora-blob" style={{ width: 180, height: 180, bottom: -60, right: -40, background: 'rgba(168,85,247,0.06)', animationDelay: '-8s' }} />
+          <div className="aurora-blob" style={{ width: 350, height: 350, top: -100, left: -80, background: 'rgba(99,102,241,0.1)', animationDelay: '0s' }} />
+          <div className="aurora-blob" style={{ width: 280, height: 280, top: -50, right: 60, background: 'rgba(34,211,238,0.07)', animationDelay: '-4s' }} />
+          <div className="aurora-blob" style={{ width: 200, height: 200, bottom: -70, right: -50, background: 'rgba(168,85,247,0.06)', animationDelay: '-8s' }} />
 
           <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div>
               {/* Live badge */}
               <div
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-4"
-                style={{ background: 'rgba(0,208,132,0.1)', border: '1px solid rgba(0,208,132,0.25)', color: '#00d084' }}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-5"
+                style={{
+                  background: 'rgba(99,102,241,0.1)',
+                  border: '1px solid rgba(99,102,241,0.3)',
+                  color: '#818cf8',
+                  backdropFilter: 'blur(12px)'
+                }}
               >
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full rounded-full animate-ping" style={{ background: '#00d084', opacity: 0.6 }} />
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: '#00d084' }} />
+                  <span className="absolute inline-flex h-full w-full rounded-full animate-ping" style={{ background: '#6366f1', opacity: 0.6 }} />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: '#6366f1' }} />
                 </span>
                 RAG Sales Intelligence — Active
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2" style={{ color: '#f0f4fc', lineHeight: 1.2 }}>
+              <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3" style={{ color: '#e8ecf4', lineHeight: 1.15 }}>
                 Never let a warm prospect
                 <br />
-                <span style={{ color: '#00d084' }}>slip away again.</span>
+                <span style={{
+                  background: 'linear-gradient(135deg, #6366f1, #22d3ee)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}>slip away again.</span>
               </h2>
 
-              <p className="text-sm max-w-xl leading-relaxed" style={{ color: '#8b98b4' }}>
+              <p className="text-sm max-w-xl leading-relaxed" style={{ color: '#94a3b8' }}>
                 Sakha analyzes your Gmail conversations, scores urgency 1–10, surfaces buying intent signals,
                 and drafts contextual follow-ups for your review.
               </p>
@@ -204,13 +217,13 @@ export default function App() {
             <div className="shrink-0 flex items-center gap-3">
               <button
                 onClick={() => setIsChatOpen(true)}
-                className="flex items-center gap-2.5 px-5 py-3 rounded-2xl text-sm font-bold text-white transition-all active:scale-95"
+                className="flex items-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-bold text-white transition-all active:scale-95"
                 style={{
-                  background: 'linear-gradient(135deg, #00d084, #00a86b)',
-                  boxShadow: '0 8px 32px rgba(0,208,132,0.3), 0 0 0 1px rgba(0,208,132,0.4)'
+                  background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+                  boxShadow: '0 8px 32px rgba(99,102,241,0.35), 0 0 0 1px rgba(99,102,241,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
                 }}
-                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,208,132,0.45), 0 0 0 1px rgba(0,208,132,0.5)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,208,132,0.3), 0 0 0 1px rgba(0,208,132,0.4)'; e.currentTarget.style.transform = ''; }}
+                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 12px 40px rgba(99,102,241,0.5), 0 0 0 1px rgba(99,102,241,0.5), inset 0 1px 0 rgba(255,255,255,0.15)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(99,102,241,0.35), 0 0 0 1px rgba(99,102,241,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'; e.currentTarget.style.transform = ''; }}
               >
                 <Sparkles className="w-4.5 h-4.5" />
                 Ask Copilot Anything
@@ -237,29 +250,33 @@ export default function App() {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <div
-              className="w-12 h-12 rounded-2xl flex items-center justify-center"
-              style={{ background: 'rgba(0,208,132,0.1)', border: '1px solid rgba(0,208,132,0.2)' }}
+              className="w-14 h-14 rounded-2xl flex items-center justify-center"
+              style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)' }}
             >
-              <RefreshCw className="w-6 h-6 animate-spin" style={{ color: '#00d084' }} />
+              <RefreshCw className="w-6 h-6 animate-spin" style={{ color: '#6366f1' }} />
             </div>
-            <p className="text-sm font-medium" style={{ color: '#4a5568' }}>
+            <p className="text-sm font-medium" style={{ color: '#475569' }}>
               Scanning inbox and computing urgency embeddings…
             </p>
           </div>
         ) : filteredLeads.length === 0 ? (
           <div
-            className="flex flex-col items-center justify-center py-24 my-6 rounded-3xl gap-4 text-center"
-            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}
+            className="flex flex-col items-center justify-center py-24 my-6 rounded-2xl gap-4 text-center"
+            style={{
+              background: 'rgba(255,255,255,0.02)',
+              border: '1px solid rgba(255,255,255,0.06)',
+              backdropFilter: 'blur(16px)'
+            }}
           >
             <div
               className="w-14 h-14 rounded-2xl flex items-center justify-center"
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+              style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.15)' }}
             >
-              <Inbox className="w-7 h-7" style={{ color: '#4a5568' }} />
+              <Inbox className="w-7 h-7" style={{ color: '#6366f1' }} />
             </div>
             <div>
-              <h3 className="text-base font-bold mb-1.5" style={{ color: '#f0f4fc' }}>No prospects found</h3>
-              <p className="text-sm max-w-sm" style={{ color: '#4a5568' }}>
+              <h3 className="text-base font-bold mb-1.5" style={{ color: '#e8ecf4' }}>No prospects found</h3>
+              <p className="text-sm max-w-sm" style={{ color: '#475569' }}>
                 {searchQuery
                   ? `No leads match "${searchQuery}". Try a different search.`
                   : 'All prospects in this category are up to date.'}
@@ -269,7 +286,11 @@ export default function App() {
               <button
                 onClick={() => setSearchQuery('')}
                 className="px-4 py-2 rounded-xl text-sm font-semibold transition-all"
-                style={{ background: 'rgba(255,255,255,0.06)', color: '#c9d1e0', border: '1px solid rgba(255,255,255,0.08)' }}
+                style={{
+                  background: 'rgba(255,255,255,0.06)',
+                  color: '#94a3b8',
+                  border: '1px solid rgba(255,255,255,0.08)'
+                }}
                 onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
                 onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
               >
@@ -278,7 +299,7 @@ export default function App() {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-6">
             {filteredLeads.map(lead => (
               <LeadCard
                 key={lead.id}
@@ -294,16 +315,16 @@ export default function App() {
 
       {/* ── Footer ── */}
       <footer
-        className="mt-auto py-5 px-5 text-center text-xs"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.05)', color: '#4a5568' }}
+        className="mt-auto py-6 px-5 text-center text-xs"
+        style={{ borderTop: '1px solid rgba(99,102,241,0.08)', color: '#475569' }}
       >
-        <div style={{ maxWidth: '1280px', margin: '0 auto' }} className="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div style={{ maxWidth: '1320px', margin: '0 auto' }} className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="font-bold" style={{ color: '#8b98b4' }}>Sakha</span>
+            <span className="font-bold" style={{ color: '#94a3b8' }}>Sakha</span>
             <span>— AI Sales Follow-Up Agent</span>
             <span>· Built by Team Sakha</span>
           </div>
-          <div className="flex items-center gap-3" style={{ color: '#2d3748' }}>
+          <div className="flex items-center gap-3" style={{ color: '#334155' }}>
             {['Local MiniLM RAG', 'ChromaDB Vector Memory', 'Human-in-the-Loop Gmail'].map((s, i, arr) => (
               <React.Fragment key={s}>
                 <span>{s}</span>
