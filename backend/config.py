@@ -2,9 +2,20 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load .env file from root directory
+# Load .env file from root directory (auto-create from .env.example if missing)
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / ".env")
+env_file = BASE_DIR / ".env"
+env_example = BASE_DIR / ".env.example"
+
+if not env_file.exists() and env_example.exists():
+    import shutil
+    try:
+        shutil.copy(env_example, env_file)
+        print("[Config] Created .env from .env.example template.")
+    except Exception as e:
+        print(f"[Config] Could not auto-create .env: {e}")
+
+load_dotenv(env_file)
 
 class Settings:
     PROJECT_NAME: str = "Sakha AI Sales Follow-Up Agent"
