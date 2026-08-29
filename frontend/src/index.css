@@ -2,42 +2,181 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply bg-slate-950 text-slate-100 font-sans selection:bg-emerald-500 selection:text-white;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ─────────────────────────────────────────────────
+   DESIGN TOKENS — premium "abyss" dark theme
+───────────────────────────────────────────────── */
+:root {
+  --bg-base: #06090f;
+  --bg-surface: #0d1117;
+  --bg-raised: #111827;
+  --bg-overlay: #1a2230;
+  --border-subtle: rgba(255,255,255,0.05);
+  --border-default: rgba(255,255,255,0.08);
+  --border-medium: rgba(255,255,255,0.13);
+  --border-strong: rgba(255,255,255,0.22);
+
+  --green-vivid:    #00d084;
+  --green-glow:     rgba(0,208,132,0.15);
+  --green-muted:    rgba(0,208,132,0.08);
+
+  --amber-vivid:    #f59e0b;
+  --red-vivid:      #ef4444;
+  --blue-vivid:     #3b82f6;
+  --purple-vivid:   #a855f7;
+
+  --text-primary:   #f0f4fc;
+  --text-secondary: #8b98b4;
+  --text-muted:     #4a5568;
+
+  --font: 'Inter', system-ui, sans-serif;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --shadow-glow-green: 0 0 40px rgba(0,208,132,0.12), 0 0 80px rgba(0,208,132,0.05);
+  --shadow-card: 0 1px 1px rgba(0,0,0,.4), 0 8px 32px rgba(0,0,0,.5);
+  --shadow-modal: 0 4px 6px rgba(0,0,0,.5), 0 20px 80px rgba(0,0,0,.8);
 }
 
-/* Custom modern scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* ─────────────────────────────────────────────────
+   BASE
+───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv11', 'ss01';
+  line-height: 1.5;
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
-}
+/* Selection */
+::selection { background: rgba(0,208,132,0.25); color: #fff; }
 
+/* ─────────────────────────────────────────────────
+   SCROLLBARS
+───────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(51, 65, 85, 0.8);
-  border-radius: 9999px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
+
+/* ─────────────────────────────────────────────────
+   UTILITY CLASSES
+───────────────────────────────────────────────── */
+
+/* Glass surface — used everywhere */
+.glass {
+  background: rgba(255,255,255,0.028);
+  border: 1px solid var(--border-default);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(71, 85, 105, 1);
+.glass-raised {
+  background: rgba(255,255,255,0.045);
+  border: 1px solid var(--border-medium);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
 }
 
-/* Subtle glow animations */
-.glow-emerald {
-  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.25);
+/* Green accent glow */
+.glow-green {
+  box-shadow: var(--shadow-glow-green);
 }
 
-.glass-card {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(51, 65, 85, 0.5);
+/* Card hover lift */
+.card-hover {
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0,208,132,0.2) !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,208,132,0.1);
 }
 
-.glass-card:hover {
-  border-color: rgba(71, 85, 105, 0.8);
+/* No horizontal scrollbar */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Shimmer / skeleton */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 8px;
+}
+
+/* Pulsing dot */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.8); }
+}
+.pulse-dot { animation: pulse-dot 2s infinite; }
+
+/* Spin */
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.spin-slow { animation: spin-slow 3s linear infinite; }
+
+/* Fade-in for modals */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-fadeIn { animation: fadeIn 0.2s ease forwards; }
+.animate-slideUp { animation: slideUp 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+/* Noise texture overlay for cards */
+.noise::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* Focus ring */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--green-vivid);
+  outline-offset: 2px;
+}
+
+/* ─────────────────────────────────────────────────
+   AURORA BACKGROUND EFFECT (used in hero banner)
+───────────────────────────────────────────────── */
+@keyframes aurora-shift {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(30px, -20px) scale(1.05); }
+  66%  { transform: translate(-20px, 10px) scale(0.97); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: aurora-shift 12s ease-in-out infinite;
+  pointer-events: none;
 }
