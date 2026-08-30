@@ -551,7 +551,7 @@ class GmailClient:
             if status != "OK" or not fetch_data:
                 return get_demo_leads()
 
-            thread_map = {}  # group by clean subject line
+            thread_map = {}  # group by (subject, external_contact)
             sender_display = settings.sender_display_name
 
             for item in fetch_data:
@@ -562,7 +562,7 @@ class GmailClient:
                     raw_email = item[1]
                     msg = email.message_from_bytes(raw_email)
 
-                    subject = _decode_header_value(msg.get("Subject", "No Subject"))
+                    subject_raw = _decode_header_value(msg.get("Subject", "")).strip()
                     from_addr = _decode_header_value(msg.get("From", ""))
                     to_addr = _decode_header_value(msg.get("To", ""))
                     date_str = msg.get("Date", "")
@@ -572,7 +572,9 @@ class GmailClient:
                     if not sender_name:
                         sender_name = sender_email.split("@")[0].replace(".", " ").title() if sender_email else "Contact"
 
-                    is_outbound = self.gmail_email.lower() in from_addr.lower()
+                    to_name, to_email = email.utils.parseaddr(to_addr)
+
+                    is_outbound = bool(self.gmail_email and self.gmail_email.lower() in from_addr.lower())
 
                     try:
                         parsed_date = email.utils.parsedate_to_datetime(date_str)
@@ -580,32 +582,48 @@ class GmailClient:
                     except Exception:
                         nice_date = date_str[:20] if date_str else "Recent"
 
-                    clean_subject = subject.strip()
+                    clean_subject = subject_raw
                     for prefix in ["Re:", "RE:", "Fwd:", "FWD:", "re:", "fwd:"]:
                         if clean_subject.startswith(prefix):
                             clean_subject = clean_subject[len(prefix):].strip()
 
+                    # External contact identifier
+                    external_contact = sender_email if not is_outbound else (to_email or "unknown@domain.com")
+                    external_name = sender_name if not is_outbound else (to_name or "Contact")
+
+                    # If subject is empty or generic, extract fallback subject from body snippet or sender
+                    if not clean_subject or clean_subject.lower() in ["no subject", "(no subject)", "none", ""]:
+                        first_line = body.strip().split("\n")[0].strip() if body else ""
+                        if first_line and len(first_line) > 3:
+                            clean_subject = first_line[:50]
+                        else:
+                            clean_subject = f"Message from {external_name}"
+
+                    message_id = msg.get("Message-ID", f"msg_{hash(subject_raw + date_str + from_addr) % 1000000}")
+
                     message_obj = {
-                        "id": f"msg_{hash(subject + date_str) % 1000000}",
+                        "id": f"msg_{hash(subject_raw + date_str + from_addr) % 1000000}",
                         "sender": sender_name,
                         "sender_email": sender_email,
                         "date": nice_date,
                         "body": body[:2500],
                         "is_outbound": is_outbound,
-                        "subject": subject
+                        "subject": subject_raw or clean_subject
                     }
 
-                    if clean_subject not in thread_map:
-                        thread_map[clean_subject] = {
+                    # Group key ensures separate external senders never get merged into one lead
+                    thread_key = f"{external_contact.lower()}::{clean_subject.lower()}"
+
+                    if thread_key not in thread_map:
+                        thread_map[thread_key] = {
                             "subject": clean_subject,
                             "messages": [],
-                            "participants": set(),
+                            "contact_email": external_contact,
+                            "contact_name": external_name,
                             "latest_date": nice_date
                         }
 
-                    thread_map[clean_subject]["messages"].append(message_obj)
-                    if sender_email:
-                        thread_map[clean_subject]["participants"].add(sender_email)
+                    thread_map[thread_key]["messages"].append(message_obj)
 
                 except Exception as ex:
                     print(f"[GmailClient] Error parsing batch message: {ex}")
@@ -613,19 +631,13 @@ class GmailClient:
 
             # Convert grouped threads to rich Sakha prospect format
             threads = []
-            for idx, (subj, thread_data) in enumerate(thread_map.items()):
+            for idx, (t_key, thread_data) in enumerate(thread_map.items()):
                 msgs = thread_data["messages"]
+                subj = thread_data["subject"]
+                contact_email = thread_data["contact_email"]
+                contact_name = thread_data["contact_name"]
                 
-                # Identify external prospect
-                external_emails = [e for e in thread_data["participants"] if self.gmail_email.lower() not in e.lower()]
-                contact_email = external_emails[0] if external_emails else (list(thread_data["participants"])[0] if thread_data["participants"] else "contact@client.com")
-                
-                contact_name = "Prospect"
-                for m in msgs:
-                    if not m["is_outbound"] and m["sender"] not in ["Unknown", "Contact", ""]:
-                        contact_name = m["sender"]
-                        break
-                if contact_name == "Prospect" and "@" in contact_email:
+                if contact_name in ["Prospect", "Contact", ""] and "@" in contact_email:
                     contact_name = contact_email.split("@")[0].replace(".", " ").title()
 
                 domain_part = contact_email.split("@")[1].split(".")[0].capitalize() if "@" in contact_email else "Enterprise"
@@ -638,7 +650,7 @@ class GmailClient:
                 
                 if any(k in combined_text for k in ["meeting", "scheduled", "calendar", "call", "zoom", "meet"]):
                     category = "Meeting / Call"
-                elif any(k in combined_text for k in ["pricing", "proposal", "contract", "quote", "cost", "invoice"]):
+                elif any(k in combined_text for k in ["pricing", "proposal", "contract", "quote", "cost", "invoice", "rupees", "$", "₹"]):
                     category = "Pricing & Terms"
                 elif any(k in combined_text for k in ["demo", "walkthrough", "presentation", "trial"]):
                     category = "Product Demo"
@@ -664,12 +676,13 @@ class GmailClient:
                     "next_action": f"Send personalized follow-up to {contact_name} regarding {subj[:45]}." if is_awaiting else f"Follow up with {contact_name} to maintain momentum.",
                     "thread": msgs,
                     "signals": {
-                        "buying_intent": "High" if any(k in combined_text for k in ["pricing", "demo", "proposal", "contract", "cost"]) else "Medium",
+                        "buying_intent": "High" if any(k in combined_text for k in ["pricing", "demo", "proposal", "contract", "cost", "hackathon"]) else "Medium",
                         "response_lag_days": 1,
                         "unanswered_promise": False
                     },
                     "draft": {
                         "subject": f"Re: {subj}",
+                        "recipient": contact_email,
                         "body": f"Hi {contact_name.split()[0]},\n\nThank you for reaching out regarding {subj}.\n\nI am following up to review our discussion for {company_name} and address any questions your team may have as we move forward.\n\nPlease let me know your availability this week for a brief review session.\n\nBest regards,\n{sender_display}",
                         "tone": "Professional"
                     },
@@ -682,7 +695,6 @@ class GmailClient:
             print(f"[GmailClient] IMAP fetch error: {e}")
             return get_demo_leads()
 
-        return threads if threads else get_demo_leads()
 
     def create_draft(self, to_email: str, subject: str, body_text: str) -> Dict[str, Any]:
         """Create a draft via SMTP (IMAP mode), Gmail API (OAuth), or simulation (demo)."""

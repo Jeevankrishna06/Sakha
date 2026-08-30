@@ -115,7 +115,6 @@ class AnalysisChain:
         if not context_chunks:
             return "Sakha searched your active sales conversations but found no relevant leads or discussions matching your query."
 
-        # Format context
         formatted_context = "\n\n".join([f"Source [{c.get('metadata', {}).get('name', 'Lead')} - {c.get('metadata', {}).get('company', '')}]:\n{c.get('text', '')}" for c in context_chunks])
         prompt = f"""You are Sakha, an elite AI sales copilot. Answer the sales question accurately using only the provided email conversation context. Provide structured output with executive summary and conversation details.
 
@@ -132,14 +131,16 @@ Provide a concise, direct, executive-ready sales summary with clear actionable n
             try:
                 from groq import Groq
                 client = Groq(api_key=self.groq_key)
-                for model_name in ["qwen/qwen3.6-27b", "openai/gpt-oss-120b", "groq/compound"]:
+                for model_name in ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "qwen/qwen3.6-27b"]:
                     try:
                         resp = client.chat.completions.create(
                             model=model_name,
                             messages=[{"role": "user", "content": prompt}],
                             temperature=0.2
                         )
-                        return resp.choices[0].message.content.strip()
+                        raw_ans = resp.choices[0].message.content.strip()
+                        cleaned_ans = re.sub(r"<think>.*?</think>", "", raw_ans, flags=re.DOTALL).strip()
+                        return cleaned_ans
                     except Exception:
                         continue
             except Exception as e:
@@ -179,7 +180,7 @@ Provide a concise, direct, executive-ready sales summary with clear actionable n
             except Exception as e:
                 print(f"[AnalysisChain] Gemini chat error: {e}")
 
-        # Smart deterministic synthesis fallback
+        # Deterministic synthesis fallback
         lead_names = list(set([c.get("metadata", {}).get("name", "") for c in context_chunks if c.get("metadata", {}).get("name")]))
         names_str = ", ".join(lead_names) if lead_names else "identified prospects"
         return f"Based on your recent inbox conversations, {names_str} match your query:\n\n" + "\n".join([f"• **{c.get('metadata', {}).get('name')} ({c.get('metadata', {}).get('company')}):** {c.get('text', '')[:180]}..." for c in context_chunks[:3]])
@@ -187,12 +188,10 @@ Provide a concise, direct, executive-ready sales summary with clear actionable n
     def _sanitize_text(self, text: str) -> str:
         if not text:
             return ""
-        # Normalize non-standard unicode dashes and quotes to clean ASCII
         text = text.replace('\u2011', '-').replace('\u2012', '-').replace('\u2013', '-').replace('\u2014', '--').replace('\u2212', '-')
         text = text.replace('\u2018', "'").replace('\u2019', "'").replace('\u201a', "'").replace('\u201b', "'")
         text = text.replace('\u201c', '"').replace('\u201d', '"').replace('\u201e', '"').replace('\u201f', '"')
         text = text.replace('\u2026', '...')
-        # Encode to clean ascii ignoring unencodable emojis for clean display
         text = text.encode("ascii", "ignore").decode("ascii")
         return text
 
@@ -228,7 +227,7 @@ Provide a concise, direct, executive-ready sales summary with clear actionable n
                     "response_format": {"type": "json_object"},
                     "temperature": 0.4
                 }
-                res = requests.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload, timeout=1.2)
+                res = requests.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload, timeout=5.0)
                 if res.status_code == 200:
                     content = res.json()["choices"][0]["message"]["content"].strip()
                     if content.startswith("```"):
@@ -246,14 +245,14 @@ Provide a concise, direct, executive-ready sales summary with clear actionable n
         import requests
         prompt = self._build_prompt(lead_data, signals, custom_instructions, tone)
         
-        for model_name in ["gemini-flash-latest", "gemini-2.5-flash", "gemini-1.5-flash"]:
+        for model_name in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]:
             try:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={self.gemini_key}"
                 payload = {
                     "contents": [{"parts": [{"text": prompt + "\n\nOutput strictly valid JSON with keys: urgency, urgency_level, reason, next_action, draft_subject, draft_message"}]}],
                     "generationConfig": {"temperature": 0.4}
                 }
-                res = requests.post(url, json=payload, timeout=1.2)
+                res = requests.post(url, json=payload, timeout=5.0)
                 if res.status_code == 200:
                     data = res.json()
                     text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
@@ -271,6 +270,7 @@ Provide a concise, direct, executive-ready sales summary with clear actionable n
             "Short & Direct": "Keep the email to 2-3 sentences maximum. Be ultra-concise, zero fluff, straight to the point, and end with a clear binary question or single next step.",
             "Warm & Friendly": "Use an appreciative, relationship-driven, enthusiastic, and warm tone. Greet warmly (e.g. 'Hope you are having a wonderful week!'), express gratitude, and offer help supportively.",
             "Urgent / Action-Oriented": "Use a fast-paced, action-oriented, time-sensitive tone. Highlight timeline preservation, upcoming deadlines, or securing terms promptly. Propose an immediate 10-minute sync today or tomorrow.",
+            "Executive / Concise": "Use a high-level, executive briefing tone. Bullet points for key deliverables, concise decision points, and minimal preamble.",
             "Professional": "Use a polished, formal corporate executive tone. Focus on structured value, professional courtesy, and clear next steps."
         }
         
@@ -321,7 +321,6 @@ Output strictly valid JSON with exactly these keys:
 
     def _heuristic_analysis(self, lead_data: Dict[str, Any], signals: Dict[str, Any], custom_instructions: Optional[str], tone: str) -> Dict[str, Any]:
         """Provides expert deterministic analysis and rich tone-specific drafts."""
-        # Calculate dynamic urgency score (1-10)
         score = 5
         reasons = []
 
@@ -396,6 +395,16 @@ Output strictly valid JSON with exactly these keys:
                 f"Hi {greeting_name},\n\n"
                 f"Following up right away on {clean_subject} so we don't hold up your timeline for {company}.\n\n"
                 f"I have everything ready on our end—could we do a brief 10-minute call today or tomorrow morning to lock in next steps?\n\n"
+                f"Best regards,\n"
+                f"{sender_full_name}"
+            )
+        elif tone == "Executive / Concise":
+            body = (
+                f"Hi {greeting_name},\n\n"
+                f"Touching base on the {clean_subject} initiative for {company}.\n\n"
+                f"• Deliverables & scope: ready for final review\n"
+                f"• Proposed timeline: kick-off next week\n\n"
+                f"Let me know if 15 minutes this Thursday works for your calendar.\n\n"
                 f"Best regards,\n"
                 f"{sender_full_name}"
             )

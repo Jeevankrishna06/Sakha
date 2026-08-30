@@ -11,13 +11,14 @@ const SAMPLE_QUERIES = [
   'Summarize top deals by urgency.'
 ];
 
-export default function RagChatModal({ isOpen, onClose, onSelectLeadById }) {
+export default function RagChatModal({ isOpen, onClose, onSelectLeadById, theme = 'dark' }) {
+  const isDark = theme === 'dark';
   const [query, setQuery]     = useState('');
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([{
     id: 'welcome',
     sender: 'agent',
-    text: "Hi! I'm Sakha — your RAG sales intelligence copilot. I've indexed your Gmail threads into local vector memory.\n\nAsk me anything about active deals, overdue follow-ups, or prospect discussions.",
+    text: "Hi! I'm Sakha Copilot — your RAG sales intelligence engine. I've indexed your Gmail threads into vector memory.\n\nAsk me anything about active deals, overdue follow-ups, or prospect discussions.",
     sources: []
   }]);
   const bottomRef = useRef(null);
@@ -59,120 +60,95 @@ export default function RagChatModal({ isOpen, onClose, onSelectLeadById }) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-stretch justify-end animate-fadeIn"
-      style={{ background: 'rgba(5, 8, 16, 0.75)', backdropFilter: 'blur(12px)' }}
+      style={{
+        background: isDark ? 'rgba(5, 5, 8, 0.82)' : 'rgba(0, 0, 0, 0.4)',
+        backdropFilter: 'blur(16px)'
+      }}
       onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}
     >
-      {/* Drawer */}
+      {/* Drawer Container */}
       <div
-        className="flex flex-col w-full max-w-md h-full animate-slideUp relative"
-        style={{
-          background: 'rgba(5, 8, 16, 0.85)',
-          backdropFilter: 'blur(20px)',
-          borderLeft: '1px solid',
-          borderImageSource: 'linear-gradient(to bottom, rgba(99,102,241,0.8), rgba(34,211,238,0.4), rgba(5,8,16,0))',
-          borderImageSlice: 1,
-          boxShadow: '-20px 0 80px rgba(0,0,0,0.8)'
-        }}
+        className={`flex flex-col w-full max-w-lg h-full animate-slideUp border-l shadow-2xl relative ${
+          isDark ? 'bg-[#0e0e11] border-white/15 text-white' : 'bg-white border-black/10 text-black'
+        }`}
       >
         {/* Header */}
-        <div
-          className="flex items-center justify-between px-5 py-4 shrink-0 relative z-10"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-        >
+        <div className={`flex items-center justify-between px-6 py-5 shrink-0 border-b ${
+          isDark ? 'border-white/10 bg-[#121214]' : 'border-black/10 bg-[#f8f8fa]'
+        }`}>
           <div className="flex items-center gap-3">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center relative overflow-hidden"
-            >
-              <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #6366f1, #22d3ee)', opacity: 0.2 }} />
-              <div className="absolute inset-0" style={{ border: '1px solid rgba(99,102,241,0.5)', borderRadius: '0.75rem' }} />
-              <Sparkles className="w-4.5 h-4.5" style={{ color: '#22d3ee', filter: 'drop-shadow(0 0 8px rgba(34,211,238,0.5))' }} />
+            <div className="h-9 px-2 rounded-xl flex items-center justify-center bg-white border border-black/10 shadow-sm">
+              <img src="/logo.jpeg" alt="Sakha" className="h-5 w-auto object-contain" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#e8ecf4] leading-tight tracking-wide">Ask Sakha</h3>
-              <p className="text-[11px] mt-0.5" style={{ color: '#94a3b8' }}>RAG Semantic Search · Gmail Corpus</p>
+              <h3 className="text-sm font-bold leading-tight">Ask Sakha</h3>
+              <p className={`text-[11px] ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>RAG Semantic Search · ChromaDB Vector Memory</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-xl transition-all"
-            style={{ background: 'rgba(255,255,255,0.035)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.06)' }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#e8ecf4'; e.currentTarget.style.transform = 'scale(1.05)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.035)'; e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.transform = 'scale(1)'; }}
+            className={`btn-3d w-8 h-8 flex items-center justify-center rounded-xl transition-colors ${
+              isDark ? 'bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white' : 'bg-black/5 hover:bg-black/10 text-zinc-600 hover:text-black'
+            }`}
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Top Fade Gradient */}
-        <div className="absolute top-[68px] left-0 right-0 h-6 z-10 pointer-events-none" style={{ background: 'linear-gradient(to bottom, rgba(5,8,16,0.8), transparent)' }} />
-
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto px-4 py-5 space-y-5 relative">
+        {/* Messages List */}
+        <div className="flex-1 overflow-y-auto px-6 py-6 space-y-5">
           {messages.map(msg => (
             <div
               key={msg.id}
-              className={`flex gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
+              className={`flex gap-3.5 ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
             >
               {/* Avatar */}
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 relative overflow-hidden"
+                className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold shadow-sm ${
+                  msg.sender === 'agent'
+                    ? 'bg-white text-black p-1 border border-black/10'
+                    : isDark ? 'bg-white/10 text-white border border-white/20' : 'bg-black/10 text-black border border-black/20'
+                }`}
               >
                 {msg.sender === 'agent' ? (
-                  <>
-                    <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(34,211,238,0.1), rgba(99,102,241,0.1))' }} />
-                    <div className="absolute inset-0 rounded-full" style={{ border: '1px solid rgba(34,211,238,0.4)', borderRadius: '9999px' }} />
-                    <Bot className="w-4 h-4" style={{ color: '#22d3ee' }} />
-                  </>
+                  <img src="/logo.jpeg" alt="AI" className="w-full h-full object-contain" />
                 ) : (
-                  <>
-                    <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1))' }} />
-                    <div className="absolute inset-0 rounded-full" style={{ border: '1px solid rgba(99,102,241,0.4)', borderRadius: '9999px' }} />
-                    <User className="w-4 h-4" style={{ color: '#6366f1' }} />
-                  </>
+                  <User className="w-4 h-4" />
                 )}
               </div>
 
-              {/* Bubble */}
+              {/* Message Bubble */}
               <div
-                className={`max-w-[82%] p-3.5 text-[13px] leading-relaxed shadow-sm relative overflow-hidden ${
-                  msg.sender === 'user' ? 'rounded-2xl rounded-tr-sm' : 'rounded-2xl rounded-tl-sm'
-                }`}
-                style={
+                className={`max-w-[85%] p-4 text-xs sm:text-[13px] leading-relaxed rounded-2xl ${
                   msg.sender === 'user'
-                    ? { 
-                        background: 'rgba(99,102,241,0.15)', 
-                        color: '#e8ecf4', 
-                        border: '1px solid rgba(99,102,241,0.25)',
-                        boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.05)'
-                      }
-                    : { 
-                        background: 'rgba(255,255,255,0.035)', 
-                        color: '#e8ecf4', 
-                        border: '1px solid rgba(255,255,255,0.06)',
-                        boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.02)'
-                      }
-                }
+                    ? isDark
+                      ? 'bg-white text-black rounded-tr-sm font-medium'
+                      : 'bg-black text-white rounded-tr-sm font-medium'
+                    : isDark
+                      ? 'bg-[#18181b] text-zinc-200 rounded-tl-sm border border-white/10'
+                      : 'bg-[#f4f4f6] text-zinc-800 rounded-tl-sm border border-black/10'
+                }`}
               >
-                <div className="whitespace-pre-line relative z-10">{msg.text}</div>
+                <div className="whitespace-pre-line font-normal leading-relaxed">{msg.text}</div>
 
-                {/* Sources */}
+                {/* Sources List */}
                 {msg.sources?.length > 0 && (
-                  <div className="mt-3 pt-3 space-y-1.5 relative z-10" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span className="text-[10px] font-bold uppercase tracking-widest block" style={{ color: '#94a3b8' }}>
-                      Sources
+                  <div className={`mt-3 pt-3 space-y-2 border-t ${isDark ? 'border-white/10' : 'border-black/10'}`}>
+                    <span className={`text-[10px] font-bold uppercase tracking-wider block ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                      Referenced Conversations
                     </span>
                     <div className="flex flex-wrap gap-1.5">
                       {msg.sources.map((src, i) => (
-                        <div
+                        <button
                           key={i}
-                          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] transition-colors cursor-default"
-                          style={{ background: 'rgba(255,255,255,0.035)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.06)' }}
-                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#e8ecf4'; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.035)'; e.currentTarget.style.color = '#94a3b8'; }}
+                          onClick={() => onSelectLeadById && onSelectLeadById(src.lead_id || src.id)}
+                          className={`btn-3d flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium border transition-colors ${
+                            isDark ? 'bg-white/5 hover:bg-white/10 text-white border-white/10' : 'bg-black/5 hover:bg-black/10 text-black border-black/10'
+                          }`}
                         >
-                          <Building2 className="w-3 h-3" style={{ color: '#22d3ee' }} />
-                          {src.lead_name} · {src.company}
-                        </div>
+                          <Building2 className="w-3 h-3 opacity-60" />
+                          <span>{src.lead_name} · {src.company}</span>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -181,21 +157,15 @@ export default function RagChatModal({ isOpen, onClose, onSelectLeadById }) {
             </div>
           ))}
 
-          {/* Loading indicator */}
           {loading && (
             <div className="flex gap-3 items-start animate-fadeIn">
-              <div
-                className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 relative overflow-hidden"
-              >
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(34,211,238,0.1), rgba(99,102,241,0.1))' }} />
-                <div className="absolute inset-0 rounded-full" style={{ border: '1px solid rgba(34,211,238,0.4)', borderRadius: '9999px' }} />
-                <Bot className="w-4 h-4" style={{ color: '#22d3ee' }} />
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-white p-1 border border-black/10">
+                <img src="/logo.jpeg" alt="Loading" className="w-full h-full object-contain animate-pulse" />
               </div>
-              <div
-                className="flex items-center gap-2.5 px-4 py-3 rounded-2xl rounded-tl-sm text-[13px]"
-                style={{ background: 'rgba(255,255,255,0.035)', border: '1px solid rgba(255,255,255,0.06)', color: '#94a3b8' }}
-              >
-                <RefreshCw className="w-4 h-4 animate-spin" style={{ color: '#22d3ee' }} />
+              <div className={`flex items-center gap-2 px-4 py-3 rounded-2xl rounded-tl-sm text-xs border ${
+                isDark ? 'bg-[#18181b] border-white/10 text-zinc-400' : 'bg-[#f4f4f6] border-black/10 text-zinc-600'
+              }`}>
+                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                 <span>Searching vector memory…</span>
               </div>
             </div>
@@ -204,57 +174,55 @@ export default function RagChatModal({ isOpen, onClose, onSelectLeadById }) {
           <div ref={bottomRef} className="h-2" />
         </div>
 
-        {/* Footer */}
-        <div
-          className="shrink-0 px-4 pb-5 pt-3 space-y-3 relative z-10"
-          style={{ background: 'rgba(5, 8, 16, 0.95)', borderTop: '1px solid rgba(255,255,255,0.06)' }}
-        >
-          {/* Quick queries */}
-          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+        {/* Footer Area */}
+        <div className={`shrink-0 px-6 pb-6 pt-3 space-y-3 border-t ${
+          isDark ? 'bg-[#121214] border-white/10' : 'bg-[#f8f8fa] border-black/10'
+        }`}>
+          
+          {/* Quick Query Pills */}
+          <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
             {SAMPLE_QUERIES.map((q, i) => (
               <button
                 key={i}
+                type="button"
                 onClick={() => handleSend(q)}
-                className="flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 rounded-full text-[11px] font-medium transition-all shrink-0"
-                style={{ background: 'rgba(255,255,255,0.035)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.06)' }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.15)'; e.currentTarget.style.color = '#e8ecf4'; e.currentTarget.style.border = '1px solid rgba(99,102,241,0.3)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.035)'; e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.border = '1px solid rgba(255,255,255,0.06)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                className={`btn-3d flex items-center gap-1 whitespace-nowrap px-3 py-1.5 rounded-full text-[11px] font-medium border transition-all shrink-0 ${
+                  isDark ? 'bg-white/5 hover:bg-white/10 text-zinc-300 border-white/10' : 'bg-black/5 hover:bg-black/10 text-zinc-700 border-black/10'
+                }`}
               >
-                <ChevronRight className="w-3 h-3" style={{ color: '#6366f1' }} />
-                {q}
+                <ChevronRight className="w-3 h-3 opacity-70" />
+                <span>{q}</span>
               </button>
             ))}
           </div>
 
-          {/* Input */}
-          <form onSubmit={e => { e.preventDefault(); handleSend(); }} className="flex gap-2 relative">
+          {/* Prompt Form Input */}
+          <form
+            onSubmit={e => {
+              e.preventDefault();
+              handleSend();
+            }}
+            className="flex gap-2 relative"
+          >
             <input
               type="text"
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder="Ask about your leads & emails…"
-              className="flex-1 px-4 py-3 rounded-xl text-sm focus:outline-none transition-all"
-              style={{
-                background: 'rgba(255,255,255,0.035)',
-                border: '1px solid rgba(255,255,255,0.12)',
-                color: '#e8ecf4'
-              }}
-              onFocus={e => { e.currentTarget.style.border = '1px solid rgba(99,102,241,0.5)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.15), inset 0 0 20px rgba(99,102,241,0.05)'; }}
-              onBlur={e => { e.currentTarget.style.border = '1px solid rgba(255,255,255,0.12)'; e.currentTarget.style.boxShadow = ''; }}
+              className={`flex-1 px-4 py-3 rounded-2xl text-xs sm:text-sm border focus:outline-none transition-all ${
+                isDark
+                  ? 'bg-white/5 border-white/10 text-white placeholder:text-zinc-500 focus:border-white'
+                  : 'bg-black/5 border-black/10 text-black placeholder:text-zinc-400 focus:border-black'
+              }`}
             />
             <button
               type="submit"
               disabled={loading || !query.trim()}
-              className="w-12 h-12 flex items-center justify-center rounded-xl text-white transition-all active:scale-95 disabled:opacity-40 shrink-0 relative overflow-hidden group"
-              style={{
-                background: 'linear-gradient(135deg, #6366f1, #22d3ee)',
-                boxShadow: '0 4px 16px rgba(99,102,241,0.2)'
-              }}
-              onMouseEnter={e => { if (!e.currentTarget.disabled) { e.currentTarget.style.boxShadow = '0 6px 20px rgba(99,102,241,0.4)'; e.currentTarget.style.transform = 'scale(1.02)'; } }}
-              onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(99,102,241,0.2)'; e.currentTarget.style.transform = 'scale(1)'; }}
+              className={`btn-3d w-12 h-12 flex items-center justify-center rounded-2xl transition-all active:scale-95 disabled:opacity-30 shrink-0 font-bold shadow-md ${
+                isDark ? 'text-black bg-white hover:bg-zinc-100' : 'text-white bg-black hover:bg-zinc-800'
+              }`}
             >
-              <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
-              <Send className="w-5 h-5 relative z-10" />
+              <Send className="w-4 h-4" />
             </button>
           </form>
         </div>

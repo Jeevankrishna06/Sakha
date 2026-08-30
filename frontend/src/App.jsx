@@ -8,7 +8,7 @@ import RagChatModal from './components/RagChatModal';
 import SettingsModal from './components/SettingsModal';
 import Toast from './components/Toast';
 import { apiService } from './services/api';
-import { Sparkles, Inbox, RefreshCw, Zap } from 'lucide-react';
+import { Sparkles, Inbox, RefreshCw, Zap, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export default function App() {
   const [leads, setLeads]           = useState([]);
@@ -16,6 +16,22 @@ export default function App() {
   const [loading, setLoading]       = useState(true);
   const [isSyncing, setIsSyncing]   = useState(false);
   const [isLive, setIsLive]         = useState(false);
+
+  // Theme Management (Dark / Light)
+  const [theme, setTheme]           = useState(() => {
+    return localStorage.getItem('sakha_theme') || 'dark';
+  });
+
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    localStorage.setItem('sakha_theme', next);
+  };
+
+  useEffect(() => {
+    document.documentElement.classList.remove('dark', 'light');
+    document.documentElement.classList.add(theme);
+  }, [theme]);
 
   const [searchQuery, setSearchQuery]           = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -30,7 +46,10 @@ export default function App() {
   const pollTimerRef  = useRef(null);
   const sseRef        = useRef(null);
 
-  // Silent data refresh (no loading spinner — used by auto-poll & SSE)
+  const showToast = (msg) => {
+    setToastMessage(msg);
+  };
+
   const refreshData = useCallback(async () => {
     try {
       const [leadsData, statsData] = await Promise.all([
@@ -41,16 +60,16 @@ export default function App() {
       setLeads(newLeads);
       setStats(statsData || null);
 
-      // Notify user if new leads appeared
       if (prevLeadCount.current > 0 && newLeads.length > prevLeadCount.current) {
         const diff = newLeads.length - prevLeadCount.current;
         showToast(`🔔 ${diff} new email${diff > 1 ? 's' : ''} synced from Gmail!`);
       }
       prevLeadCount.current = newLeads.length;
-    } catch (e) { console.error('[AutoRefresh]', e); }
+    } catch (e) {
+      console.warn('[AutoRefresh]', e);
+    }
   }, []);
 
-  // Initial full load (shows loading spinner)
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
@@ -62,20 +81,20 @@ export default function App() {
       setLeads(newLeads);
       setStats(statsData || null);
       prevLeadCount.current = newLeads.length;
-    } catch (e) { console.error(e); }
-    finally { setLoading(false); }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  // ── Setup: Initial load + Auto-poll every 15s + SSE real-time listener ──
   useEffect(() => {
     loadData();
 
-    // Auto-poll every 15 seconds (silent background refresh)
     pollTimerRef.current = setInterval(() => {
       refreshData();
     }, 15000);
 
-    // SSE real-time push connection
     const connectSSE = () => {
       try {
         const eventSource = new EventSource('/api/stream/leads');
@@ -83,12 +102,9 @@ export default function App() {
 
         eventSource.addEventListener('connected', () => {
           setIsLive(true);
-          console.log('[SSE] Real-time connection established');
         });
 
-        eventSource.addEventListener('leads_updated', (e) => {
-          console.log('[SSE] New email event received:', e.data);
-          // Immediately refresh dashboard data
+        eventSource.addEventListener('leads_updated', () => {
           refreshData();
         });
 
@@ -99,17 +115,17 @@ export default function App() {
         eventSource.onerror = () => {
           setIsLive(false);
           eventSource.close();
-          // Reconnect after 5 seconds
           setTimeout(connectSSE, 5000);
         };
       } catch (e) {
-        console.warn('[SSE] EventSource not available, using polling only.');
+        console.warn('[SSE] connection error:', e);
       }
     };
+
     connectSSE();
 
     return () => {
-      if (pollTimerRef.current) clearInterval(pollTimerRef.current);
+      clearInterval(pollTimerRef.current);
       if (sseRef.current) sseRef.current.close();
     };
   }, [loadData, refreshData]);
@@ -117,25 +133,26 @@ export default function App() {
   const handleSync = async () => {
     setIsSyncing(true);
     try {
-      const res = await apiService.syncInbox();
-      await refreshData();
-      showToast(res?.message || 'Inbox synced and re-indexed!');
-    } catch { showToast('Error syncing inbox.'); }
-    finally { setIsSyncing(false); }
+      const res = await apiService.triggerSync();
+      showToast(`Synced ${res.synced_threads ?? 0} threads from Gmail.`);
+      await loadData();
+    } catch {
+      showToast('Sync failed — check your Gmail IMAP connection in Settings.');
+    } finally {
+      setIsSyncing(false);
+    }
   };
-
-  const showToast = (msg) => setToastMessage(msg);
 
   const filteredLeads = useMemo(() => {
     let r = [...leads];
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       r = r.filter(l =>
-        l.name.toLowerCase().includes(q) ||
-        l.company.toLowerCase().includes(q) ||
-        l.role.toLowerCase().includes(q) ||
-        l.reason.toLowerCase().includes(q) ||
-        l.category.toLowerCase().includes(q)
+        l.name?.toLowerCase().includes(q) ||
+        l.company?.toLowerCase().includes(q) ||
+        l.role?.toLowerCase().includes(q) ||
+        l.reason?.toLowerCase().includes(q) ||
+        l.category?.toLowerCase().includes(q)
       );
     }
     if (selectedCategory === 'critical') r = r.filter(l => l.urgency >= 9);
@@ -151,9 +168,14 @@ export default function App() {
     return r;
   }, [leads, searchQuery, selectedCategory, sortBy]);
 
-  return (
-    <div style={{ minHeight: '100vh', background: '#050810', color: '#e8ecf4', fontFamily: 'Inter, system-ui, sans-serif' }}>
+  const isDark = theme === 'dark';
 
+  return (
+    <div className={`min-h-screen transition-colors duration-300 flex flex-col font-sans ${
+      isDark ? 'bg-[#09090b] text-white' : 'bg-[#f4f4f6] text-black'
+    }`}>
+
+      {/* Top Navbar */}
       <Navbar
         onOpenChat={() => setIsChatOpen(true)}
         onOpenSettings={() => setIsSettingsOpen(true)}
@@ -161,81 +183,86 @@ export default function App() {
         isSyncing={isSyncing}
         isLive={isLive}
         lastSyncTime={stats?.last_sync || 'Just now'}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
-      <main style={{ maxWidth: '1320px', margin: '0 auto', padding: '28px 24px 48px', width: '100%' }}>
+      <main className="max-w-7xl mx-auto px-5 lg:px-8 py-8 w-full flex-1 space-y-8">
 
-        {/* ── Hero Banner ── */}
-        <div
-          className="relative rounded-2xl overflow-hidden mb-8 p-7 sm:p-10"
-          style={{
-            background: 'linear-gradient(135deg, rgba(99,102,241,0.06) 0%, rgba(34,211,238,0.04) 50%, rgba(16,185,129,0.03) 100%)',
-            border: '1px solid rgba(99,102,241,0.15)',
-            boxShadow: '0 0 60px rgba(99,102,241,0.06), inset 0 1px 0 rgba(255,255,255,0.04)'
-          }}
-        >
-          {/* Aurora blobs */}
-          <div className="aurora-blob" style={{ width: 350, height: 350, top: -100, left: -80, background: 'rgba(99,102,241,0.1)', animationDelay: '0s' }} />
-          <div className="aurora-blob" style={{ width: 280, height: 280, top: -50, right: 60, background: 'rgba(34,211,238,0.07)', animationDelay: '-4s' }} />
-          <div className="aurora-blob" style={{ width: 200, height: 200, bottom: -70, right: -50, background: 'rgba(168,85,247,0.06)', animationDelay: '-8s' }} />
-
-          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div>
-              {/* Live badge */}
-              <div
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-5"
-                style={{
-                  background: 'rgba(99,102,241,0.1)',
-                  border: '1px solid rgba(99,102,241,0.3)',
-                  color: '#818cf8',
-                  backdropFilter: 'blur(12px)'
-                }}
-              >
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full rounded-full animate-ping" style={{ background: '#6366f1', opacity: 0.6 }} />
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: '#6366f1' }} />
+        {/* ── 3D Hero Header Banner ── */}
+        <div className="perspective-1000">
+          <div
+            className={`rounded-3xl p-8 sm:p-10 border flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden transition-transform duration-300 hover:-translate-y-1 ${
+              isDark
+                ? 'bg-[#121214] border-white/10 text-white shadow-2xl'
+                : 'bg-white border-black/10 text-black shadow-lg'
+            }`}
+            style={{
+              boxShadow: isDark
+                ? '0 20px 40px -10px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1)'
+                : '0 20px 35px -8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,1)'
+            }}
+          >
+            <div className="space-y-3 z-10">
+              {/* Live Indicator with Logo Mark */}
+              <div className={`inline-flex items-center gap-2.5 px-3 py-1 rounded-full text-xs font-semibold border ${
+                isDark ? 'bg-white/5 border-white/10 text-zinc-300' : 'bg-black/5 border-black/10 text-zinc-700'
+              }`}>
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full rounded-full animate-ping bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
                 </span>
-                RAG Sales Intelligence — Active
+                <span className="flex items-center gap-1.5 font-medium">
+                  <span>RAG Sales Intelligence</span>
+                  <span className="text-zinc-500">·</span>
+                  <span className="text-emerald-500 font-bold">Active</span>
+                </span>
               </div>
 
-              <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3" style={{ color: '#e8ecf4', lineHeight: 1.15 }}>
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">
                 Never let a warm prospect
                 <br />
-                <span style={{
-                  background: 'linear-gradient(135deg, #6366f1, #22d3ee)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}>slip away again.</span>
-              </h2>
+                <span className={isDark ? 'text-zinc-400' : 'text-zinc-500'}>slip away again.</span>
+              </h1>
 
-              <p className="text-sm max-w-xl leading-relaxed" style={{ color: '#94a3b8' }}>
-                Sakha analyzes your Gmail conversations, scores urgency 1–10, surfaces buying intent signals,
+              <p className={`text-sm max-w-xl leading-relaxed font-normal ${
+                isDark ? 'text-zinc-400' : 'text-zinc-600'
+              }`}>
+                Sakha analyzes your Gmail conversations, scores urgency 1–10, surfaces broken promises,
                 and drafts contextual follow-ups for your review.
               </p>
             </div>
 
-            <div className="shrink-0 flex items-center gap-3">
+            <div className="shrink-0 flex items-center gap-3 z-10">
               <button
                 onClick={() => setIsChatOpen(true)}
-                className="flex items-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-bold text-white transition-all active:scale-95"
+                className={`btn-3d flex items-center gap-2.5 px-6 py-3.5 rounded-2xl text-sm font-bold transition-all active:scale-95 shadow-md ${
+                  isDark
+                    ? 'bg-white text-black hover:bg-zinc-100 shadow-white/10'
+                    : 'bg-black text-white hover:bg-zinc-800 shadow-black/20'
+                }`}
                 style={{
-                  background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-                  boxShadow: '0 8px 32px rgba(99,102,241,0.35), 0 0 0 1px rgba(99,102,241,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
+                  boxShadow: isDark
+                    ? '0 8px 20px rgba(255,255,255,0.15)'
+                    : '0 8px 20px rgba(0,0,0,0.2)'
                 }}
-                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 12px 40px rgba(99,102,241,0.5), 0 0 0 1px rgba(99,102,241,0.5), inset 0 1px 0 rgba(255,255,255,0.15)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(99,102,241,0.35), 0 0 0 1px rgba(99,102,241,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'; e.currentTarget.style.transform = ''; }}
               >
-                <Sparkles className="w-4.5 h-4.5" />
-                Ask Copilot Anything
+                <Sparkles className="w-4 h-4" />
+                <span>Ask Copilot Anything</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* ── KPI Stats ── */}
-        <StatsOverview stats={stats} activeFilter={selectedCategory} onSelectFilter={setSelectedCategory} />
+        {/* ── KPI Stats Overview ── */}
+        <StatsOverview
+          stats={stats}
+          activeFilter={selectedCategory}
+          onSelectFilter={setSelectedCategory}
+          theme={theme}
+        />
 
-        {/* ── Filters ── */}
+        {/* ── Search & Filter Controls ── */}
         <LeadFilters
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -244,100 +271,95 @@ export default function App() {
           sortBy={sortBy}
           setSortBy={setSortBy}
           totalResults={filteredLeads.length}
+          theme={theme}
         />
 
-        {/* ── Lead Grid ── */}
+        {/* ── 3D Lead Grid ── */}
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-24 gap-4">
-            <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center"
-              style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)' }}
-            >
-              <RefreshCw className="w-6 h-6 animate-spin" style={{ color: '#6366f1' }} />
+          <div className={`flex flex-col items-center justify-center py-24 gap-4 border rounded-3xl ${
+            isDark ? 'bg-[#121214] border-white/10' : 'bg-white border-black/10 shadow-sm'
+          }`}>
+            <div className="w-16 h-12 rounded-2xl flex items-center justify-center bg-white p-2 border border-white/20 shadow-md">
+              <img src="/logo.jpeg" alt="Sakha" className="h-6 w-auto object-contain animate-pulse" />
             </div>
-            <p className="text-sm font-medium" style={{ color: '#475569' }}>
+            <p className={`text-sm font-medium ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
               Scanning inbox and computing urgency embeddings…
             </p>
           </div>
         ) : filteredLeads.length === 0 ? (
-          <div
-            className="flex flex-col items-center justify-center py-24 my-6 rounded-2xl gap-4 text-center"
-            style={{
-              background: 'rgba(255,255,255,0.02)',
-              border: '1px solid rgba(255,255,255,0.06)',
-              backdropFilter: 'blur(16px)'
-            }}
-          >
-            <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center"
-              style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.15)' }}
-            >
-              <Inbox className="w-7 h-7" style={{ color: '#6366f1' }} />
+          <div className={`flex flex-col items-center justify-center py-20 my-4 rounded-3xl gap-3 text-center border ${
+            isDark ? 'bg-[#121214] border-white/10' : 'bg-white border-black/10 shadow-sm'
+          }`}>
+            <div className="w-16 h-12 rounded-2xl flex items-center justify-center bg-white p-2 border border-black/10 shadow-sm">
+              <img src="/logo.jpeg" alt="Sakha" className="h-6 w-auto object-contain opacity-80" />
             </div>
             <div>
-              <h3 className="text-base font-bold mb-1.5" style={{ color: '#e8ecf4' }}>No prospects found</h3>
-              <p className="text-sm max-w-sm" style={{ color: '#475569' }}>
+              <h3 className="text-base font-bold mb-1">
+                No prospects found
+              </h3>
+              <p className={`text-xs max-w-sm ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
                 {searchQuery
-                  ? `No leads match "${searchQuery}". Try a different search.`
-                  : 'All prospects in this category are up to date.'}
+                  ? `No leads match "${searchQuery}". Try a different keyword.`
+                  : 'No leads currently match this filter criteria.'}
               </p>
             </div>
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="px-4 py-2 rounded-xl text-sm font-semibold transition-all"
-                style={{
-                  background: 'rgba(255,255,255,0.06)',
-                  color: '#94a3b8',
-                  border: '1px solid rgba(255,255,255,0.08)'
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
+                className={`btn-3d px-4 py-2 rounded-xl text-xs font-semibold ${
+                  isDark ? 'bg-white text-black hover:bg-zinc-100' : 'bg-black text-white hover:bg-zinc-800'
+                }`}
               >
                 Clear Search
               </button>
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredLeads.map(lead => (
               <LeadCard
                 key={lead.id}
                 lead={lead}
                 onSelectLead={setActiveLead}
                 onQuickDraft={setActiveLead}
+                theme={theme}
               />
             ))}
           </div>
         )}
-
       </main>
 
       {/* ── Footer ── */}
-      <footer
-        className="mt-auto py-6 px-5 text-center text-xs"
-        style={{ borderTop: '1px solid rgba(99,102,241,0.08)', color: '#475569' }}
-      >
-        <div style={{ maxWidth: '1320px', margin: '0 auto' }} className="flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="font-bold" style={{ color: '#94a3b8' }}>Sakha</span>
+      <footer className={`mt-auto py-6 px-6 text-center text-xs border-t ${
+        isDark ? 'border-white/10 text-zinc-500' : 'border-black/10 text-zinc-600 bg-white/50'
+      }`}>
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="h-6 px-1.5 rounded-lg bg-white border border-black/10 flex items-center justify-center shadow-xs">
+              <img src="/logo.jpeg" alt="Logo" className="h-3.5 w-auto object-contain" />
+            </div>
+            <span className={`font-bold ${isDark ? 'text-white' : 'text-black'}`}>Sakha</span>
             <span>— AI Sales Follow-Up Agent</span>
             <span>· Built by Team Sakha</span>
           </div>
-          <div className="flex items-center gap-3" style={{ color: '#334155' }}>
-            {['Local MiniLM RAG', 'ChromaDB Vector Memory', 'Human-in-the-Loop Gmail'].map((s, i, arr) => (
-              <React.Fragment key={s}>
-                <span>{s}</span>
-                {i < arr.length - 1 && <span>·</span>}
-              </React.Fragment>
-            ))}
+          <div className="flex items-center gap-3 opacity-75">
+            <span>Local MiniLM RAG</span>
+            <span>·</span>
+            <span>ChromaDB Vector Memory</span>
+            <span>·</span>
+            <span>Human-in-the-Loop Gmail</span>
           </div>
         </div>
       </footer>
 
       {/* ── Modals ── */}
       {activeLead && (
-        <LeadDetailModal lead={activeLead} onClose={() => setActiveLead(null)} showToast={showToast} />
+        <LeadDetailModal
+          lead={activeLead}
+          onClose={() => setActiveLead(null)}
+          showToast={showToast}
+          theme={theme}
+        />
       )}
 
       <RagChatModal
@@ -348,12 +370,14 @@ export default function App() {
           if (l) setActiveLead(l);
           setIsChatOpen(false);
         }}
+        theme={theme}
       />
 
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         showToast={showToast}
+        theme={theme}
       />
 
       <Toast message={toastMessage} onClose={() => setToastMessage('')} />
