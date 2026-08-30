@@ -17,6 +17,7 @@ export default function Navbar({
   lastSyncTime,
   llmProvider = 'groq',
   isLive = false,
+  isLiveGmail = false,
   theme = 'dark',
   onToggleTheme
 }) {
@@ -105,7 +106,7 @@ export default function Navbar({
             )}
           </button>
 
-          {/* Live / Continued Status Indicator (Exception) */}
+          {/* Live / Demo Status Indicator */}
           <div
             className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs border ${
               isDark
@@ -117,12 +118,24 @@ export default function Navbar({
               <span className="absolute inline-flex h-full w-full rounded-full animate-ping bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
             </span>
-            <span>Gmail</span>
-            <span className={`font-medium ${isDark ? 'text-white' : 'text-black'}`}>Connected</span>
-            {isLive && (
-              <span className="ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-500 border border-emerald-500/30">
-                LIVE
-              </span>
+            {isLiveGmail ? (
+              <>
+                <span>Gmail</span>
+                <span className={`font-medium ${isDark ? 'text-white' : 'text-black'}`}>Connected</span>
+                {isLive && (
+                  <span className="ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-500 border border-emerald-500/30">
+                    LIVE
+                  </span>
+                )}
+              </>
+            ) : (
+              <>
+                <span>Workspace</span>
+                <span className={`font-medium ${isDark ? 'text-white' : 'text-black'}`}>Demo Ready</span>
+                <span className="ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/25">
+                  DEMO
+                </span>
+              </>
             )}
           </div>
 
