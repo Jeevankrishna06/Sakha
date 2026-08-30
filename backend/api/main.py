@@ -3,13 +3,23 @@ FastAPI Backend Application for Sakha — AI Sales Follow-Up Agent.
 Provides unified REST API endpoints and full-stack integration with the React Dashboard.
 """
 
+import sys
+from pathlib import Path
+
+# Ensure project root is in sys.path regardless of execution directory
+_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+_BACKEND = Path(__file__).resolve().parent.parent
+if str(_BACKEND) not in sys.path:
+    sys.path.insert(0, str(_BACKEND))
+
 from typing import Optional, Dict, Any, List
 import os
 import time
 import json
 import asyncio
 import threading
-from pathlib import Path
 from fastapi import FastAPI, APIRouter, HTTPException, Body, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, StreamingResponse

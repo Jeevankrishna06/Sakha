@@ -1,9 +1,12 @@
 import os
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
 # Load .env file from root directory (auto-create from .env.example if missing)
 BASE_DIR = Path(__file__).resolve().parent.parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
 env_file = BASE_DIR / ".env"
 env_example = BASE_DIR / ".env.example"
 

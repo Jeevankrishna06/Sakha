@@ -202,13 +202,21 @@ class GmailClient:
                 ]
 
                 creds = None
-                if os.path.exists(token_path):
-                    creds = Credentials.from_authorized_user_file(token_path, SCOPES)
+                if os.path.exists(token_path) and os.path.getsize(token_path) > 0:
+                    try:
+                        creds = Credentials.from_authorized_user_file(token_path, SCOPES)
+                    except Exception as token_err:
+                        print(f"[GmailClient] Could not read token.json: {token_err}. Will re-authenticate if credentials.json is present.")
+                        creds = None
 
                 if not creds or not creds.valid:
                     if creds and creds.expired and creds.refresh_token:
-                        creds.refresh(Request())
-                    elif os.path.exists(creds_path):
+                        try:
+                            creds.refresh(Request())
+                        except Exception as ref_err:
+                            print(f"[GmailClient] Token refresh failed: {ref_err}")
+                            creds = None
+                    if (not creds or not creds.valid) and os.path.exists(creds_path) and os.path.getsize(creds_path) > 0:
                         flow = InstalledAppFlow.from_client_secrets_file(creds_path, SCOPES)
                         creds = flow.run_local_server(port=0)
                         with open(token_path, 'w') as token:
