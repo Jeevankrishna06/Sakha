@@ -1,18 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import {
   Sparkles, Send, Copy, Check, ExternalLink,
-  RefreshCw, Wand2, Mail, ShieldAlert
+  RefreshCw, Wand2, Mail, ShieldCheck, Zap,
+  Sliders
 } from 'lucide-react';
 import { apiService } from '../services/api';
 
 const TONES = [
   { id: 'Professional',            label: 'Professional',   icon: '💼' },
+  { id: 'Short & Direct',          label: 'Direct',         icon: '🎯' },
+  { id: 'Urgent / Action-Oriented', label: 'Urgent',        icon: '⚡', isCritical: true },
   { id: 'Warm & Friendly',         label: 'Warm',           icon: '🤝' },
-  { id: 'Urgent / Action-Oriented', label: 'Urgent',        icon: '⚡' },
-  { id: 'Short & Direct',          label: 'Direct',         icon: '🎯' }
+  { id: 'Executive / Concise',     label: 'Executive',      icon: '👑' }
 ];
 
-export default function DraftEditor({ lead, onDraftCreated, showToast }) {
+const QUICK_PROMPTS = [
+  "Make it 50% shorter",
+  "Ask for 10-min meeting Tuesday",
+  "Add pricing pilot discount",
+  "Polite follow-up nudge",
+  "Highlight product ROI"
+];
+
+export default function DraftEditor({ lead, onDraftCreated, showToast, theme = 'dark' }) {
+  const isDark = theme === 'dark';
   const [tone, setTone]               = useState(lead.draft?.tone || 'Professional');
   const [subject, setSubject]         = useState(lead.draft?.subject || `Re: ${lead.company} & Sakha`);
   const [body, setBody]               = useState(lead.draft?.body || '');
@@ -35,286 +46,311 @@ export default function DraftEditor({ lead, onDraftCreated, showToast }) {
     setIsRegenerating(true);
     try {
       const g = await apiService.generateDraft(lead.id, newTone, customPrompt);
-      if (g?.body) { setBody(g.body); if (g.subject) setSubject(g.subject); }
-    } catch (e) { console.error(e); } finally { setIsRegenerating(false); }
+      if (g?.body) {
+        setBody(g.body);
+        if (g.subject) setSubject(g.subject);
+      }
+      showToast(`Regenerated draft with ${newTone} tone!`);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsRegenerating(false);
+    }
   };
 
-  const handleCustomRegenerate = async (e) => {
-    e.preventDefault();
-    if (!customPrompt.trim()) return;
+  const handleCustomRegenerate = async (promptText) => {
+    const p = promptText || customPrompt;
+    if (!p.trim()) return;
     setIsRegenerating(true);
     try {
-      const g = await apiService.generateDraft(lead.id, tone, customPrompt);
+      const g = await apiService.generateDraft(lead.id, tone, p.trim());
       if (g?.body) setBody(g.body);
-      showToast('Draft regenerated with your instructions!');
-    } catch (e) { console.error(e); } finally { setIsRegenerating(false); }
+      showToast('AI updated draft according to instructions!');
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsRegenerating(false);
+    }
   };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(`Subject: ${subject}\n\n${body}`);
     setCopied(true);
-    showToast('Copied to clipboard!');
+    showToast('Copied draft to clipboard!');
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleCreateGmailDraft = async () => {
     setIsCreatingDraft(true);
     try {
-      const result = await apiService.createDraft(lead.id, { recipient: lead.email, subject, body });
+      const result = await apiService.createDraft(lead.id, {
+        recipient: lead.email,
+        subject,
+        body
+      });
       setCreatedDraftInfo(result);
       if (result?.success) {
-        showToast('Gmail Draft created — check your Gmail drafts folder.');
+        showToast('Gmail Draft created successfully!');
         if (onDraftCreated) onDraftCreated(result);
       }
-    } catch (e) { showToast('Error creating draft in Gmail'); } finally { setIsCreatingDraft(false); }
+    } catch (e) {
+      showToast('Error creating draft in Gmail');
+    } finally {
+      setIsCreatingDraft(false);
+    }
   };
 
-  return (
-    <div className="space-y-4">
+  const handleOpenDirectGmail = () => {
+    const to = encodeURIComponent(lead.email || '');
+    const su = encodeURIComponent(subject || '');
+    const b = encodeURIComponent(body || '');
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${su}&body=${b}`;
+    window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+  };
 
-      {/* Section header */}
-      <div className="flex items-center justify-between pb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4" style={{ color: '#6366f1' }} />
-          <h4 className="text-xs font-bold uppercase tracking-widest" style={{ color: '#e8ecf4' }}>
-            Personalized Draft
-          </h4>
+  const wordCount = body.trim() ? body.trim().split(/\s+/).length : 0;
+  const charCount = body.length;
+
+  return (
+    <div className="space-y-5">
+      
+      {/* ── Studio Header ── */}
+      <div className={`flex items-center justify-between pb-3 border-b ${isDark ? 'border-white/10' : 'border-black/10'}`}>
+        <div className="flex items-center gap-2.5">
+          <div className="h-7 px-1.5 rounded-lg flex items-center justify-center bg-white border border-black/10 shadow-xs">
+            <img src="/logo.jpeg" alt="Sakha" className="h-4 w-auto object-contain" />
+          </div>
+          <div>
+            <h4 className={`text-xs font-bold uppercase tracking-widest ${isDark ? 'text-white' : 'text-black'}`}>
+              AI Follow-Up Studio
+            </h4>
+            <span className={`text-[10px] ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>Context-Aware Follow-Up Generation</span>
+          </div>
         </div>
-        <span
-          className="text-[10px] font-semibold px-2 py-0.5 rounded-lg"
-          style={{ background: 'rgba(34,211,238,0.1)', color: '#22d3ee', border: '1px solid rgba(34,211,238,0.2)' }}
-        >
-          Context-Aware RAG
-        </span>
+
+        <div className="flex items-center gap-2">
+          <span className={`text-[11px] font-mono px-2.5 py-1 rounded-lg border ${
+            isDark ? 'text-zinc-300 bg-white/5 border-white/10' : 'text-zinc-700 bg-black/5 border-black/10'
+          }`}>
+            {wordCount} words · {charCount} chars
+          </span>
+        </div>
       </div>
 
-      {/* Tone pills */}
-      <div>
-        <label className="block text-[10px] font-semibold uppercase tracking-widest mb-2" style={{ color: '#94a3b8' }}>
-          Tone
-        </label>
-        <div className="grid grid-cols-4 gap-1.5">
+      {/* ── Tone Selection Pills ── */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className={`text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5 ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>
+            <Sliders className="w-3.5 h-3.5 text-current" />
+            <span>Tone of Voice</span>
+          </label>
+          <span className={`text-[10px] font-semibold ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+            Active: <strong className={isDark ? 'text-white' : 'text-black'}>{tone}</strong>
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
           {TONES.map(t => {
             const active = tone === t.id;
             return (
               <button
                 key={t.id}
+                type="button"
                 onClick={() => handleToneChange(t.id)}
                 disabled={isRegenerating}
-                className="py-2 rounded-xl text-xs font-semibold transition-all active:scale-95 disabled:opacity-40"
-                style={{
-                  background: active ? 'linear-gradient(180deg, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0.05) 100%)' : 'rgba(255,255,255,0.035)',
-                  backdropFilter: 'blur(20px)',
-                  color: active ? '#6366f1' : '#94a3b8',
-                  border: `1px solid ${active ? 'rgba(99,102,241,0.5)' : 'rgba(255,255,255,0.06)'}`,
-                  boxShadow: active ? '0 0 16px rgba(99,102,241,0.2), inset 0 1px 0 rgba(255,255,255,0.1)' : 'inset 0 1px 0 rgba(255,255,255,0.02)'
-                }}
-                onMouseEnter={e => {
-                  if (!e.currentTarget.disabled && !active) {
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
-                  }
-                }}
-                onMouseLeave={e => {
-                  if (!e.currentTarget.disabled && !active) {
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.035)';
-                  }
-                }}
+                className={`btn-3d py-2.5 px-3 rounded-2xl text-xs font-bold transition-all active:scale-95 disabled:opacity-40 flex items-center gap-2 justify-center border ${
+                  active
+                    ? isDark
+                      ? 'bg-white text-black border-white shadow-md'
+                      : 'bg-black text-white border-black shadow-md'
+                    : isDark
+                      ? 'bg-white/5 text-zinc-400 border-white/10 hover:border-white/20 hover:text-white'
+                      : 'bg-black/5 text-zinc-600 border-black/10 hover:border-black/20 hover:text-black'
+                }`}
               >
-                <span className="block text-base leading-none mb-0.5">{t.icon}</span>
-                {t.label}
+                <span>{t.icon}</span>
+                <span>{t.label}</span>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Recipient / subject */}
-      <div
-        className="rounded-xl overflow-hidden shadow-inner"
-        style={{
-          border: '1px solid rgba(255,255,255,0.06)',
-          background: 'rgba(255,255,255,0.02)',
-          backdropFilter: 'blur(20px)'
-        }}
-      >
-        <div className="flex items-center gap-3 px-3 py-2.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-          <span className="text-[11px] font-semibold w-14 shrink-0" style={{ color: '#475569' }}>To:</span>
-          <span className="text-xs font-mono" style={{ color: '#94a3b8' }}>{lead.email}</span>
+      {/* ── Recipient & Subject Header ── */}
+      <div className={`rounded-2xl overflow-hidden border ${
+        isDark ? 'bg-[#121214] border-white/10' : 'bg-[#f4f4f6] border-black/10'
+      }`}>
+        <div className={`flex items-center gap-3 px-4 py-2.5 border-b ${isDark ? 'border-white/10' : 'border-black/10'}`}>
+          <span className={`text-[11px] font-bold w-12 shrink-0 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>To:</span>
+          <span className={`text-xs font-mono font-medium ${isDark ? 'text-white' : 'text-black'}`}>{lead.email}</span>
         </div>
-        <div className="flex items-center gap-3 px-3 py-2.5">
-          <span className="text-[11px] font-semibold w-14 shrink-0" style={{ color: '#475569' }}>Subject:</span>
+        <div className="flex items-center gap-3 px-4 py-2.5">
+          <span className={`text-[11px] font-bold w-12 shrink-0 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>Subject:</span>
           <input
             type="text"
             value={subject}
             onChange={e => setSubject(e.target.value)}
-            className="flex-1 bg-transparent text-xs focus:outline-none"
-            style={{ color: '#e8ecf4' }}
+            className={`flex-1 bg-transparent text-xs focus:outline-none font-medium ${isDark ? 'text-white' : 'text-black'}`}
           />
         </div>
       </div>
 
-      {/* Editable body */}
-      <div className="relative">
+      {/* ── Editable Email Canvas ── */}
+      <div className={`relative group rounded-2xl overflow-hidden border ${
+        isDark ? 'bg-[#121214] border-white/10' : 'bg-white border-black/10'
+      }`}>
         <textarea
-          rows={10}
+          rows={11}
           value={body}
           onChange={e => setBody(e.target.value)}
           disabled={isRegenerating}
           placeholder="AI follow-up draft will appear here…"
-          className="w-full rounded-xl p-4 text-xs leading-relaxed resize-none focus:outline-none transition-all disabled:opacity-50"
-          style={{
-            background: 'rgba(255,255,255,0.02)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            color: '#e8ecf4',
-            fontFamily: 'inherit',
-            boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2)'
-          }}
-          onFocus={e => {
-            e.currentTarget.style.border = '1px solid rgba(99,102,241,0.5)';
-            e.currentTarget.style.boxShadow = '0 0 12px rgba(99,102,241,0.2), inset 0 2px 4px rgba(0,0,0,0.2)';
-          }}
-          onBlur={e => {
-            e.currentTarget.style.border = '1px solid rgba(255,255,255,0.06)';
-            e.currentTarget.style.boxShadow = 'inset 0 2px 4px rgba(0,0,0,0.2)';
-          }}
+          className={`w-full p-4 text-xs leading-relaxed resize-none focus:outline-none transition-all disabled:opacity-50 font-sans bg-transparent ${
+            isDark ? 'text-white' : 'text-black'
+          }`}
         />
+
         {isRegenerating && (
-          <div
-            className="absolute inset-0 rounded-xl flex flex-col items-center justify-center gap-3"
-            style={{ background: 'rgba(5,8,16,0.7)', backdropFilter: 'blur(8px)' }}
-          >
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg"
-              style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)' }}
-            >
-              <RefreshCw className="w-5 h-5 animate-spin" style={{ color: '#6366f1' }} />
+          <div className={`absolute inset-0 flex flex-col items-center justify-center gap-3 backdrop-blur-md z-20 ${
+            isDark ? 'bg-[#09090b]/85' : 'bg-white/85'
+          }`}>
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg ${
+              isDark ? 'bg-white text-black' : 'bg-black text-white'
+            }`}>
+              <RefreshCw className="w-5 h-5 animate-spin" />
             </div>
-            <span className="text-xs font-semibold" style={{ color: '#6366f1' }}>
-              Regenerating with <em>{tone}</em> tone…
+            <span className={`text-xs font-bold ${isDark ? 'text-white' : 'text-black'}`}>
+              Synthesizing draft with <em>{tone}</em> tone…
             </span>
           </div>
         )}
       </div>
 
-      {/* Custom instruction input */}
-      <form onSubmit={handleCustomRegenerate} className="flex gap-2">
+      {/* ── 1-Click Smart Quick Prompts ── */}
+      <div className="space-y-2">
+        <span className={`text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+          Instant AI Modifications
+        </span>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {QUICK_PROMPTS.map((promptText, i) => (
+            <button
+              key={i}
+              type="button"
+              disabled={isRegenerating}
+              onClick={() => {
+                setCustomPrompt(promptText);
+                handleCustomRegenerate(promptText);
+              }}
+              className={`btn-3d px-3 py-1.5 rounded-xl text-[11px] font-medium border transition-all active:scale-95 disabled:opacity-40 ${
+                isDark
+                  ? 'bg-white/5 hover:bg-white/10 text-zinc-300 border-white/10 hover:border-white/20'
+                  : 'bg-black/5 hover:bg-black/10 text-zinc-700 border-black/10 hover:border-black/20'
+              }`}
+            >
+              + {promptText}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Custom Instruction Input ── */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleCustomRegenerate();
+        }}
+        className="flex gap-2"
+      >
         <input
           type="text"
           value={customPrompt}
           onChange={e => setCustomPrompt(e.target.value)}
-          placeholder="Custom instruction (e.g. 'Mention 10% pilot discount if signed by Friday')…"
-          className="flex-1 px-3.5 py-2.5 rounded-xl text-xs focus:outline-none transition-all"
-          style={{
-            background: 'rgba(255,255,255,0.035)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            color: '#e8ecf4',
-            boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)'
-          }}
-          onFocus={e => {
-            e.currentTarget.style.border = '1px solid rgba(99,102,241,0.5)';
-            e.currentTarget.style.boxShadow = '0 0 10px rgba(99,102,241,0.15), inset 0 1px 2px rgba(0,0,0,0.1)';
-          }}
-          onBlur={e => {
-            e.currentTarget.style.border = '1px solid rgba(255,255,255,0.06)';
-            e.currentTarget.style.boxShadow = 'inset 0 1px 2px rgba(0,0,0,0.1)';
-          }}
+          placeholder="Custom prompt (e.g. 'Reference their recent Q3 product release')…"
+          className={`flex-1 px-4 py-2.5 rounded-xl text-xs border focus:outline-none transition-all ${
+            isDark
+              ? 'bg-[#121214] border-white/10 text-white placeholder:text-zinc-500 focus:border-white'
+              : 'bg-white border-black/10 text-black placeholder:text-zinc-400 focus:border-black'
+          }`}
         />
         <button
           type="submit"
           disabled={isRegenerating || !customPrompt.trim()}
-          className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all active:scale-95 disabled:opacity-40 shadow-sm"
-          style={{
-            background: 'rgba(255,255,255,0.035)',
-            backdropFilter: 'blur(20px)',
-            color: '#e8ecf4',
-            border: '1px solid rgba(255,255,255,0.1)'
-          }}
-          onMouseEnter={e => { if (!e.currentTarget.disabled) e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.035)'; }}
+          className={`btn-3d flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold border transition-all active:scale-95 disabled:opacity-40 ${
+            isDark
+              ? 'bg-white/10 hover:bg-white/15 border-white/15 text-white'
+              : 'bg-black/10 hover:bg-black/15 border-black/15 text-black'
+          }`}
         >
-          <Wand2 className="w-3.5 h-3.5" style={{ color: '#6366f1' }} />
-          Apply
+          <Wand2 className="w-3.5 h-3.5 text-current" />
+          <span>Apply</span>
         </button>
       </form>
 
-      {/* Human-in-the-loop notice */}
-      <div
-        className="flex items-start gap-3 px-3.5 py-3 rounded-xl text-[11px] shadow-sm"
-        style={{
-          background: 'rgba(16,185,129,0.05)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(16,185,129,0.15)',
-          color: '#94a3b8'
-        }}
-      >
-        <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" style={{ color: '#10b981' }} />
-        <span>
-          <strong style={{ color: '#e8ecf4' }}>Human-in-the-Loop:</strong> Sakha creates an editable draft in your Gmail.
-          It will <strong style={{ color: '#e8ecf4' }}>never</strong> send emails automatically.
-        </span>
+      {/* ── Human In The Loop Safety Banner ── */}
+      <div className={`flex items-center justify-between p-3.5 rounded-2xl border text-xs ${
+        isDark ? 'bg-white/[0.04] border-white/10 text-zinc-300' : 'bg-black/[0.03] border-black/10 text-zinc-700'
+      }`}>
+        <div className="flex items-center gap-2.5">
+          <ShieldCheck className="w-4 h-4 shrink-0" />
+          <span>
+            <strong className={isDark ? 'text-white' : 'text-black'}>Human Approval Guaranteed:</strong> Sakha prepares drafts for you to review; no automated sends.
+          </span>
+        </div>
       </div>
 
-      {/* Action row */}
-      <div className="flex items-center justify-between gap-3 pt-1">
+      {/* ── Action Buttons Footer ── */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
         <button
+          type="button"
           onClick={handleCopy}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all active:scale-95 shadow-sm"
-          style={{
-            background: 'rgba(255,255,255,0.035)',
-            backdropFilter: 'blur(20px)',
-            color: '#e8ecf4',
-            border: '1px solid rgba(255,255,255,0.08)'
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.035)'; }}
+          className={`btn-3d flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-colors ${
+            isDark
+              ? 'bg-white/5 hover:bg-white/10 text-white border-white/10'
+              : 'bg-black/5 hover:bg-black/10 text-black border-black/10'
+          }`}
         >
-          {copied
-            ? <><Check className="w-4 h-4" style={{ color: '#10b981' }} /><span style={{ color: '#10b981' }}>Copied!</span></>
-            : <><Copy className="w-4 h-4" style={{ color: '#94a3b8' }} />Copy</>
-          }
+          {copied ? (
+            <><Check className="w-3.5 h-3.5 text-emerald-500" /><span className="font-bold">Copied!</span></>
+          ) : (
+            <><Copy className="w-3.5 h-3.5 opacity-70" /><span>Copy Full Text</span></>
+          )}
         </button>
 
-        <div className="flex items-center gap-2">
-          {createdDraftInfo?.gmail_link && (
-            <a
-              href={createdDraftInfo.gmail_link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-sm"
-              style={{
-                background: 'rgba(34,211,238,0.05)',
-                backdropFilter: 'blur(20px)',
-                color: '#22d3ee',
-                border: '1px solid rgba(34,211,238,0.2)'
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(34,211,238,0.1)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(34,211,238,0.05)'; }}
-            >
-              Open Gmail <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          )}
-
+        <div className="flex items-center gap-2.5">
+          {/* Direct Gmail Web Compose */}
           <button
+            type="button"
+            onClick={handleOpenDirectGmail}
+            className={`btn-3d flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold border transition-all shadow-sm ${
+              isDark
+                ? 'bg-white/10 hover:bg-white/20 border-white/20 text-white'
+                : 'bg-black/10 hover:bg-black/20 border-black/20 text-black'
+            }`}
+          >
+            <span>Open in Gmail Web</span>
+            <ExternalLink className="w-3.5 h-3.5 opacity-70" />
+          </button>
+
+          {/* Create Gmail Draft API Button */}
+          <button
+            type="button"
             onClick={handleCreateGmailDraft}
             disabled={isCreatingDraft}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white transition-all active:scale-95 disabled:opacity-50"
-            style={{
-              background: 'linear-gradient(135deg, #6366f1, #22d3ee)',
-              boxShadow: '0 4px 15px rgba(99,102,241,0.3), inset 0 1px 0 rgba(255,255,255,0.2)',
-              border: 'none'
-            }}
-            onMouseEnter={e => { if (!e.currentTarget.disabled) e.currentTarget.style.boxShadow = '0 6px 20px rgba(34,211,238,0.4), inset 0 1px 0 rgba(255,255,255,0.2)'; }}
-            onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 4px 15px rgba(99,102,241,0.3), inset 0 1px 0 rgba(255,255,255,0.2)'; }}
+            className={`btn-3d flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold transition-transform active:scale-95 disabled:opacity-50 ${
+              isDark
+                ? 'bg-white text-black hover:bg-zinc-100 shadow-md'
+                : 'bg-black text-white hover:bg-zinc-800 shadow-md'
+            }`}
           >
-            {isCreatingDraft
-              ? <><RefreshCw className="w-4 h-4 animate-spin" />Creating…</>
-              : <><Mail className="w-4 h-4" />Create Gmail Draft</>
-            }
+            {isCreatingDraft ? (
+              <><RefreshCw className="w-3.5 h-3.5 animate-spin" /><span>Syncing…</span></>
+            ) : (
+              <><Mail className="w-3.5 h-3.5" /><span>Save to Gmail Drafts</span></>
+            )}
           </button>
         </div>
       </div>
+
     </div>
   );
 }

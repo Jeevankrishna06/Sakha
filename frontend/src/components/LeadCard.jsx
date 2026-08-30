@@ -1,252 +1,251 @@
-import React from 'react';
-import {
-  Building2, Clock, ArrowRight, Sparkles, AlertCircle
-} from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Building2, Clock, ArrowRight, Sparkles, AlertCircle } from 'lucide-react';
 
-function getUrgency(score) {
-  if (score >= 9) return { accent: '#ef4444', label: 'CRITICAL',  bg: 'rgba(239,68,68,0.08)',   ring: 'rgba(239,68,68,0.25)' };
-  if (score >= 7) return { accent: '#f97316', label: 'HIGH',       bg: 'rgba(249,115,22,0.08)',  ring: 'rgba(249,115,22,0.25)' };
-  if (score >= 4) return { accent: '#f59e0b', label: 'MEDIUM',     bg: 'rgba(245,158,11,0.08)',  ring: 'rgba(245,158,11,0.25)' };
-  return          { accent: '#3b82f6', label: 'LOW',          bg: 'rgba(59,130,246,0.08)',   ring: 'rgba(59,130,246,0.25)' };
-}
-
-// Initials avatar color palette
-const AVATAR_COLORS = [
-  '#00d084','#f97316','#3b82f6','#a855f7','#f59e0b','#ef4444','#06b6d4'
-];
-function getInitials(name = '') {
-  return name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
-}
-function getAvatarColor(name = '') {
-  let hash = 0;
-  for (const c of name) hash = c.charCodeAt(0) + ((hash << 5) - hash);
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
-}
-
-export default function LeadCard({ lead, onSelectLead, onQuickDraft }) {
-  const u = getUrgency(lead.urgency);
-  const initials = getInitials(lead.name);
-  const avatarColor = getAvatarColor(lead.name);
-
-  // Progress bar width for urgency
+export default function LeadCard({ lead, onSelectLead, onQuickDraft, theme = 'dark' }) {
+  const isDark = theme === 'dark';
+  const isCritical = lead.urgency >= 9;
   const barWidth = `${lead.urgency * 10}%`;
+
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0, isHovered: false });
+  const cardRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 12; // tilt angle max 6deg
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -12;
+    setMousePos({ x, y, isHovered: true });
+  };
+
+  const handleMouseLeave = () => {
+    setMousePos({ x: 0, y: 0, isHovered: false });
+  };
+
+  const initials = lead.name
+    ? lead.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()
+    : '??';
 
   return (
     <div
-      className="relative group rounded-xl p-5 flex flex-col gap-4 transition-all duration-300 overflow-hidden"
-      style={{
-        background: 'rgba(255,255,255,0.035)',
-        border: '1px solid rgba(255,255,255,0.06)',
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 20px rgba(0,0,0,0.4)',
-        backdropFilter: 'blur(20px)',
-        backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.03%22/%3E%3C/svg%3E")',
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.1), 0 12px 30px -10px ${u.accent}33, 0 4px 20px rgba(0,0,0,0.5)`;
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 20px rgba(0,0,0,0.4)';
-      }}
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="perspective-1000 w-full"
     >
-      {/* Subtle top gradient bar (urgency color) */}
       <div
-        className="absolute top-0 left-0 right-0 h-[2px] transition-all duration-300 opacity-80 group-hover:opacity-100"
-        style={{ background: `linear-gradient(90deg, ${u.accent}, transparent)` }}
-      />
-
-      {/* ── Row 1: Avatar + name + score ── */}
-      <div className="flex items-start gap-4">
-        {/* Avatar */}
-        <div
-          className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 p-[2px]"
-          style={{ background: `linear-gradient(135deg, ${avatarColor}99, rgba(255,255,255,0.05))` }}
-        >
-          <div className="w-full h-full rounded-full flex items-center justify-center text-sm font-bold"
-               style={{ background: '#050810', color: avatarColor }}>
-            {initials}
-          </div>
-        </div>
-
-        {/* Name + role + company */}
-        <div className="flex-1 min-w-0 pt-0.5">
-          <div className="flex items-baseline gap-2 flex-wrap">
-            <h3 className="text-[15px] font-semibold leading-tight truncate" style={{ color: '#e8ecf4' }}>
-              {lead.name}
-            </h3>
-            <span className="text-xs truncate font-medium" style={{ color: '#94a3b8' }}>
-              {lead.role}
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-            <Building2 className="w-3.5 h-3.5 shrink-0" style={{ color: '#475569' }} />
-            <span className="text-[13px] font-normal truncate" style={{ color: '#94a3b8' }}>
-              {lead.company}
-            </span>
-            {lead.deal_size && (
-              <>
-                <span style={{ color: '#475569' }}>·</span>
-                <span className="text-xs font-semibold" style={{ color: '#10b981' }}>
-                  {lead.deal_size}
-                </span>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Urgency badge */}
-        <div className="flex flex-col items-end shrink-0">
+        className={`rounded-3xl p-6 transition-all duration-300 flex flex-col justify-between gap-4 relative transform-style-3d ${
+          isDark
+            ? isCritical
+              ? 'bg-[#141214] border border-red-500/40 text-white'
+              : 'bg-[#121214] border border-white/10 text-white'
+            : isCritical
+              ? 'bg-white border border-red-500/40 text-black shadow-md'
+              : 'bg-white border border-black/10 text-black shadow-md'
+        }`}
+        style={{
+          transform: mousePos.isHovered
+            ? `rotateX(${mousePos.y}deg) rotateY(${mousePos.x}deg) translateY(-8px) scale(1.02)`
+            : 'rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)',
+          boxShadow: isDark
+            ? mousePos.isHovered
+              ? isCritical
+                ? '0 25px 50px -12px rgba(239, 68, 68, 0.25), 0 0 20px rgba(239, 68, 68, 0.15)'
+                : '0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.15)'
+              : '0 10px 25px -5px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+            : mousePos.isHovered
+              ? isCritical
+                ? '0 25px 50px -12px rgba(239, 68, 68, 0.2), 0 10px 20px rgba(0,0,0,0.08)'
+                : '0 25px 50px -12px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.1)'
+              : '0 6px 20px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1)'
+        }}
+      >
+        {/* ── 3D Floating Avatar + Info + Score ── */}
+        <div className="flex items-start gap-3.5 translate-z-20">
+          {/* 3D Embossed Avatar */}
           <div
-            className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-bold shadow-sm"
-            style={{ 
-              background: u.bg, 
-              color: u.accent, 
-              border: `1px solid ${u.ring}`,
-              boxShadow: `inset 0 0 12px ${u.accent}15`
+            className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 text-xs font-black shadow-md ${
+              isDark
+                ? 'bg-white/10 text-white border border-white/20'
+                : 'bg-black/5 text-black border border-black/15'
+            }`}
+            style={{
+              boxShadow: isDark
+                ? '0 4px 10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2)'
+                : '0 4px 10px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)'
             }}
           >
-            <span className="text-lg font-black leading-none">{lead.urgency}</span>
-            <span className="text-[10px] opacity-70 font-bold uppercase tracking-wider">/10</span>
+            {initials}
           </div>
-          <span className="text-[10px] font-bold tracking-[0.2em] mt-1.5" style={{ color: u.accent }}>
-            {u.label}
-          </span>
-        </div>
-      </div>
 
-      {/* Urgency progress bar */}
-      <div className="h-[3px] rounded-full overflow-hidden mt-1" style={{ background: 'rgba(255,255,255,0.06)' }}>
+          {/* Info */}
+          <div className="flex-1 min-w-0 pt-0.5">
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <h3 className={`text-base font-extrabold tracking-tight truncate ${isDark ? 'text-white' : 'text-black'}`}>
+                {lead.name}
+              </h3>
+              <span className={`text-xs truncate font-medium ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                {lead.role}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 mt-1 flex-wrap text-xs">
+              <Building2 className={`w-3.5 h-3.5 shrink-0 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`} />
+              <span className={`truncate font-medium ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>{lead.company}</span>
+              {lead.deal_size && (
+                <>
+                  <span className="text-zinc-400">·</span>
+                  <span className={`text-xs font-black ${isDark ? 'text-white' : 'text-black'}`}>
+                    {lead.deal_size}
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* 3D Urgency Badge (Red if Critical, Monochrome otherwise) */}
+          <div className="flex flex-col items-end shrink-0">
+            <div
+              className={`flex items-center gap-1 px-3 py-1 rounded-xl text-xs font-black shadow-sm ${
+                isCritical
+                  ? 'bg-red-500/20 text-red-500 border border-red-500/40'
+                  : isDark
+                    ? 'bg-white/10 text-white border border-white/20'
+                    : 'bg-black/5 text-black border border-black/15'
+              }`}
+              style={{
+                boxShadow: isCritical
+                  ? '0 4px 12px rgba(239,68,68,0.2)'
+                  : isDark
+                    ? '0 4px 10px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)'
+                    : '0 4px 8px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.8)'
+              }}
+            >
+              <span className="text-sm font-black">{lead.urgency}</span>
+              <span className="text-[9px] opacity-60 font-bold uppercase">/10</span>
+            </div>
+            <span
+              className={`text-[9px] font-extrabold tracking-widest mt-1 uppercase ${
+                isCritical ? 'text-red-500' : isDark ? 'text-zinc-400' : 'text-zinc-500'
+              }`}
+            >
+              {isCritical ? 'CRITICAL' : lead.urgency >= 7 ? 'HIGH' : lead.urgency >= 4 ? 'MEDIUM' : 'LOW'}
+            </span>
+          </div>
+        </div>
+
+        {/* Progress Bar (Red if Critical, Monochrome otherwise) */}
+        <div className={`h-[3px] rounded-full overflow-hidden ${isDark ? 'bg-white/10' : 'bg-black/10'}`}>
+          <div
+            className={`h-full rounded-full transition-all duration-700 ${
+              isCritical ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]' : isDark ? 'bg-white' : 'bg-black'
+            }`}
+            style={{ width: barWidth }}
+          />
+        </div>
+
+        {/* Signal Tags (Black & White with Critical / Continued exceptions) */}
+        <div className="flex items-center gap-1.5 flex-wrap text-[11px] translate-z-10">
+          <span className={`px-2.5 py-0.5 rounded-lg font-medium border ${
+            isDark ? 'bg-white/5 text-zinc-300 border-white/10' : 'bg-black/5 text-zinc-700 border-black/10'
+          }`}>
+            {lead.category}
+          </span>
+          
+          {/* Continued Exception (Amber) */}
+          {lead.status === 'Awaiting Response' && (
+            <span className="px-2.5 py-0.5 rounded-lg font-bold bg-amber-500/15 text-amber-500 border border-amber-500/30">
+              Awaiting Reply
+            </span>
+          )}
+
+          {/* Critical Exception (Red) */}
+          {lead.signals?.unanswered_promise && (
+            <span className="px-2.5 py-0.5 rounded-lg font-bold bg-red-500/15 text-red-500 border border-red-500/30">
+              Broken Promise
+            </span>
+          )}
+
+          <div className={`flex items-center gap-1 ml-auto text-[11px] font-medium ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+            <Clock className="w-3 h-3" />
+            <span>{lead.last_contact}</span>
+          </div>
+        </div>
+
+        {/* Flag Reason Context Box with 3D Depth */}
         <div
-          className="h-full rounded-full transition-all duration-700 relative"
-          style={{ 
-            width: barWidth, 
-            background: `linear-gradient(90deg, ${u.accent}66, ${u.accent})`,
-            boxShadow: `0 0 10px ${u.accent}80` 
-          }}
-        />
-      </div>
-
-      {/* ── Tags row ── */}
-      <div className="flex items-center gap-2 flex-wrap mt-1">
-        <span
-          className="px-2.5 py-1 rounded-full text-[11px] font-medium"
-          style={{ background: 'rgba(255,255,255,0.035)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.08)' }}
-        >
-          {lead.category}
-        </span>
-        {lead.status === 'Awaiting Response' && (
-          <span
-            className="px-2.5 py-1 rounded-full text-[11px] font-semibold"
-            style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)' }}
-          >
-            Waiting on Us
-          </span>
-        )}
-        {lead.signals?.unanswered_promise && (
-          <span
-            className="px-2.5 py-1 rounded-full text-[11px] font-semibold"
-            style={{ background: 'rgba(245,158,11,0.1)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.2)' }}
-          >
-            Broken Promise
-          </span>
-        )}
-        <div className="flex items-center gap-1.5 ml-auto font-medium" style={{ color: '#475569' }}>
-          <Clock className="w-3 h-3" />
-          <span className="text-[11px] text-[#94a3b8]">{lead.last_contact}</span>
-        </div>
-      </div>
-
-      <div className="w-full h-px my-1" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)' }} />
-
-      {/* ── WHY box ── */}
-      <div
-        className="rounded-r-xl rounded-l-sm p-3 relative overflow-hidden"
-        style={{ 
-          background: 'linear-gradient(90deg, rgba(245,158,11,0.08), rgba(255,255,255,0.02))', 
-          border: '1px solid rgba(255,255,255,0.04)',
-          borderLeft: '3px solid #f59e0b'
-        }}
-      >
-        <div className="flex items-center gap-1.5 mb-1.5">
-          <AlertCircle className="w-3.5 h-3.5 shrink-0" style={{ color: '#f59e0b' }} />
-          <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#f59e0b' }}>
-            Sakha flagged
-          </span>
-        </div>
-        <p className="text-[13px] leading-relaxed font-medium" style={{ color: '#94a3b8' }}>
-          {lead.reason}
-        </p>
-      </div>
-
-      {/* ── NEXT ACTION box ── */}
-      <div
-        className="rounded-r-xl rounded-l-sm p-3 relative overflow-hidden"
-        style={{ 
-          background: 'linear-gradient(90deg, rgba(99,102,241,0.1), rgba(255,255,255,0.02))', 
-          border: '1px solid rgba(255,255,255,0.04)',
-          borderLeft: '3px solid #6366f1'
-        }}
-      >
-        <div className="flex items-center gap-1.5 mb-1.5">
-          <Sparkles className="w-3.5 h-3.5 shrink-0" style={{ color: '#22d3ee' }} />
-          <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: '#22d3ee' }}>
-            Next action
-          </span>
-        </div>
-        <p className="text-[13px] font-medium leading-relaxed" style={{ color: '#e8ecf4' }}>
-          {lead.next_action}
-        </p>
-      </div>
-
-      {/* ── CTA Row ── */}
-      <div
-        className="flex gap-3 pt-2 mt-auto"
-      >
-        <button
-          onClick={() => onSelectLead(lead)}
-          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold transition-all active:scale-95"
-          style={{ 
-            background: 'rgba(255,255,255,0.035)', 
-            color: '#e8ecf4', 
-            border: '1px solid rgba(255,255,255,0.08)',
-            backdropFilter: 'blur(10px)'
-          }}
-          onMouseEnter={e => { 
-            e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; 
-            e.currentTarget.style.border = '1px solid rgba(255,255,255,0.15)'; 
-          }}
-          onMouseLeave={e => { 
-            e.currentTarget.style.background = 'rgba(255,255,255,0.035)'; 
-            e.currentTarget.style.border = '1px solid rgba(255,255,255,0.08)'; 
-          }}
-        >
-          <span>View Thread</span>
-          <ArrowRight className="w-3.5 h-3.5 opacity-70" />
-        </button>
-
-        <button
-          onClick={() => onQuickDraft(lead)}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white transition-all active:scale-95 shadow-lg"
+          className={`p-3.5 rounded-2xl border text-xs space-y-1 translate-z-10 ${
+            isDark ? 'bg-white/[0.03] border-white/10' : 'bg-black/[0.02] border-black/10'
+          }`}
           style={{
-            background: 'linear-gradient(135deg, #6366f1, #22d3ee)',
-            boxShadow: '0 4px 16px rgba(99,102,241,0.25)',
-            border: '1px solid rgba(255,255,255,0.1)'
-          }}
-          onMouseEnter={e => { 
-            e.currentTarget.style.boxShadow = '0 6px 24px rgba(99,102,241,0.4)'; 
-            e.currentTarget.style.transform = 'translateY(-1px)'; 
-            e.currentTarget.style.filter = 'brightness(1.1)';
-          }}
-          onMouseLeave={e => { 
-            e.currentTarget.style.boxShadow = '0 4px 16px rgba(99,102,241,0.25)'; 
-            e.currentTarget.style.transform = ''; 
-            e.currentTarget.style.filter = 'brightness(1)';
+            boxShadow: isDark
+              ? 'inset 0 1px 2px rgba(0,0,0,0.4)'
+              : 'inset 0 1px 2px rgba(0,0,0,0.04)'
           }}
         >
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Draft</span>
-        </button>
+          <div className={`flex items-center gap-1.5 font-semibold text-[10px] uppercase tracking-wider ${
+            isDark ? 'text-zinc-400' : 'text-zinc-500'
+          }`}>
+            <AlertCircle className="w-3 h-3 text-current" />
+            <span>Context & Intent</span>
+          </div>
+          <p className={`leading-relaxed font-normal ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>
+            {lead.reason}
+          </p>
+        </div>
+
+        {/* Recommended Action Box with 3D Depth */}
+        <div
+          className={`p-3.5 rounded-2xl border text-xs space-y-1 translate-z-20 ${
+            isDark ? 'bg-white/[0.06] border-white/15' : 'bg-black/[0.04] border-black/15'
+          }`}
+          style={{
+            boxShadow: isDark
+              ? '0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)'
+              : '0 4px 12px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.9)'
+          }}
+        >
+          <div className={`flex items-center gap-1.5 font-semibold text-[10px] uppercase tracking-wider ${
+            isDark ? 'text-zinc-400' : 'text-zinc-500'
+          }`}>
+            <Sparkles className="w-3 h-3 text-current" />
+            <span>Recommended Next Step</span>
+          </div>
+          <p className={`font-semibold leading-relaxed ${isDark ? 'text-white' : 'text-black'}`}>
+            {lead.next_action}
+          </p>
+        </div>
+
+        {/* Action Buttons (3D Tactile Push Buttons) */}
+        <div className="flex items-center gap-2 pt-1 mt-auto translate-z-30">
+          <button
+            onClick={() => onSelectLead(lead)}
+            className={`btn-3d flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold border transition-all ${
+              isDark
+                ? 'bg-white/5 hover:bg-white/10 text-white border-white/15'
+                : 'bg-black/5 hover:bg-black/10 text-black border-black/15'
+            }`}
+          >
+            <span>View Thread</span>
+            <ArrowRight className="w-3.5 h-3.5 opacity-70" />
+          </button>
+
+          <button
+            onClick={() => onQuickDraft(lead)}
+            className={`btn-3d flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 ${
+              isDark
+                ? 'bg-white text-black hover:bg-zinc-100'
+                : 'bg-black text-white hover:bg-zinc-800'
+            }`}
+            style={{
+              boxShadow: isDark
+                ? '0 4px 12px rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.4)'
+                : '0 4px 12px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1)'
+            }}
+          >
+            <Sparkles className="w-3.5 h-3.5 fill-current" />
+            <span>Draft</span>
+          </button>
+        </div>
       </div>
     </div>
   );

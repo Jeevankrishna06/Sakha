@@ -6,98 +6,80 @@ import {
 import ConversationView from './ConversationView';
 import DraftEditor from './DraftEditor';
 
-function getUrgency(score) {
-  if (score >= 9) return { accent: '#ef4444', label: 'CRITICAL', bg: 'rgba(239,68,68,0.1)', ring: 'rgba(239,68,68,0.3)' };
-  if (score >= 7) return { accent: '#f97316', label: 'HIGH',     bg: 'rgba(249,115,22,0.1)', ring: 'rgba(249,115,22,0.3)' };
-  if (score >= 4) return { accent: '#f59e0b', label: 'MEDIUM',   bg: 'rgba(245,158,11,0.1)', ring: 'rgba(245,158,11,0.3)' };
-  return          { accent: '#3b82f6', label: 'LOW',      bg: 'rgba(59,130,246,0.1)',  ring: 'rgba(59,130,246,0.3)' };
-}
-
-const SIGNAL_ITEMS = [
-  { key: 'buying_intent',        label: 'Buying Intent',   color: '#00d084', fallback: 'High' },
-  { key: 'response_lag_days',    label: 'Response Lag',    color: '#f59e0b', suffix: ' days' },
-  { key: 'unanswered_promise',   label: 'Broken Promise',  color: '#ef4444', bool: true }
-];
-
-export default function LeadDetailModal({ lead, onClose, showToast }) {
+export default function LeadDetailModal({ lead, onClose, showToast, theme = 'dark' }) {
   if (!lead) return null;
-  const u = getUrgency(lead.urgency);
+  const isDark = theme === 'dark';
+  const isCritical = lead.urgency >= 9;
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 animate-fadeIn"
-      style={{ background: 'rgba(5, 8, 16, 0.85)', backdropFilter: 'blur(16px)' }}
+      style={{
+        background: isDark ? 'rgba(5, 5, 8, 0.88)' : 'rgba(0, 0, 0, 0.5)',
+        backdropFilter: 'blur(20px)'
+      }}
       onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
-        className="relative w-full max-w-6xl max-h-[90vh] rounded-2xl flex flex-col overflow-hidden animate-slideUp"
+        className={`relative w-full max-w-6xl max-h-[90vh] rounded-3xl flex flex-col overflow-hidden animate-slideUp border shadow-2xl ${
+          isDark
+            ? 'bg-[#121214] border-white/15 text-white'
+            : 'bg-white border-black/10 text-black'
+        }`}
         style={{
-          background: 'rgba(255,255,255,0.035)',
-          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.05), 0 25px 50px -12px rgba(0,0,0,0.7)',
-          backdropFilter: 'blur(24px)'
+          boxShadow: isDark
+            ? '0 30px 60px -12px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.1)'
+            : '0 30px 60px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.08)'
         }}
       >
-        {/* Gradient border wrapper effect */}
-        <div 
-          className="absolute inset-0 rounded-2xl pointer-events-none" 
-          style={{ 
-            padding: '1px', 
-            background: 'linear-gradient(to bottom right, rgba(255,255,255,0.15), rgba(255,255,255,0.02))',
-            WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-            WebkitMaskComposite: 'xor',
-            maskComposite: 'exclude'
-          }} 
-        />
-        
-        {/* ── Modal header ── */}
+        {/* ── Modal Header ── */}
         <div
-          className="flex items-center justify-between px-6 py-5 shrink-0 relative"
-          style={{ 
-            background: 'rgba(5, 8, 16, 0.4)',
-            borderBottom: '1px solid rgba(255,255,255,0.06)',
-            borderLeft: `3px solid ${u.accent}`
-          }}
+          className={`flex items-center justify-between px-7 py-5 shrink-0 border-b ${
+            isDark ? 'border-white/10 bg-[#161619]' : 'border-black/10 bg-[#f8f8fa]'
+          }`}
         >
           <div className="flex items-center gap-4">
-            {/* Urgency flash */}
+            {/* Urgency Score Pill */}
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-sm font-extrabold shadow-inner"
-              style={{ 
-                background: `linear-gradient(135deg, ${u.bg}, rgba(5,8,16,0.5))`, 
-                color: u.accent, 
-                border: `1px solid ${u.ring}`,
-                boxShadow: `inset 0 0 10px ${u.bg}`
-              }}
+              className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 text-base font-black shadow-sm ${
+                isCritical
+                  ? 'bg-red-500/20 text-red-500 border border-red-500/40'
+                  : isDark
+                    ? 'bg-white/10 text-white border border-white/20'
+                    : 'bg-black/5 text-black border border-black/15'
+              }`}
             >
               {lead.urgency}
             </div>
 
             <div>
               <div className="flex items-center gap-2 flex-wrap mb-1">
-                <h2 className="text-lg font-semibold tracking-tight text-[#e8ecf4] leading-tight">{lead.name}</h2>
-                <span className="text-xs" style={{ color: '#475569' }}>·</span>
-                <span className="text-sm font-medium" style={{ color: '#94a3b8' }}>{lead.role}</span>
+                <h2 className="text-lg font-bold tracking-tight leading-tight">
+                  {lead.name}
+                </h2>
+                <span className="opacity-40">·</span>
+                <span className={`text-sm font-medium ${isDark ? 'text-zinc-300' : 'text-zinc-600'}`}>{lead.role}</span>
                 <span
-                  className="px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider ml-1 uppercase"
-                  style={{ 
-                    background: u.bg, 
-                    color: u.accent, 
-                    border: `1px solid ${u.ring}`,
-                    boxShadow: `inset 0 0 8px ${u.bg}`
-                  }}
+                  className={`px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider ml-1 uppercase border ${
+                    isCritical
+                      ? 'bg-red-500/20 text-red-500 border-red-500/30'
+                      : isDark
+                        ? 'bg-white/10 text-white border-white/20'
+                        : 'bg-black/5 text-black border-black/15'
+                  }`}
                 >
-                  {u.label}
+                  {isCritical ? 'CRITICAL' : lead.urgency >= 7 ? 'HIGH' : lead.urgency >= 4 ? 'MEDIUM' : 'LOW'}
                 </span>
               </div>
-              <div className="flex items-center gap-4 text-xs font-medium" style={{ color: '#94a3b8' }}>
+              <div className={`flex items-center gap-4 text-xs font-medium ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
                 <span className="flex items-center gap-1.5">
-                  <Building2 className="w-3.5 h-3.5" />{lead.company}
+                  <Building2 className="w-3.5 h-3.5 opacity-60" />{lead.company}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <Mail className="w-3.5 h-3.5" />{lead.email}
+                  <Mail className="w-3.5 h-3.5 opacity-60" />{lead.email}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5" />{lead.last_contact}
+                  <Clock className="w-3.5 h-3.5 opacity-60" />{lead.last_contact}
                 </span>
               </div>
             </div>
@@ -105,40 +87,23 @@ export default function LeadDetailModal({ lead, onClose, showToast }) {
 
           <button
             onClick={onClose}
-            className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200"
-            style={{ 
-              background: 'rgba(255,255,255,0.03)', 
-              color: '#94a3b8', 
-              border: '1px solid rgba(255,255,255,0.06)' 
-            }}
-            onMouseEnter={e => { 
-              e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; 
-              e.currentTarget.style.color = '#e8ecf4';
-              e.currentTarget.style.boxShadow = '0 0 12px rgba(255,255,255,0.1)';
-            }}
-            onMouseLeave={e => { 
-              e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; 
-              e.currentTarget.style.color = '#94a3b8'; 
-              e.currentTarget.style.boxShadow = 'none';
-            }}
+            className={`btn-3d w-9 h-9 flex items-center justify-center rounded-xl transition-colors ${
+              isDark ? 'bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white' : 'bg-black/5 hover:bg-black/10 text-zinc-600 hover:text-black'
+            }`}
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* ── Body: Split view ── */}
+        {/* ── Body: Split Pane View ── */}
         <div
-          className="grid grid-cols-1 lg:grid-cols-12 flex-1 overflow-y-auto relative z-10"
+          className="grid grid-cols-1 lg:grid-cols-12 flex-1 overflow-y-auto"
           style={{ minHeight: 0 }}
         >
-          {/* Left pane — Thread */}
-          <div
-            className="lg:col-span-5 overflow-y-auto p-6"
-            style={{ 
-              background: 'rgba(5,8,16,0.3)', 
-              borderRight: '1px solid rgba(255,255,255,0.06)' 
-            }}
-          >
+          {/* Left Pane — Thread History */}
+          <div className={`lg:col-span-5 overflow-y-auto p-6 border-r ${
+            isDark ? 'border-white/10 bg-[#0e0e11]' : 'border-black/10 bg-[#fbfbfd]'
+          }`}>
             <ConversationView
               thread={lead.thread}
               prospectName={lead.name}
@@ -146,98 +111,57 @@ export default function LeadDetailModal({ lead, onClose, showToast }) {
             />
           </div>
 
-          {/* Right pane — AI analysis + Draft */}
-          <div className="lg:col-span-7 overflow-y-auto p-6 space-y-6">
+          {/* Right Pane — AI Analysis & Draft Studio */}
+          <div className={`lg:col-span-7 overflow-y-auto p-6 space-y-6 ${
+            isDark ? 'bg-[#141417]' : 'bg-[#ffffff]'
+          }`}>
 
-            {/* AI Reasoning Card */}
-            <div
-              className="rounded-xl p-5 space-y-4"
-              style={{ 
-                background: 'rgba(255,255,255,0.02)', 
-                border: '1px solid rgba(255,255,255,0.06)',
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02)'
-              }}
-            >
+            {/* AI Reasoning Context Card */}
+            <div className={`rounded-2xl p-5 space-y-4 border ${
+              isDark ? 'bg-[#18181b] border-white/10' : 'bg-[#f4f4f6] border-black/10'
+            }`}>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <Flame className="w-4 h-4" style={{ color: '#6366f1' }} />
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#6366f1' }}>
-                    Why Sakha flagged this
+                <div className="flex items-center gap-2">
+                  <Flame className="w-4 h-4" />
+                  <span className="text-xs font-bold uppercase tracking-widest">
+                    Why Sakha Flagged This Lead
                   </span>
                 </div>
-                <span className="text-[11px] font-medium px-2.5 py-1 rounded-md" style={{ background: `${u.bg}`, color: u.accent, border: `1px solid ${u.ring}` }}>
+                <span className={`text-[11px] font-bold px-2.5 py-1 rounded border ${
+                  isDark ? 'bg-white/10 text-white border-white/10' : 'bg-black/5 text-black border-black/10'
+                }`}>
                   Urgency {lead.urgency}/10
                 </span>
               </div>
 
-              <p className="text-[13px] leading-relaxed" style={{ color: '#e8ecf4' }}>{lead.reason}</p>
+              <p className={`text-sm leading-relaxed ${isDark ? 'text-zinc-200' : 'text-zinc-700'}`}>{lead.reason}</p>
 
-              {/* Signal grid */}
-              <div
-                className="grid grid-cols-3 gap-3 pt-4"
-                style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
-              >
-                {SIGNAL_ITEMS.map(s => {
-                  let val, color;
-                  if (s.bool) {
-                    const v = lead.signals?.[s.key];
-                    val = v ? 'Yes — Detected' : 'None';
-                    color = v ? s.color : '#94a3b8';
-                  } else {
-                    val = (lead.signals?.[s.key] ?? s.fallback) + (s.suffix || '');
-                    color = s.color;
-                  }
-                  return (
-                    <div
-                      key={s.key}
-                      className="rounded-lg p-3 transition-colors"
-                      style={{ 
-                        background: 'rgba(255,255,255,0.02)', 
-                        border: '1px solid rgba(255,255,255,0.06)',
-                        backdropFilter: 'blur(8px)'
-                      }}
-                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
-                      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
-                    >
-                      <span className="block text-[10px] uppercase font-semibold tracking-wider mb-1" style={{ color: '#475569' }}>{s.label}</span>
-                      <span className="text-[13px] font-medium" style={{ color }}>{val}</span>
-                    </div>
-                  );
-                })}
+              {/* Signals Grid */}
+              <div className={`grid grid-cols-3 gap-3 pt-3 border-t ${isDark ? 'border-white/10' : 'border-black/10'}`}>
+                <div className="space-y-0.5">
+                  <span className="text-[10px] uppercase font-bold opacity-60">Buying Intent</span>
+                  <div className="text-xs font-bold">{lead.signals?.buying_intent || 'High'}</div>
+                </div>
+                <div className="space-y-0.5">
+                  <span className="text-[10px] uppercase font-bold opacity-60">Response Lag</span>
+                  <div className="text-xs font-bold text-amber-500">{(lead.signals?.response_lag_days ?? 2) + ' days'}</div>
+                </div>
+                <div className="space-y-0.5">
+                  <span className="text-[10px] uppercase font-bold opacity-60">Broken Promise</span>
+                  <div className={`text-xs font-bold ${lead.signals?.unanswered_promise ? 'text-red-500' : 'opacity-70'}`}>
+                    {lead.signals?.unanswered_promise ? 'Yes — Detected' : 'None'}
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Tactical next action */}
-            <div
-              className="relative rounded-xl p-5 overflow-hidden"
-              style={{ 
-                background: 'linear-gradient(to right, rgba(34,211,238,0.03), rgba(16,185,129,0.03))'
-              }}
-            >
-              <div 
-                className="absolute inset-0 pointer-events-none rounded-xl"
-                style={{
-                  padding: '1px',
-                  background: 'linear-gradient(to right, rgba(34,211,238,0.3), rgba(16,185,129,0.3))',
-                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  WebkitMaskComposite: 'xor',
-                  maskComposite: 'exclude'
-                }}
-              />
-              <div className="flex items-center gap-2.5 mb-2 relative z-10">
-                <Sparkles className="w-4 h-4" style={{ color: '#22d3ee' }} />
-                <span className="text-xs font-bold uppercase tracking-widest bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(to right, #22d3ee, #10b981)' }}>
-                  Recommended move
-                </span>
-              </div>
-              <p className="text-[13px] leading-relaxed font-medium relative z-10" style={{ color: '#e8ecf4' }}>
-                {lead.next_action}
-              </p>
-            </div>
-
-            {/* AI Draft Editor */}
-            <DraftEditor lead={lead} onDraftCreated={() => {}} showToast={showToast} />
-
+            {/* AI Draft Studio Component */}
+            <DraftEditor
+              lead={lead}
+              onDraftCreated={() => {}}
+              showToast={showToast}
+              theme={theme}
+            />
           </div>
         </div>
       </div>

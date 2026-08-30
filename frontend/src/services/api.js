@@ -28,7 +28,7 @@ export const apiService = {
       low_priority_count: low,
       awaiting_response_count: awaiting,
       due_today_count: critical + high,
-      last_sync: '2 minutes ago'
+      last_sync: 'Just now'
     };
   },
 
@@ -111,7 +111,10 @@ export const apiService = {
           custom_instructions: customInstructions
         })
       });
-      if (res.ok) return await res.json();
+      if (res.ok) {
+        const data = await res.json();
+        return data;
+      }
     } catch (e) {
       console.warn('[API] Backend draft error, using local generator:', e);
     }
@@ -129,6 +132,8 @@ export const apiService = {
       body = `Hi ${firstName},\n\nHope you are having a wonderful week!\n\nI wanted to check in regarding our conversation on ${cleanSubj}. We would love to partner with ${lead.company} and make sure all your questions are answered.\n\nPlease let me know if you would like to jump on a quick call this week, or if I can share any additional details.\n\nWarm regards,\nSathwik`;
     } else if (tone === 'Urgent / Action-Oriented') {
       body = `Hi ${firstName},\n\nFollowing up right away on ${cleanSubj} so we don't hold up your timeline for ${lead.company}.\n\nI have everything ready on our end—could we do a brief 10-minute call today or tomorrow morning to lock in next steps?\n\nBest regards,\nSathwik`;
+    } else if (tone === 'Executive / Concise') {
+      body = `Hi ${firstName},\n\nTouching base on the ${cleanSubj} initiative for ${lead.company}.\n\nKey next step: finalize timeline & deliverables.\n\nLet me know if 15 minutes this Thursday works for your calendar.\n\nBest regards,\nSathwik`;
     } else {
       body = `Hi ${firstName},\n\nThank you for your time regarding ${cleanSubj}.\n\nI am following up to review our discussion for ${lead.company} and address any questions your team may have as we move forward.\n\nPlease let me know your availability this week for a brief review session.\n\nBest regards,\nSathwik`;
     }
@@ -183,7 +188,7 @@ export const apiService = {
 
     return {
       query,
-      response: `Based on your recent 1000+ indexed Gmail threads, **Rahul Sharma (Acme Tech)** and **Priya Mehta (TechNova)** require the most urgent follow-up today to maintain momentum on active deals.`,
+      response: `Based on your recent indexed Gmail threads, **Rahul Sharma (Acme Tech)** and **Priya Mehta (TechNova)** require the most urgent follow-up today to maintain momentum on active deals.`,
       sources: [
         { lead_name: "Rahul Sharma", company: "Acme Technologies", date: "Aug 26, 2026", score: 0.89 },
         { lead_name: "Priya Mehta", company: "TechNova Solutions", date: "Aug 28, 2026", score: 0.87 }
@@ -201,9 +206,14 @@ export const apiService = {
     }
     return {
       status: 'success',
-      message: '127 conversation threads parsed, cleaned, and indexed in ChromaDB.',
+      message: 'Conversation threads parsed, cleaned, and indexed in ChromaDB.',
       details: { leads_processed: 6, chunks_indexed: 18 }
     };
+  },
+
+  // Alias for syncInbox
+  async triggerSync() {
+    return this.syncInbox();
   },
 
   // Connect Gmail via IMAP (email + App Password)
