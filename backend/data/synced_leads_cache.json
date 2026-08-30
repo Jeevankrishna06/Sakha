@@ -1,5 +1,57 @@
 [
   {
+    "id": "1a053aace79f973b",
+    "name": "Rahul Sharma",
+    "email": "rahul.sharma@acmetech.io",
+    "company": "Acmetech",
+    "role": "Key Contact",
+    "subject": "Pricing Quote",
+    "urgency": 6,
+    "category": "Pricing & Terms",
+    "status": "Active",
+    "last_contact": "Aug 30, 2026 01:14 PM",
+    "reason": "Prospect inquired about pricing or terms.",
+    "next_action": "Check in with Rahul to confirm receipt and maintain momentum.",
+    "thread": [
+      {
+        "id": "1a053aace79f973b",
+        "message_id": "1a053aace79f973b",
+        "thread_id": "1a053aace79f973b",
+        "sender": "Jeevan Krishna",
+        "sender_email": "jeevankrishna675@gmail.com",
+        "recipient": "rahul.sharma@acmetech.io",
+        "recipient_email": "rahul.sharma@acmetech.io",
+        "subject": "Pricing Quote",
+        "date": "Aug 30, 2026 01:14 PM",
+        "snippet": "Here is your quote.",
+        "body": "Here is your quote.",
+        "is_outbound": true
+      }
+    ],
+    "signals": {
+      "buying_intent": "High",
+      "response_lag_days": 1,
+      "unanswered_promise": false,
+      "last_sender_is_prospect": false,
+      "pricing_requested": true,
+      "demo_mentioned": false,
+      "meeting_requested": false,
+      "call_scheduled": false,
+      "call_confirmed": false,
+      "call_rescheduled": false,
+      "chat": false,
+      "thread_depth": 1
+    },
+    "draft": {
+      "subject": "Re: Pricing Quote",
+      "recipient": "rahul.sharma@acmetech.io",
+      "body": "Hi Rahul,\n\nThank you for reaching out regarding Pricing Quote.\n\nI am following up to review our discussion for Acmetech and address any questions your team may have as we move forward.\n\nPlease let me know your availability this week for a brief review session.\n\nBest regards,\nSathwik Kashyap",
+      "tone": "Professional"
+    },
+    "deal_size": "",
+    "urgency_level": "Medium"
+  },
+  {
     "id": "1a053a5efcaa9bf6",
     "name": "Rahul Sharma",
     "email": "rahul.sharma@acmetech.io",
@@ -1530,58 +1582,6 @@
       "subject": "Re: Join the Official WhatsApp Group | AI Product Hackathon '26",
       "recipient": "updates@unstop.email",
       "body": "Hi Unstop,\n\nThank you for reaching out regarding Join the Official WhatsApp Group | AI Product Hackathon '26.\n\nI am following up to review our discussion for Unstop and address any questions your team may have as we move forward.\n\nPlease let me know your availability this week for a brief review session.\n\nBest regards,\nSathwik Kashyap",
-      "tone": "Professional"
-    },
-    "deal_size": "",
-    "urgency_level": "Medium"
-  },
-  {
-    "id": "1a04acbbdc104bc9",
-    "name": "John at Taskade",
-    "email": "updates@taskade.com",
-    "company": "Taskade",
-    "role": "Key Contact",
-    "subject": "Build It. Run It. Go Live.",
-    "urgency": 7,
-    "category": "Partnership / Event",
-    "status": "Awaiting Response",
-    "last_contact": "Aug 28, 2026 11:54 PM",
-    "reason": "Awaiting reply from our side.",
-    "next_action": "Send personalized follow-up to John regarding Build It. Run It. Go Live..",
-    "thread": [
-      {
-        "id": "1a04acbbdc104bc9",
-        "message_id": "1a04acbbdc104bc9",
-        "thread_id": "1a04acbbdc104bc9",
-        "sender": "John at Taskade",
-        "sender_email": "updates@taskade.com",
-        "recipient": "Jeevankrishna675 <jeevankrishna675@gmail.com>",
-        "recipient_email": "jeevankrishna675@gmail.com",
-        "subject": "Build It. Run It. Go Live.",
-        "date": "Aug 28, 2026 11:54 PM",
-        "snippet": "Live data, agents, automations, and your domain. One working system. ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ Taskade Updates taskade.com Taskade Hey 👋 Your apps can now trigger workflows, run",
-        "body": "Hey,\nYour apps can now trigger agentic workflows, run automations, and go live on your own custom domain.\nBuild It. Run It. Go Live.\nDescribe what you want to run. Taskade builds you the complete system. CRMs, Portals, Forms, and Dashboards. No code. No setup.\nOne app on the screen, one system behind it: live data, agents, and automations. Data, agents, and workflows, fully connected in one unified workspace. Four businesses, one prompt. And on Business and above, bring your domain or buy one in Taskade - publish under your own brand.\nNew this week: real sign-in built in, App Kit previews, bring your own AI account, apps that learn from visitor questions, and agents on your website.\nBuild your next app: https://www.taskade.com/newsletters/l/nrtaJL9DkSfaf51r9892Ts763g/YJXbF4zly1jRSgdqbvyB3Q/OWvddar3EGvZG8923mnetbWA/create\nClone one instantly: https://www.taskade.com/newsletters/l/nrtaJL9DkSfaf51r9892Ts763g/YJXbF4zly1jRSgdqbvyB3Q/OWvddar3EGvZG8923mnetbWA/@taskade\nFull changelog: https://www.taskade.com/newsletters/l/nrtaJL9DkSfaf51r9892Ts763g/YJXbF4zly1jRSgdqbvyB3Q/OWvddar3EGvZG8923mnetbWA/changelog\nStart with an idea, a task, a flow. Taskade Genesis builds the rest.\nProjects remember. Agents think. Automations act. Your app deploys.\nBuild it. Run it. Go live.\nNo code. No setup. Just pure creation.\nOne prompt. One app. One system.\nEnjoy and have fun building!\nJohn Xie\nCo-founder & CEO, Taskade\nTaskade Inc. - 1160 Battery Street East, Suite 100, San Francisco, CA 94111, USA\nUnsubscribe: https://www.taskade.com/newsletters/unsubscribe/qlbgs7dtZpB763Rn4od0cHDJYlojPqt1XUazA892NOh5gm0/YfNqJScJU5Aav9XSnZrf3w/OWvddar3EGvZG8923mnetbWA",
-        "is_outbound": false
-      }
-    ],
-    "signals": {
-      "buying_intent": "Medium",
-      "response_lag_days": 1,
-      "unanswered_promise": false,
-      "last_sender_is_prospect": true,
-      "pricing_requested": false,
-      "demo_mentioned": false,
-      "meeting_requested": false,
-      "call_scheduled": false,
-      "call_confirmed": false,
-      "call_rescheduled": false,
-      "chat": false,
-      "thread_depth": 1
-    },
-    "draft": {
-      "subject": "Re: Build It. Run It. Go Live.",
-      "recipient": "updates@taskade.com",
-      "body": "Hi John,\n\nThank you for reaching out regarding Build It. Run It. Go Live..\n\nI am following up to review our discussion for Taskade and address any questions your team may have as we move forward.\n\nPlease let me know your availability this week for a brief review session.\n\nBest regards,\nSathwik Kashyap",
       "tone": "Professional"
     },
     "deal_size": "",
