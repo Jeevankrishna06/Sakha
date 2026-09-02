@@ -160,6 +160,20 @@ def register_or_update_user(
     return user_entry
 
 
+def delete_user(email: str) -> bool:
+    """Removes a user from the registry."""
+    if not email:
+        return False
+    email_clean = email.strip().lower()
+    users = _load_registry()
+    new_users = [u for u in users if u.get("email", "").strip().lower() != email_clean]
+    if len(new_users) != len(users):
+        _save_registry(new_users)
+        print(f"[UserManager] Deleted user: {email_clean}")
+        return True
+    return False
+
+
 def get_user_token_path(email: str) -> Path:
     """Returns the path to the user's specific OAuth token file."""
     u_dir = get_user_workspace_dir(email)

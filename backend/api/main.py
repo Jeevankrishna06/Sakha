@@ -28,7 +28,7 @@ from pydantic import BaseModel
 
 from backend.config import settings
 from backend.data.leads_store import get_all_leads, get_lead_by_id, update_lead_draft
-from backend.data.user_manager import get_all_users, get_user_by_email, register_or_update_user
+from backend.data.user_manager import get_all_users, get_user_by_email, register_or_update_user, delete_user
 from backend.ingestion.gmail_pull import gmail_client, get_gmail_client, GmailClient
 from backend.rag.retriever import rag_retriever
 from backend.agent.analysis_chain import analysis_chain
@@ -389,6 +389,12 @@ def gmail_status(request: Request):
 def list_accounts():
     """Returns list of all connected Google / email accounts."""
     return get_all_users()
+
+@api_router.delete("/auth/user")
+def remove_account(email: str):
+    """Deletes an account from the local registry."""
+    success = delete_user(email)
+    return {"success": success, "email": email}
 
 class GoogleAuthRequest(BaseModel):
     force_new: Optional[bool] = False

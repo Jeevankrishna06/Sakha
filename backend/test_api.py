@@ -16,7 +16,7 @@ from backend.api.main import (
     CreateDraftRequest,
     ChatQueryRequest
 )
-from backend.data.user_manager import register_or_update_user, get_all_users
+from backend.data.user_manager import register_or_update_user, get_all_users, delete_user
 
 def build_mock_request(user_email: str = "demo@sakha.ai") -> Request:
     scope = {
@@ -75,6 +75,10 @@ def test_all():
     draft_res = create_gmail_draft_for_lead("lead-1", request=req, request_body=c_req)
     assert draft_res["success"] is True
     print("   -> OK: Gmail draft queue verified.")
+
+    # Clean up test accounts
+    delete_user("alice@acmecorp.com")
+    delete_user("bob@salescloud.io")
 
     print("\n=======================================================")
     print("ALL 8 MULTI-USER BACKEND API ENDPOINTS VERIFIED & PASSING!")

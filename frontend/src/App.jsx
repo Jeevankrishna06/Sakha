@@ -384,6 +384,37 @@ export default function App() {
               Scanning inbox and computing urgency embeddings…
             </p>
           </div>
+        ) : leads.length === 0 ? (
+          <div className={`flex flex-col items-center justify-center py-16 my-4 rounded-3xl gap-4 text-center border ${
+            isDark ? 'bg-[#121214] border-white/10' : 'bg-white border-black/10 shadow-sm'
+          }`}>
+            <div className="w-16 h-12 rounded-2xl flex items-center justify-center bg-white p-2 border border-black/10 shadow-sm">
+              <img src="/logo.jpeg" alt="Sakha" className="h-6 w-auto object-contain" />
+            </div>
+            <div className="max-w-md space-y-1.5 px-4">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-1">
+                <span>Account Connected</span>
+              </div>
+              <h3 className="text-lg font-bold">
+                {user.email || 'Your Inbox'} is ready for Analysis
+              </h3>
+              <p className={`text-xs ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                Click <strong>Sync Gmail</strong> to pull your recent conversation threads, compute urgency scores (1–10), detect broken promises, and generate follow-up drafts.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
+              <button
+                onClick={handleSync}
+                disabled={isSyncing}
+                className={`btn-3d flex items-center gap-2 px-6 py-3 rounded-2xl text-xs font-bold transition-all shadow-md active:scale-95 ${
+                  isDark ? 'bg-emerald-500 text-black hover:bg-emerald-400' : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                }`}
+              >
+                <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                <span>{isSyncing ? 'Syncing Gmail Threads…' : 'Sync My Gmail Threads'}</span>
+              </button>
+            </div>
+          </div>
         ) : filteredLeads.length === 0 ? (
           <div className={`flex flex-col items-center justify-center py-20 my-4 rounded-3xl gap-3 text-center border ${
             isDark ? 'bg-[#121214] border-white/10' : 'bg-white border-black/10 shadow-sm'

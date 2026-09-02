@@ -290,6 +290,20 @@ export const apiService = {
     return [];
   },
 
+  // Remove account from registry
+  async removeAccount(email) {
+    try {
+      const res = await fetch(`${BASE_URL}/auth/user?email=${encodeURIComponent(email)}`, {
+        method: 'DELETE',
+        headers: getRequestHeaders()
+      });
+      if (res.ok) return await res.json();
+    } catch (e) {
+      console.warn('[API] Could not remove account:', e);
+    }
+    return { success: false };
+  },
+
   // Interactive Google Sign-In (OAuth 2.0)
   async loginWithGoogle(forceNew = false) {
     try {
