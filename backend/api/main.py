@@ -49,15 +49,19 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-def get_request_user_email(request: Request) -> Optional[str]:
+def get_request_user_email(request: Optional[Request] = None) -> Optional[str]:
     """Helper to extract user email from request headers or query params."""
-    header_val = request.headers.get("X-User-Email") or request.headers.get("x-user-email")
-    if header_val and header_val.strip():
-        return header_val.strip()
-    query_val = request.query_params.get("user_email")
-    if query_val and query_val.strip():
-        return query_val.strip()
+    if not request:
+        return None
+    try:
+        header_val = request.headers.get("X-User-Email") or request.headers.get("x-user-email")
+        if header_val and header_val.strip():
+            return header_val.strip()
+        query_val = request.query_params.get("user_email")
+        if query_val and query_val.strip():
+            return query_val.strip()
+    except Exception:
+        pass
     return None
 
 # Request Models
@@ -111,16 +115,16 @@ def receive_gmail_pubsub_webhook(payload: PubSubPushEnvelope):
         return {"status": "ok", "error": str(e)}
 
 @api_router.post("/gmail/watch")
-def start_gmail_pubsub_watch(topic: Optional[str] = None, request: Request = None):
+def start_gmail_pubsub_watch(request: Request, topic: Optional[str] = None):
     """Enables real-time push sync via Google Cloud Pub/Sub."""
-    user_email = get_request_user_email(request) if request else None
+    user_email = get_request_user_email(request)
     client = get_gmail_client(user_email)
     return client.start_watch(topic)
 
 @api_router.post("/gmail/stop-watch")
-def stop_gmail_pubsub_watch(request: Request = None):
+def stop_gmail_pubsub_watch(request: Request):
     """Disables real-time push sync."""
-    user_email = get_request_user_email(request) if request else None
+    user_email = get_request_user_email(request)
     client = get_gmail_client(user_email)
     return client.stop_watch()
 
@@ -191,7 +195,7 @@ async def stream_leads_sse(request: Request):
     Frontend connects once and receives instant push notifications
     whenever new emails arrive or leads change.
     """
-    q: asyncio.Queue = asyncio.Queue()
+    q = asyncio.Queue()
     with _sse_lock:
         _sse_clients.append(q)
 
@@ -225,9 +229,9 @@ async def stream_leads_sse(request: Request):
     )
 
 @api_router.get("/health")
-def health_check(request: Optional[Request] = None):
+def health_check(request: Request):
     """Returns application status, LLM engine, and Gmail connection state."""
-    user_email = get_request_user_email(request) if request else None
+    user_email = get_request_user_email(request)
     client = get_gmail_client(user_email)
     gmail_status = client.get_status()
     return {
@@ -239,9 +243,9 @@ def health_check(request: Optional[Request] = None):
     }
 
 @api_router.get("/stats")
-def get_dashboard_stats(request: Optional[Request] = None):
+def get_dashboard_stats(request: Request):
     """Returns aggregated executive dashboard metrics for active user."""
-    user_email = get_request_user_email(request) if request else None
+    user_email = get_request_user_email(request)
     leads = get_all_leads(user_email=user_email)
     client = get_gmail_client(user_email)
     
@@ -265,9 +269,9 @@ def get_dashboard_stats(request: Optional[Request] = None):
     }
 
 @api_router.get("/leads")
-def list_leads(request: Optional[Request] = None, urgency_min: Optional[int] = None, search: Optional[str] = None):
+def list_leads(request: Request, urgency_min: Optional[int] = None, search: Optional[str] = None):
     """Returns prioritized prospects sorted by urgency score for active user."""
-    user_email = get_request_user_email(request) if request else None
+    user_email = get_request_user_email(request)
     leads = get_all_leads(user_email=user_email)
     sorted_leads = sorted(leads, key=lambda x: x.get("urgency", 0), reverse=True)
     
@@ -284,9 +288,9 @@ def list_leads(request: Optional[Request] = None, urgency_min: Optional[int] = N
     return sorted_leads
 
 @api_router.get("/lead/{lead_id}")
-def get_lead_details(lead_id: str, request: Optional[Request] = None):
+def get_lead_details(lead_id: str, request: Request):
     """Returns complete prospect profile, conversation thread, and AI recommendations."""
-    user_email = get_request_user_email(request) if request else None
+    user_email = get_request_user_email(request)
     lead = get_lead_by_id(lead_id, user_email=user_email)
     if not lead:
         raise HTTPException(status_code=404, detail="Lead not found")
@@ -297,9 +301,9 @@ def get_lead_details(lead_id: str, request: Optional[Request] = None):
     return lead_copy
 
 @api_router.post("/draft/generate")
-def generate_custom_draft(payload: GenerateDraftRequest, request: Optional[Request] = None):
+def generate_custom_draft(payload: GenerateDraftRequest, request: Request):
     """Dynamically generates or regenerates a draft using specified tone and custom instructions."""
-    user_email = get_request_user_email(request) if request else None
+    user_email = get_request_user_email(request)
     lead = get_lead_by_id(payload.lead_id, user_email=user_email)
     if not lead:
         raise HTTPException(status_code=404, detail="Lead not found")
@@ -313,9 +317,9 @@ def generate_custom_draft(payload: GenerateDraftRequest, request: Optional[Reque
     return draft
 
 @api_router.post("/draft/{lead_id}")
-def create_gmail_draft_for_lead(lead_id: str, request_body: Optional[CreateDraftRequest] = None, request: Optional[Request] = None):
+def create_gmail_draft_for_lead(lead_id: str, request: Request, request_body: Optional[CreateDraftRequest] = None):
     """Creates a real or simulated Gmail draft for the prospect."""
-    user_email = get_request_user_email(request) if request else None
+    user_email = get_request_user_email(request)
     lead = get_lead_by_id(lead_id, user_email=user_email)
     if not lead:
         raise HTTPException(status_code=404, detail="Lead not found")
@@ -329,9 +333,9 @@ def create_gmail_draft_for_lead(lead_id: str, request_body: Optional[CreateDraft
     return result
 
 @api_router.post("/chat")
-def query_sales_copilot(payload: ChatQueryRequest, request: Optional[Request] = None):
+def query_sales_copilot(payload: ChatQueryRequest, request: Request):
     """Answers sales inquiries using RAG retrieval over user's indexed conversation chunks."""
-    user_email = get_request_user_email(request) if request else None
+    user_email = get_request_user_email(request)
     query = payload.query.strip()
     if not query:
         raise HTTPException(status_code=400, detail="Query cannot be empty")
@@ -354,7 +358,7 @@ def query_sales_copilot(payload: ChatQueryRequest, request: Optional[Request] = 
     }
 
 @api_router.post("/gmail/connect")
-def connect_gmail(payload: GmailConnectRequest, request: Optional[Request] = None):
+def connect_gmail(payload: GmailConnectRequest, request: Request):
     """Connects to Gmail via IMAP and triggers ingestion pipeline for this user."""
     email_addr = payload.email.strip()
     app_pw = payload.app_password.strip()
@@ -375,9 +379,9 @@ def connect_gmail(payload: GmailConnectRequest, request: Optional[Request] = Non
     return result
 
 @api_router.get("/gmail/status")
-def gmail_status(request: Optional[Request] = None):
+def gmail_status(request: Request):
     """Returns current Gmail connection status and auth mode for active user."""
-    user_email = get_request_user_email(request) if request else None
+    user_email = get_request_user_email(request)
     client = get_gmail_client(user_email)
     return client.get_status()
 
@@ -400,9 +404,9 @@ def google_auth():
     return res
 
 @api_router.get("/auth/status")
-def auth_status(request: Optional[Request] = None):
+def auth_status(request: Request):
     """Returns current user authentication state."""
-    user_email = get_request_user_email(request) if request else None
+    user_email = get_request_user_email(request)
     client = get_gmail_client(user_email)
     user_info = get_user_by_email(user_email) if user_email else None
     status = client.get_status()
@@ -411,9 +415,9 @@ def auth_status(request: Optional[Request] = None):
     return status
 
 @api_router.post("/auth/logout")
-def auth_logout(request: Optional[Request] = None):
+def auth_logout(request: Request):
     """Logs out of current user session."""
-    user_email = get_request_user_email(request) if request else None
+    user_email = get_request_user_email(request)
     if user_email:
         client = get_gmail_client(user_email)
         client.is_authenticated = False
@@ -421,9 +425,9 @@ def auth_logout(request: Optional[Request] = None):
     return {"success": True, "message": "Logged out successfully"}
 
 @api_router.post("/sync")
-def trigger_inbox_sync(request: Optional[Request] = None):
+def trigger_inbox_sync(request: Request):
     """Manually triggers Gmail ingestion and local re-indexing for active user."""
-    user_email = get_request_user_email(request) if request else None
+    user_email = get_request_user_email(request)
     result = run_ingestion_pipeline(user_email=user_email)
     return {
         "status": "success",

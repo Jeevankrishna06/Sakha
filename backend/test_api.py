@@ -72,7 +72,7 @@ def test_all():
 
     print("8. Testing create_gmail_draft_for_lead('lead-1')...")
     c_req = CreateDraftRequest(to_email="rahul.sharma@acmetech.io", subject="Pricing Quote", body_text="Here is your quote.")
-    draft_res = create_gmail_draft_for_lead("lead-1", c_req, req)
+    draft_res = create_gmail_draft_for_lead("lead-1", request=req, request_body=c_req)
     assert draft_res["success"] is True
     print("   -> OK: Gmail draft queue verified.")
 
