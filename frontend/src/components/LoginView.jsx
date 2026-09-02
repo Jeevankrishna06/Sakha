@@ -13,7 +13,9 @@ import {
   User,
   Plus,
   Key,
-  Globe
+  Globe,
+  ExternalLink,
+  HelpCircle
 } from 'lucide-react';
 import { apiService } from '../services/api';
 
@@ -21,6 +23,7 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
   const [authMode, setAuthMode] = useState('oauth'); // 'oauth' or 'app_password'
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [authHelp, setAuthHelp] = useState('');
   const [existingAccounts, setExistingAccounts] = useState([]);
   const [isSlow, setIsSlow] = useState(false);
 
@@ -47,6 +50,7 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
   const handleGoogleSignIn = async (forceNew = false) => {
     setIsAuthenticating(true);
     setAuthError('');
+    setAuthHelp('');
     setIsSlow(false);
 
     const slowTimer = setTimeout(() => {
@@ -54,7 +58,6 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
     }, 4000);
 
     try {
-      // Force account picker so user can enter email & password for new account
       const res = await apiService.loginWithGoogle(forceNew);
       clearTimeout(slowTimer);
       if (res.success) {
@@ -70,6 +73,7 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
         });
       } else {
         setAuthError(res.message || 'Google authentication failed. Ensure credentials.json is present.');
+        setAuthHelp(res.help || '');
         if (showToast) {
           showToast(res.message || 'Authentication error', 'error');
         }
@@ -86,15 +90,17 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
   const handleAppPasswordSubmit = async (e) => {
     e.preventDefault();
     if (!imapEmail.trim() || !imapPassword.trim()) {
-      setAuthError('Please enter both Gmail address and App Password.');
+      setAuthError('Please enter both Gmail address and 16-character App Password.');
       return;
     }
 
     setIsAuthenticating(true);
     setAuthError('');
+    setAuthHelp('');
 
     try {
-      const res = await apiService.connectGmail(imapEmail.trim(), imapPassword.trim());
+      const cleanPw = imapPassword.replace(/\s+/g, '').trim();
+      const res = await apiService.connectGmail(imapEmail.trim(), cleanPw);
       if (res.success) {
         if (showToast) {
           showToast(`✨ Connected Gmail as ${imapEmail}!`);
@@ -107,6 +113,7 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
         });
       } else {
         setAuthError(res.message || 'Gmail login failed. Check your App Password.');
+        setAuthHelp(res.help || '');
       }
     } catch (err) {
       setAuthError('Error connecting to backend server.');
@@ -210,7 +217,7 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
           <div className="flex items-center p-1 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 mb-5 text-xs font-semibold">
             <button
               type="button"
-              onClick={() => { setAuthMode('oauth'); setAuthError(''); }}
+              onClick={() => { setAuthMode('oauth'); setAuthError(''); setAuthHelp(''); }}
               className={`flex-1 py-1.5 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
                 authMode === 'oauth'
                   ? (isDark ? 'bg-white text-black shadow-md' : 'bg-black text-white shadow-md')
@@ -222,7 +229,7 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
             </button>
             <button
               type="button"
-              onClick={() => { setAuthMode('app_password'); setAuthError(''); }}
+              onClick={() => { setAuthMode('app_password'); setAuthError(''); setAuthHelp(''); }}
               className={`flex-1 py-1.5 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
                 authMode === 'app_password'
                   ? (isDark ? 'bg-white text-black shadow-md' : 'bg-black text-white shadow-md')
@@ -236,9 +243,29 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
 
           {/* Error Banner */}
           {authError && (
-            <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-start gap-2 text-left">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-              <div className="flex-1 leading-snug">{authError}</div>
+            <div className="mb-4 p-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs text-left space-y-2">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <div className="flex-1 font-semibold leading-snug">{authError}</div>
+              </div>
+              {authHelp && (
+                <div className={`p-2.5 rounded-xl border text-[11px] leading-relaxed whitespace-pre-line ${
+                  isDark ? 'bg-zinc-950/60 border-white/10 text-zinc-300' : 'bg-white border-black/10 text-zinc-700'
+                }`}>
+                  {authHelp}
+                  <div className="mt-2 pt-2 border-t border-white/10">
+                    <a
+                      href="https://myaccount.google.com/apppasswords"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-emerald-400 hover:underline font-bold"
+                    >
+                      <span>Open Google App Passwords page</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -330,27 +357,40 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
               </div>
 
               <div>
-                <label className={`block text-[11px] font-bold uppercase tracking-wider mb-1 px-1 ${
-                  isDark ? 'text-zinc-400' : 'text-zinc-600'
-                }`}>
-                  16-Character App Password
-                </label>
+                <div className="flex items-center justify-between mb-1 px-1">
+                  <label className={`text-[11px] font-bold uppercase tracking-wider ${
+                    isDark ? 'text-zinc-400' : 'text-zinc-600'
+                  }`}>
+                    16-Character App Password
+                  </label>
+                  <a
+                    href="https://myaccount.google.com/apppasswords"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[10px] text-emerald-400 hover:underline inline-flex items-center gap-1"
+                  >
+                    <span>Get App Password</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                </div>
                 <div className="relative">
                   <Lock className="w-4 h-4 absolute left-3 top-3 opacity-40" />
                   <input
                     type="password"
                     required
-                    placeholder="xxxx xxxx xxxx xxxx"
+                    placeholder="abcd efgh ijkl mnop"
                     value={imapPassword}
                     onChange={(e) => setImapPassword(e.target.value)}
-                    className={`w-full pl-9 pr-3 py-2.5 rounded-xl text-xs border transition-colors outline-none focus:border-emerald-500 ${
+                    className={`w-full pl-9 pr-3 py-2.5 rounded-xl text-xs border transition-colors outline-none focus:border-emerald-500 font-mono ${
                       isDark ? 'bg-zinc-800/80 border-white/10 text-white' : 'bg-zinc-50 border-black/10 text-black'
                     }`}
                   />
                 </div>
-                <p className={`text-[10px] mt-1 px-1 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
-                  Generated from Google Account → Security → 2-Step Verification → App Passwords.
-                </p>
+                <div className={`mt-1.5 p-2 rounded-lg text-[10px] leading-relaxed border ${
+                  isDark ? 'bg-white/[0.02] border-white/5 text-zinc-400' : 'bg-black/[0.02] border-black/5 text-zinc-500'
+                }`}>
+                  💡 <strong>Important:</strong> Google requires a 16-character <em>App Password</em> (not your standard Gmail account password). If you prefer using your regular account password, use the <strong>Google OAuth</strong> tab above!
+                </div>
               </div>
 
               <button
@@ -365,7 +405,7 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
                 {isAuthenticating ? (
                   <>
                     <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Connecting Gmail...</span>
+                    <span>Verifying Gmail credentials...</span>
                   </>
                 ) : (
                   <>

@@ -239,32 +239,56 @@ class GmailClient:
     def configure_imap(self, email_addr: str, app_password: str) -> Dict[str, Any]:
         """
         Dynamically configure IMAP credentials at runtime for this user.
+        Normalizes email and strips spaces from 16-character Google App Password.
         """
+        clean_email = email_addr.strip().lower()
+        # Remove all whitespace and hyphens from the app password (e.g. 'abcd efgh ijkl mnop' -> 'abcdefghijklmnop')
+        clean_pw = re.sub(r"[\s-]", "", app_password.strip())
+
+        if not clean_email or not clean_pw:
+            return {
+                "success": False,
+                "message": "Both Gmail address and App Password are required."
+            }
+
         try:
-            imap = imaplib.IMAP4_SSL("imap.gmail.com")
-            imap.login(email_addr, app_password)
+            print(f"[GmailClient] Attempting IMAP login for {clean_email}...")
+            imap = imaplib.IMAP4_SSL("imap.gmail.com", port=993)
+            imap.login(clean_email, clean_pw)
             imap.logout()
 
-            self.gmail_email = email_addr
-            self.gmail_app_password = app_password
+            self.gmail_email = clean_email
+            self.gmail_app_password = clean_pw
             self.is_authenticated = True
             self.auth_mode = "imap"
 
-            # Register user
-            register_or_update_user(email=email_addr, auth_mode="imap")
+            # Register user in multi-user registry
+            user_entry = register_or_update_user(email=clean_email, auth_mode="imap")
 
+            print(f"[GmailClient] IMAP login SUCCESS for {clean_email}")
             return {
                 "success": True,
-                "message": f"Gmail IMAP connected as {email_addr}",
+                "user": user_entry,
+                "email": clean_email,
+                "message": f"Gmail IMAP connected successfully as {clean_email}",
                 "mode": "imap"
             }
         except imaplib.IMAP4.error as e:
+            err_str = str(e)
+            print(f"[GmailClient] IMAP login failed for {clean_email}: {err_str}")
+            if "AUTHENTICATIONFAILED" in err_str or "Invalid credentials" in err_str or "Application-specific password" in err_str:
+                return {
+                    "success": False,
+                    "message": "Google rejected the password: You must use a 16-character 'Google App Password', NOT your standard Gmail account password.",
+                    "help": "How to fix:\n1. Visit: https://myaccount.google.com/apppasswords\n2. Create a new App Password named 'Sakha'\n3. Copy the 16-letter code and paste here.\n(Or switch to the 'Google OAuth' tab to sign in with your regular Google account!)"
+                }
             return {
                 "success": False,
-                "message": f"Gmail login failed: {str(e)}. Make sure you're using an App Password.",
-                "help": "Go to myaccount.google.com > Security > 2-Step Verification > App Passwords"
+                "message": f"Gmail IMAP error: {err_str}",
+                "help": "Please ensure IMAP is enabled in your Gmail Settings -> Forwarding and POP/IMAP -> Enable IMAP."
             }
         except Exception as e:
+            print(f"[GmailClient] IMAP connection exception: {e}")
             return {
                 "success": False,
                 "message": f"Connection error: {str(e)}"
