@@ -1,6 +1,7 @@
 [
   {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "id": "1a053aace79f973b",
     "name": "Rahul Sharma",
     "email": "rahul.sharma@acmetech.io",
@@ -811,6 +812,8 @@
   {
 =======
 <<<<<<< HEAD
+>>>>>>> parent of 0c3b6e7 (workflow without authentication)
+=======
 >>>>>>> parent of 0c3b6e7 (workflow without authentication)
     "id": "1a050caeb9945820",
     "name": "Team Unstop",
@@ -3280,6 +3283,9 @@
     },
     "deal_size": "",
     "urgency_level": "High"
+<<<<<<< HEAD
+>>>>>>> parent of 0c3b6e7 (workflow without authentication)
+=======
 >>>>>>> parent of 0c3b6e7 (workflow without authentication)
   }
 ]
