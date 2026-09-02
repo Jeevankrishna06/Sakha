@@ -101,12 +101,11 @@ export default function DraftEditor({ lead, onDraftCreated, showToast, theme = '
   };
 
   const handleOpenDirectGmail = () => {
-    const to = encodeURIComponent(lead?.email || '');
+    const to = encodeURIComponent(lead.email || '');
     const su = encodeURIComponent(subject || '');
     const b = encodeURIComponent(body || '');
     const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${su}&body=${b}`;
     window.open(gmailUrl, '_blank', 'noopener,noreferrer');
-    showToast('Opened Gmail Compose with pre-filled follow-up draft!');
   };
 
   const wordCount = body.trim() ? body.trim().split(/\s+/).length : 0;
@@ -318,35 +317,35 @@ export default function DraftEditor({ lead, onDraftCreated, showToast, theme = '
         </button>
 
         <div className="flex items-center gap-2.5">
-          {/* Direct Gmail Web Compose Button (Primary) */}
+          {/* Direct Gmail Web Compose */}
           <button
             type="button"
             onClick={handleOpenDirectGmail}
-            className={`btn-3d flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-transform active:scale-95 shadow-md ${
-              isDark
-                ? 'bg-white text-black hover:bg-zinc-100 shadow-md'
-                : 'bg-black text-white hover:bg-zinc-800 shadow-md'
-            }`}
-          >
-            <ExternalLink className="w-3.5 h-3.5" />
-            <span>Draft Follow-up in Gmail</span>
-          </button>
-
-          {/* Create Gmail Draft API Button (Secondary) */}
-          <button
-            type="button"
-            onClick={handleCreateGmailDraft}
-            disabled={isCreatingDraft}
-            className={`btn-3d flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold border transition-all shadow-sm disabled:opacity-50 ${
+            className={`btn-3d flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold border transition-all shadow-sm ${
               isDark
                 ? 'bg-white/10 hover:bg-white/20 border-white/20 text-white'
                 : 'bg-black/10 hover:bg-black/20 border-black/20 text-black'
             }`}
           >
+            <span>Open in Gmail Web</span>
+            <ExternalLink className="w-3.5 h-3.5 opacity-70" />
+          </button>
+
+          {/* Create Gmail Draft API Button */}
+          <button
+            type="button"
+            onClick={handleCreateGmailDraft}
+            disabled={isCreatingDraft}
+            className={`btn-3d flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold transition-transform active:scale-95 disabled:opacity-50 ${
+              isDark
+                ? 'bg-white text-black hover:bg-zinc-100 shadow-md'
+                : 'bg-black text-white hover:bg-zinc-800 shadow-md'
+            }`}
+          >
             {isCreatingDraft ? (
-              <><RefreshCw className="w-3.5 h-3.5 animate-spin" /><span>Saving…</span></>
+              <><RefreshCw className="w-3.5 h-3.5 animate-spin" /><span>Syncing…</span></>
             ) : (
-              <><Mail className="w-3.5 h-3.5 opacity-70" /><span>Save to Drafts</span></>
+              <><Mail className="w-3.5 h-3.5" /><span>Save to Gmail Drafts</span></>
             )}
           </button>
         </div>
