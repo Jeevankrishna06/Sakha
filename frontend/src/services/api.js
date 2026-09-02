@@ -291,11 +291,12 @@ export const apiService = {
   },
 
   // Interactive Google Sign-In (OAuth 2.0)
-  async loginWithGoogle() {
+  async loginWithGoogle(forceNew = false) {
     try {
       const res = await fetch(`${BASE_URL}/auth/google`, {
         method: 'POST',
-        headers: getRequestHeaders()
+        headers: getRequestHeaders(),
+        body: JSON.stringify({ force_new: forceNew })
       });
       if (res.ok) return await res.json();
       const err = await res.json().catch(() => ({}));

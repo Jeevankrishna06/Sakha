@@ -390,11 +390,15 @@ def list_accounts():
     """Returns list of all connected Google / email accounts."""
     return get_all_users()
 
+class GoogleAuthRequest(BaseModel):
+    force_new: Optional[bool] = False
+
 @api_router.post("/auth/google")
-def google_auth():
+def google_auth(payload: Optional[GoogleAuthRequest] = None):
     """Trigger Google OAuth login via InstalledAppFlow to register or switch user."""
+    force_new = payload.force_new if payload else False
     client = GmailClient()
-    res = client.authenticate_interactive_oauth()
+    res = client.authenticate_interactive_oauth(force_new_account=force_new)
     if res.get("success"):
         email = res.get("email")
         try:

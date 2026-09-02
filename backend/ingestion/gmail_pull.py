@@ -270,10 +270,12 @@ class GmailClient:
                 "message": f"Connection error: {str(e)}"
             }
 
-    def authenticate_interactive_oauth(self) -> Dict[str, Any]:
+    def authenticate_interactive_oauth(self, force_new_account: bool = False) -> Dict[str, Any]:
         """
         Explicitly triggers Google OAuth 2.0 flow using credentials.json,
         retrieves user profile info, and isolates token in user workspace.
+        If force_new_account is True, opens Google Account Chooser (prompt='select_account')
+        to prompt for email and password.
         """
         creds_path = settings.GMAIL_CREDENTIALS_PATH
         SCOPES = [
@@ -296,8 +298,34 @@ class GmailClient:
             from google.auth.transport.requests import Request
             from googleapiclient.discovery import build
 
-            flow = InstalledAppFlow.from_client_secrets_file(creds_path, SCOPES)
-            creds = flow.run_local_server(port=0)
+            creds = None
+
+            # Only check existing cached token if NOT forcing a new account login
+            if not force_new_account:
+                token_path = get_user_token_path(self.gmail_email) if self.gmail_email else Path(settings.GMAIL_TOKEN_PATH)
+                if not token_path.exists() and os.path.exists(settings.GMAIL_TOKEN_PATH):
+                    token_path = Path(settings.GMAIL_TOKEN_PATH)
+
+                if token_path.exists() and token_path.stat().st_size > 0:
+                    try:
+                        creds = Credentials.from_authorized_user_file(str(token_path), SCOPES)
+                        if creds and creds.expired and creds.refresh_token:
+                            try:
+                                creds.refresh(Request())
+                                with open(token_path, 'w', encoding='utf-8') as f:
+                                    f.write(creds.to_json())
+                            except Exception as ref_err:
+                                print(f"[GmailClient] Token refresh failed: {ref_err}")
+                                creds = None
+                    except Exception as t_err:
+                        print(f"[GmailClient] Existing token check notice: {t_err}")
+                        creds = None
+
+            # Open interactive Google login flow with account chooser
+            if not creds or not creds.valid:
+                flow = InstalledAppFlow.from_client_secrets_file(creds_path, SCOPES)
+                # prompt='select_account' forces Google to ask for the account email/password
+                creds = flow.run_local_server(port=0, prompt='select_account')
 
             if creds and creds.valid:
                 service = build('gmail', 'v1', credentials=creds)
