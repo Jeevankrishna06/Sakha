@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   Sparkles,
   RefreshCw,
@@ -6,7 +5,9 @@ import {
   Settings,
   Activity,
   Sun,
-  Moon
+  Moon,
+  LogOut,
+  User
 } from 'lucide-react';
 
 export default function Navbar({
@@ -18,7 +19,9 @@ export default function Navbar({
   llmProvider = 'groq',
   isLive = false,
   theme = 'dark',
-  onToggleTheme
+  onToggleTheme,
+  user,
+  onLogout
 }) {
   const isDark = theme === 'dark';
   const [logoError, setLogoError] = useState(false);
@@ -175,6 +178,7 @@ export default function Navbar({
           {/* Settings */}
           <button
             onClick={onOpenSettings}
+            title="System Settings"
             className={`btn-3d p-2 rounded-xl border transition-all active:scale-95 ${
               isDark
                 ? 'bg-white/[0.04] hover:bg-white/10 border-white/10 text-zinc-300 hover:text-white'
@@ -183,6 +187,36 @@ export default function Navbar({
           >
             <Settings className="w-4 h-4" />
           </button>
+
+          {/* User Account / Logout */}
+          {user && (
+            <div className="flex items-center gap-1.5 pl-1.5 border-l border-white/10">
+              <div
+                title={`Signed in as ${user.email || 'User'}`}
+                className={`hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs border ${
+                  isDark ? 'bg-white/[0.04] border-white/10 text-zinc-300' : 'bg-black/[0.03] border-black/10 text-zinc-700'
+                }`}
+              >
+                <div className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-bold">
+                  {user.email ? user.email.charAt(0).toUpperCase() : 'G'}
+                </div>
+                <span className="max-w-[120px] truncate text-[11px] font-medium">{user.email || 'Google User'}</span>
+              </div>
+
+              <button
+                onClick={onLogout}
+                title="Sign Out to Login Page"
+                className={`btn-3d p-2 rounded-xl border transition-all active:scale-95 text-xs flex items-center gap-1 ${
+                  isDark
+                    ? 'bg-white/[0.04] hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 border-white/10 text-zinc-400'
+                    : 'bg-black/[0.04] hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-600 border-black/10 text-zinc-600'
+                }`}
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="hidden sm:inline text-[11px]">Sign Out</span>
+              </button>
+            </div>
+          )}
         </div>
 
       </div>

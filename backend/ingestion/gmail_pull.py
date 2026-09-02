@@ -207,29 +207,29 @@ class GmailClient:
                         creds = Credentials.from_authorized_user_file(token_path, SCOPES)
                     except Exception as token_err:
                         print(f"[GmailClient] Could not read token.json: {token_err}. Will re-authenticate if credentials.json is present.")
-                        creds = None
-
                 if not creds or not creds.valid:
                     if creds and creds.expired and creds.refresh_token:
                         try:
                             creds.refresh(Request())
+                            with open(token_path, 'w') as token:
+                                token.write(creds.to_json())
                         except Exception as ref_err:
-                            print(f"[GmailClient] Token refresh failed: {ref_err}")
+                            print(f"[GmailClient] Token refresh notice: {ref_err}")
                             creds = None
-                    if (not creds or not creds.valid) and os.path.exists(creds_path) and os.path.getsize(creds_path) > 0:
-                        flow = InstalledAppFlow.from_client_secrets_file(creds_path, SCOPES)
-                        creds = flow.run_local_server(port=0)
-                        with open(token_path, 'w') as token:
-                            token.write(creds.to_json())
 
-                if creds:
+                if creds and creds.valid:
                     self.service = build('gmail', 'v1', credentials=creds)
                     self.is_authenticated = True
                     self.auth_mode = "oauth"
-                    print("[GmailClient] OAuth2 Gmail API authenticated.")
+                    try:
+                        profile = self.service.users().getProfile(userId='me').execute()
+                        self.gmail_email = profile.get('emailAddress', '')
+                    except Exception:
+                        pass
+                    print(f"[GmailClient] OAuth2 Gmail API authenticated as {self.gmail_email or 'User'}")
                     return
             except Exception as e:
-                print(f"[GmailClient] OAuth failed: {e}. Falling back to demo.")
+                print(f"[GmailClient] Startup OAuth check notice: {e}")
 
         # ── 3. Demo mode ──
         self.is_authenticated = False
@@ -304,17 +304,92 @@ class GmailClient:
         except Exception as e:
             print(f"[GmailClient] Could not persist to .env: {e}")
 
+    def authenticate_interactive_oauth(self) -> Dict[str, Any]:
+        """
+        Explicitly triggers Google OAuth 2.0 flow using credentials.json and token.json.
+        """
+        creds_path = settings.GMAIL_CREDENTIALS_PATH
+        token_path = settings.GMAIL_TOKEN_PATH
+        SCOPES = [
+            'https://www.googleapis.com/auth/gmail.readonly',
+            'https://www.googleapis.com/auth/gmail.compose'
+        ]
+
+        try:
+            from google.oauth2.credentials import Credentials
+            from google_auth_oauthlib.flow import InstalledAppFlow
+            from google.auth.transport.requests import Request
+            from googleapiclient.discovery import build
+
+            creds = None
+            if os.path.exists(token_path) and os.path.getsize(token_path) > 0:
+                try:
+                    creds = Credentials.from_authorized_user_file(token_path, SCOPES)
+                except Exception as token_err:
+                    print(f"[GmailClient] Could not read token.json: {token_err}")
+                    creds = None
+
+            if not creds or not creds.valid:
+                if creds and creds.expired and creds.refresh_token:
+                    try:
+                        creds.refresh(Request())
+                    except Exception as ref_err:
+                        print(f"[GmailClient] Token refresh failed: {ref_err}")
+                        creds = None
+                if (not creds or not creds.valid) and os.path.exists(creds_path) and os.path.getsize(creds_path) > 0:
+                    flow = InstalledAppFlow.from_client_secrets_file(creds_path, SCOPES)
+                    creds = flow.run_local_server(port=0)
+                    with open(token_path, 'w') as token:
+                        token.write(creds.to_json())
+
+            if creds:
+                self.service = build('gmail', 'v1', credentials=creds)
+                self.is_authenticated = True
+                self.auth_mode = "oauth"
+                try:
+                    profile = self.service.users().getProfile(userId='me').execute()
+                    self.gmail_email = profile.get('emailAddress', '')
+                except Exception:
+                    pass
+                print(f"[GmailClient] OAuth2 Google Sign-In successful for {self.gmail_email or 'User'}")
+                return {
+                    "success": True,
+                    "email": self.gmail_email,
+                    "mode": "oauth",
+                    "message": f"Successfully authenticated with Google as {self.gmail_email or 'Authorized User'}"
+                }
+            else:
+                return {
+                    "success": False,
+                    "message": "credentials.json not found in project root. Please provide Google OAuth client credentials."
+                }
+        except Exception as e:
+            print(f"[GmailClient] Interactive OAuth failed: {e}")
+            return {
+                "success": False,
+                "message": f"Google authentication failed: {str(e)}"
+            }
+
     def get_status(self) -> Dict[str, Any]:
         """Returns Gmail connection status."""
+        user_email = self.gmail_email or ""
+        if not user_email and self.service and self.auth_mode == "oauth":
+            try:
+                profile = self.service.users().getProfile(userId='me').execute()
+                user_email = profile.get('emailAddress', '')
+                self.gmail_email = user_email
+            except Exception:
+                pass
+
         return {
             "authenticated": self.is_authenticated,
             "mode": {
-                "imap": f"IMAP ({self.gmail_email})",
-                "oauth": "OAuth 2.0 Gmail API",
+                "imap": f"IMAP ({user_email})",
+                "oauth": "Google OAuth 2.0",
                 "demo": "Demo / Offline Mode"
             }.get(self.auth_mode, "Demo / Offline Mode"),
             "auth_type": self.auth_mode,
-            "email": self.gmail_email if self.auth_mode == "imap" else "",
+            "email": user_email,
             "credentials_found": os.path.exists(settings.GMAIL_CREDENTIALS_PATH),
             "token_found": os.path.exists(settings.GMAIL_TOKEN_PATH)
         }

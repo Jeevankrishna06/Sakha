@@ -239,5 +239,43 @@ export const apiService = {
       console.warn('[API] Could not fetch Gmail status.');
     }
     return { authenticated: false, mode: 'Offline', auth_type: 'demo', email: '' };
+  },
+
+  // Interactive Google Sign-In (OAuth 2.0)
+  async loginWithGoogle() {
+    try {
+      const res = await fetch(`${BASE_URL}/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (res.ok) return await res.json();
+      const err = await res.json().catch(() => ({}));
+      return { success: false, message: err.detail || 'Google Sign-in failed' };
+    } catch (e) {
+      console.warn('[API] Google auth network issue:', e);
+      return { success: false, message: 'Could not connect to backend for Google OAuth.' };
+    }
+  },
+
+  // Get Auth Status
+  async getAuthStatus() {
+    try {
+      const res = await fetch(`${BASE_URL}/auth/status`);
+      if (res.ok) return await res.json();
+    } catch (e) {
+      console.warn('[API] Auth status check error.');
+    }
+    return { authenticated: false, email: '', mode: 'demo' };
+  },
+
+  // Logout
+  async logout() {
+    try {
+      const res = await fetch(`${BASE_URL}/auth/logout`, { method: 'POST' });
+      if (res.ok) return await res.json();
+    } catch (e) {
+      console.warn('[API] Logout error:', e);
+    }
+    return { success: true };
   }
 };

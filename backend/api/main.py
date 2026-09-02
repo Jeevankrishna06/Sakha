@@ -157,9 +157,14 @@ def _background_auto_sync():
             print(f"[AutoSync] Background sync error: {e}")
         _time.sleep(_auto_sync_interval)
 
-# Start background auto-sync thread on import
-_sync_thread = threading.Thread(target=_background_auto_sync, daemon=True)
-_sync_thread.start()
+_sync_thread_started = False
+
+def start_background_sync():
+    global _sync_thread_started
+    if not _sync_thread_started:
+        _sync_thread = threading.Thread(target=_background_auto_sync, daemon=True)
+        _sync_thread.start()
+        _sync_thread_started = True
 
 @api_router.get("/stream/leads")
 async def stream_leads_sse(request: Request):
@@ -343,6 +348,29 @@ def gmail_status():
     """Returns current Gmail connection status and auth mode."""
     return gmail_client.get_status()
 
+@api_router.post("/auth/google")
+def google_auth():
+    """Trigger Google OAuth login via InstalledAppFlow."""
+    res = gmail_client.authenticate_interactive_oauth()
+    if res.get("success"):
+        try:
+            run_ingestion_pipeline()
+        except Exception as e:
+            print(f"[API] Ingestion post-OAuth notice: {e}")
+    return res
+
+@api_router.get("/auth/status")
+def auth_status():
+    """Returns current user authentication state."""
+    return gmail_client.get_status()
+
+@api_router.post("/auth/logout")
+def auth_logout():
+    """Logs out of current Gmail session."""
+    gmail_client.is_authenticated = False
+    gmail_client.auth_mode = "demo"
+    return {"success": True, "message": "Logged out successfully"}
+
 @api_router.post("/sync")
 def trigger_inbox_sync():
     """Manually triggers Gmail ingestion, AI analysis, and local re-indexing."""
@@ -387,6 +415,7 @@ async def startup_event():
     """Seed ChromaDB with demo/cached data on startup."""
     try:
         run_ingestion_pipeline()
+        start_background_sync()
     except Exception as e:
         print(f"[API] Startup indexing notice: {e}")
 

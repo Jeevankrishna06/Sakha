@@ -7,10 +7,19 @@ import LeadDetailModal from './components/LeadDetailModal';
 import RagChatModal from './components/RagChatModal';
 import SettingsModal from './components/SettingsModal';
 import Toast from './components/Toast';
+import LoginView from './components/LoginView';
 import { apiService } from './services/api';
 import { Sparkles, Inbox, RefreshCw, Zap, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export default function App() {
+  const [user, setUser]             = useState(() => {
+    try {
+      const saved = localStorage.getItem('sakha_auth_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
   const [leads, setLeads]           = useState([]);
   const [stats, setStats]           = useState(null);
   const [loading, setLoading]       = useState(true);
@@ -32,6 +41,23 @@ export default function App() {
     document.documentElement.classList.remove('dark', 'light');
     document.documentElement.classList.add(theme);
   }, [theme]);
+
+  // Check existing Google OAuth status
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await apiService.getAuthStatus();
+        if (res?.authenticated && res?.email) {
+          const authUser = { email: res.email, mode: res.auth_type || 'oauth' };
+          setUser(authUser);
+          localStorage.setItem('sakha_auth_user', JSON.stringify(authUser));
+        }
+      } catch (e) {
+        // silent
+      }
+    };
+    checkAuth();
+  }, []);
 
   const [searchQuery, setSearchQuery]           = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -143,6 +169,27 @@ export default function App() {
     }
   };
 
+  const handleLoginSuccess = (authUser) => {
+    setUser(authUser);
+    localStorage.setItem('sakha_auth_user', JSON.stringify(authUser));
+    loadData();
+  };
+
+  const handleExploreDemo = () => {
+    const demoUser = { email: 'demo@sakha.ai', mode: 'demo' };
+    setUser(demoUser);
+    localStorage.setItem('sakha_auth_user', JSON.stringify(demoUser));
+    showToast('Entered Demo Workspace with curated sales leads.');
+    loadData();
+  };
+
+  const handleLogout = async () => {
+    await apiService.logout();
+    setUser(null);
+    localStorage.removeItem('sakha_auth_user');
+    showToast('Signed out successfully.');
+  };
+
   const filteredLeads = useMemo(() => {
     let r = [...leads];
     if (searchQuery.trim()) {
@@ -170,6 +217,23 @@ export default function App() {
 
   const isDark = theme === 'dark';
 
+  // If user is not authenticated, display Google Login View
+  if (!user) {
+    return (
+      <>
+        <LoginView
+          onLoginSuccess={handleLoginSuccess}
+          onExploreDemo={handleExploreDemo}
+          theme={theme}
+          showToast={showToast}
+        />
+        {toastMessage && (
+          <Toast message={toastMessage} onClose={() => setToastMessage('')} />
+        )}
+      </>
+    );
+  }
+
   return (
     <div className={`min-h-screen transition-colors duration-300 flex flex-col font-sans ${
       isDark ? 'bg-[#09090b] text-white' : 'bg-[#f4f4f6] text-black'
@@ -185,6 +249,8 @@ export default function App() {
         lastSyncTime={stats?.last_sync || 'Just now'}
         theme={theme}
         onToggleTheme={toggleTheme}
+        user={user}
+        onLogout={handleLogout}
       />
 
       <main className="max-w-7xl mx-auto px-5 lg:px-8 py-8 w-full flex-1 space-y-8">
