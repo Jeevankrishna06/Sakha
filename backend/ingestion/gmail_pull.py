@@ -16,6 +16,7 @@ from email.header import decode_header
 from typing import List, Dict, Any, Optional
 from backend.config import settings
 from backend.data.demo_leads import get_demo_leads
+from backend.data.user_manager import get_user_token_path, register_or_update_user
 
 
 def _decode_header_value(val):
@@ -162,11 +163,11 @@ def _extract_body(msg):
 
 
 class GmailClient:
-    def __init__(self):
+    def __init__(self, gmail_email: Optional[str] = None):
         self.service = None          # Gmail API service (OAuth mode)
         self.is_authenticated = False
         self.auth_mode = "demo"      # 'imap', 'oauth', or 'demo'
-        self.gmail_email = settings.GMAIL_EMAIL
+        self.gmail_email = gmail_email or settings.GMAIL_EMAIL
         self.gmail_app_password = settings.GMAIL_APP_PASSWORD
         self._init_service()
 
@@ -187,7 +188,7 @@ class GmailClient:
 
         # ── 2. Try OAuth 2.0 via Gmail API ──
         creds_path = settings.GMAIL_CREDENTIALS_PATH
-        token_path = settings.GMAIL_TOKEN_PATH
+        token_path = str(get_user_token_path(self.gmail_email)) if self.gmail_email else settings.GMAIL_TOKEN_PATH
 
         if os.path.exists(token_path) or os.path.exists(creds_path):
             try:
@@ -206,7 +207,7 @@ class GmailClient:
                     try:
                         creds = Credentials.from_authorized_user_file(token_path, SCOPES)
                     except Exception as token_err:
-                        print(f"[GmailClient] Could not read token.json: {token_err}. Will re-authenticate if credentials.json is present.")
+                        print(f"[GmailClient] Could not read token: {token_err}")
                 if not creds or not creds.valid:
                     if creds and creds.expired and creds.refresh_token:
                         try:
@@ -223,7 +224,7 @@ class GmailClient:
                     self.auth_mode = "oauth"
                     try:
                         profile = self.service.users().getProfile(userId='me').execute()
-                        self.gmail_email = profile.get('emailAddress', '')
+                        self.gmail_email = profile.get('emailAddress', '') or self.gmail_email
                     except Exception:
                         pass
                     print(f"[GmailClient] OAuth2 Gmail API authenticated as {self.gmail_email or 'User'}")
@@ -237,23 +238,20 @@ class GmailClient:
 
     def configure_imap(self, email_addr: str, app_password: str) -> Dict[str, Any]:
         """
-        Dynamically configure IMAP credentials at runtime (called from the API).
-        Returns success/failure status.
+        Dynamically configure IMAP credentials at runtime for this user.
         """
         try:
-            # Validate credentials by attempting IMAP login
             imap = imaplib.IMAP4_SSL("imap.gmail.com")
             imap.login(email_addr, app_password)
             imap.logout()
 
-            # Save credentials in memory
             self.gmail_email = email_addr
             self.gmail_app_password = app_password
             self.is_authenticated = True
             self.auth_mode = "imap"
 
-            # Also write to .env for persistence across restarts
-            self._persist_credentials(email_addr, app_password)
+            # Register user
+            register_or_update_user(email=email_addr, auth_mode="imap")
 
             return {
                 "success": True,
@@ -263,7 +261,7 @@ class GmailClient:
         except imaplib.IMAP4.error as e:
             return {
                 "success": False,
-                "message": f"Gmail login failed: {str(e)}. Make sure you're using an App Password (not your regular password).",
+                "message": f"Gmail login failed: {str(e)}. Make sure you're using an App Password.",
                 "help": "Go to myaccount.google.com > Security > 2-Step Verification > App Passwords"
             }
         except Exception as e:
@@ -272,48 +270,25 @@ class GmailClient:
                 "message": f"Connection error: {str(e)}"
             }
 
-    def _persist_credentials(self, email_addr: str, app_password: str):
-        """Append/update GMAIL_EMAIL and GMAIL_APP_PASSWORD in .env file."""
-        from pathlib import Path
-        env_path = Path(settings.GMAIL_CREDENTIALS_PATH).parent / ".env"
-        if not env_path.exists():
-            env_path = Path(__file__).resolve().parent.parent.parent / ".env"
-
-        try:
-            lines = env_path.read_text(encoding="utf-8").splitlines() if env_path.exists() else []
-            new_lines = []
-            found_email = False
-            found_pw = False
-
-            for line in lines:
-                if line.strip().startswith("GMAIL_EMAIL="):
-                    new_lines.append(f"GMAIL_EMAIL={email_addr}")
-                    found_email = True
-                elif line.strip().startswith("GMAIL_APP_PASSWORD="):
-                    new_lines.append(f"GMAIL_APP_PASSWORD={app_password}")
-                    found_pw = True
-                else:
-                    new_lines.append(line)
-
-            if not found_email:
-                new_lines.append(f"GMAIL_EMAIL={email_addr}")
-            if not found_pw:
-                new_lines.append(f"GMAIL_APP_PASSWORD={app_password}")
-
-            env_path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
-        except Exception as e:
-            print(f"[GmailClient] Could not persist to .env: {e}")
-
     def authenticate_interactive_oauth(self) -> Dict[str, Any]:
         """
-        Explicitly triggers Google OAuth 2.0 flow using credentials.json and token.json.
+        Explicitly triggers Google OAuth 2.0 flow using credentials.json,
+        retrieves user profile info, and isolates token in user workspace.
         """
         creds_path = settings.GMAIL_CREDENTIALS_PATH
-        token_path = settings.GMAIL_TOKEN_PATH
         SCOPES = [
             'https://www.googleapis.com/auth/gmail.readonly',
-            'https://www.googleapis.com/auth/gmail.compose'
+            'https://www.googleapis.com/auth/gmail.compose',
+            'openid',
+            'https://www.googleapis.com/auth/userinfo.email',
+            'https://www.googleapis.com/auth/userinfo.profile'
         ]
+
+        if not os.path.exists(creds_path) or os.path.getsize(creds_path) == 0:
+            return {
+                "success": False,
+                "message": "credentials.json not found in project root. Please provide Google OAuth client credentials."
+            }
 
         try:
             from google.oauth2.credentials import Credentials
@@ -321,47 +296,64 @@ class GmailClient:
             from google.auth.transport.requests import Request
             from googleapiclient.discovery import build
 
-            creds = None
-            if os.path.exists(token_path) and os.path.getsize(token_path) > 0:
+            flow = InstalledAppFlow.from_client_secrets_file(creds_path, SCOPES)
+            creds = flow.run_local_server(port=0)
+
+            if creds and creds.valid:
+                service = build('gmail', 'v1', credentials=creds)
+                user_email = ""
+                user_name = ""
+                user_picture = ""
+
                 try:
-                    creds = Credentials.from_authorized_user_file(token_path, SCOPES)
-                except Exception as token_err:
-                    print(f"[GmailClient] Could not read token.json: {token_err}")
-                    creds = None
+                    profile = service.users().getProfile(userId='me').execute()
+                    user_email = profile.get('emailAddress', '')
+                except Exception as p_err:
+                    print(f"[GmailClient] Could not get Gmail profile: {p_err}")
 
-            if not creds or not creds.valid:
-                if creds and creds.expired and creds.refresh_token:
+                if not user_email:
+                    # Try id_token parsing
                     try:
-                        creds.refresh(Request())
-                    except Exception as ref_err:
-                        print(f"[GmailClient] Token refresh failed: {ref_err}")
-                        creds = None
-                if (not creds or not creds.valid) and os.path.exists(creds_path) and os.path.getsize(creds_path) > 0:
-                    flow = InstalledAppFlow.from_client_secrets_file(creds_path, SCOPES)
-                    creds = flow.run_local_server(port=0)
-                    with open(token_path, 'w') as token:
-                        token.write(creds.to_json())
+                        import jwt
+                        if hasattr(creds, 'id_token') and creds.id_token:
+                            decoded = jwt.decode(creds.id_token, options={"verify_signature": False})
+                            user_email = decoded.get('email', '')
+                            user_name = decoded.get('name', '')
+                            user_picture = decoded.get('picture', '')
+                    except Exception:
+                        pass
 
-            if creds:
-                self.service = build('gmail', 'v1', credentials=creds)
+                if not user_email:
+                    user_email = "authenticated_user@gmail.com"
+
+                # Register user and save their token
+                creds_dict = json.loads(creds.to_json())
+                user_info = register_or_update_user(
+                    email=user_email,
+                    auth_mode="oauth",
+                    name=user_name,
+                    picture=user_picture,
+                    credentials_data=creds_dict
+                )
+
+                # Set client instance state
+                self.service = service
+                self.gmail_email = user_email
                 self.is_authenticated = True
                 self.auth_mode = "oauth"
-                try:
-                    profile = self.service.users().getProfile(userId='me').execute()
-                    self.gmail_email = profile.get('emailAddress', '')
-                except Exception:
-                    pass
-                print(f"[GmailClient] OAuth2 Google Sign-In successful for {self.gmail_email or 'User'}")
+
+                print(f"[GmailClient] OAuth2 Google Sign-In successful for {user_email}")
                 return {
                     "success": True,
-                    "email": self.gmail_email,
+                    "user": user_info,
+                    "email": user_email,
                     "mode": "oauth",
-                    "message": f"Successfully authenticated with Google as {self.gmail_email or 'Authorized User'}"
+                    "message": f"Successfully authenticated as {user_email}"
                 }
             else:
                 return {
                     "success": False,
-                    "message": "credentials.json not found in project root. Please provide Google OAuth client credentials."
+                    "message": "Google OAuth authorization was not granted."
                 }
         except Exception as e:
             print(f"[GmailClient] Interactive OAuth failed: {e}")
@@ -381,6 +373,7 @@ class GmailClient:
             except Exception:
                 pass
 
+        token_path = get_user_token_path(user_email) if user_email else Path(settings.GMAIL_TOKEN_PATH)
         return {
             "authenticated": self.is_authenticated,
             "mode": {
@@ -391,7 +384,7 @@ class GmailClient:
             "auth_type": self.auth_mode,
             "email": user_email,
             "credentials_found": os.path.exists(settings.GMAIL_CREDENTIALS_PATH),
-            "token_found": os.path.exists(settings.GMAIL_TOKEN_PATH)
+            "token_found": token_path.exists()
         }
 
     def fetch_threads(self, max_threads: int = 20) -> List[Dict[str, Any]]:
@@ -901,5 +894,14 @@ class GmailClient:
                 return {"status": "error", "message": f"Failed to stop watch: {e}"}
         return {"status": "success", "message": "No active OAuth watch."}
 
+
+_CLIENT_CACHE: Dict[str, GmailClient] = {}
+
+def get_gmail_client(user_email: Optional[str] = None) -> GmailClient:
+    """Returns a GmailClient configured for the specified user."""
+    key = user_email.strip().lower() if user_email else "default"
+    if key not in _CLIENT_CACHE:
+        _CLIENT_CACHE[key] = GmailClient(gmail_email=user_email)
+    return _CLIENT_CACHE[key]
 
 gmail_client = GmailClient()

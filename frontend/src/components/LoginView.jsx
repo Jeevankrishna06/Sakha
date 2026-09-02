@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheck, 
   Sparkles, 
@@ -9,14 +9,31 @@ import {
   ArrowRight, 
   CheckCircle2, 
   AlertCircle,
-  RefreshCw
+  RefreshCw,
+  User,
+  Plus
 } from 'lucide-react';
 import { apiService } from '../services/api';
 
 export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark', showToast }) {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [existingAccounts, setExistingAccounts] = useState([]);
   const isDark = theme === 'dark';
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const users = await apiService.getAccounts();
+        if (Array.isArray(users)) {
+          setExistingAccounts(users);
+        }
+      } catch (e) {
+        // ignore
+      }
+    };
+    fetchAccounts();
+  }, []);
 
   const handleGoogleSignIn = async () => {
     setIsAuthenticating(true);
@@ -25,11 +42,14 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
     try {
       const res = await apiService.loginWithGoogle();
       if (res.success) {
+        const email = res.email || res.user?.email || 'Authorized User';
         if (showToast) {
-          showToast(`✨ Signed in successfully as ${res.email || 'Google User'}!`);
+          showToast(`✨ Signed in successfully as ${email}!`);
         }
         onLoginSuccess({
-          email: res.email || 'jeevankrishna675@gmail.com',
+          email: email,
+          name: res.user?.name || email.split('@')[0],
+          picture: res.user?.picture || '',
           mode: 'oauth'
         });
       } else {
@@ -43,6 +63,18 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
     } finally {
       setIsAuthenticating(false);
     }
+  };
+
+  const handleSelectAccount = (account) => {
+    if (showToast) {
+      showToast(`Switched to ${account.email}`);
+    }
+    onLoginSuccess({
+      email: account.email,
+      name: account.name || account.email.split('@')[0],
+      picture: account.picture || '',
+      mode: account.auth_mode || 'oauth'
+    });
   };
 
   return (
@@ -80,10 +112,46 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
               <p className={`text-xs mt-1.5 leading-relaxed max-w-xs mx-auto ${
                 isDark ? 'text-zinc-400' : 'text-zinc-500'
               }`}>
-                Proactive inbox intelligence that prioritizes high-value sales deals and drafts context-aware follow-ups.
+                Multi-User Sales Intelligence that prioritizes active deal threads and drafts context-aware follow-ups.
               </p>
             </div>
           </div>
+
+          {/* Existing Accounts List (Multi-User Quick Switch) */}
+          {existingAccounts.length > 0 && (
+            <div className="mb-6 space-y-2 text-left">
+              <div className={`text-[11px] font-bold uppercase tracking-wider px-1 ${
+                isDark ? 'text-zinc-400' : 'text-zinc-500'
+              }`}>
+                Continue with existing account:
+              </div>
+              <div className="space-y-1.5 max-h-36 overflow-y-auto">
+                {existingAccounts.map((acc) => (
+                  <button
+                    key={acc.email}
+                    type="button"
+                    onClick={() => handleSelectAccount(acc)}
+                    className={`w-full p-2.5 rounded-xl border flex items-center justify-between gap-3 transition-all hover:scale-[1.01] active:scale-98 ${
+                      isDark 
+                        ? 'bg-white/[0.04] hover:bg-white/[0.08] border-white/10 text-white' 
+                        : 'bg-black/[0.03] hover:bg-black/[0.06] border-black/10 text-black'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold shrink-0">
+                        {acc.email.charAt(0).toUpperCase()}
+                      </div>
+                      <div className="min-w-0 text-left">
+                        <div className="text-xs font-bold truncate">{acc.name || acc.email.split('@')[0]}</div>
+                        <div className={`text-[10px] truncate ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>{acc.email}</div>
+                      </div>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 opacity-60 shrink-0" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Value Props Pills */}
           <div className="grid grid-cols-2 gap-2 text-left mb-6 text-[11px]">
@@ -91,7 +159,7 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
               isDark ? 'bg-white/[0.03] border-white/5 text-zinc-300' : 'bg-black/[0.02] border-black/5 text-zinc-700'
             }`}>
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-              <span className="font-medium">OAuth 2.0 Ingestion</span>
+              <span className="font-medium">Multi-Tenant Isolation</span>
             </div>
             <div className={`p-2.5 rounded-xl border flex items-center gap-2 ${
               isDark ? 'bg-white/[0.03] border-white/5 text-zinc-300' : 'bg-black/[0.02] border-black/5 text-zinc-700'
@@ -103,7 +171,7 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
               isDark ? 'bg-white/[0.03] border-white/5 text-zinc-300' : 'bg-black/[0.02] border-black/5 text-zinc-700'
             }`}>
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-              <span className="font-medium">Local RAG Copilot</span>
+              <span className="font-medium">Tenant Vector RAG</span>
             </div>
             <div className={`p-2.5 rounded-xl border flex items-center gap-2 ${
               isDark ? 'bg-white/[0.03] border-white/5 text-zinc-300' : 'bg-black/[0.02] border-black/5 text-zinc-700'
@@ -136,7 +204,7 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
               {isAuthenticating ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin text-current" />
-                  <span>Connecting to Google OAuth...</span>
+                  <span>Connecting with Google OAuth...</span>
                 </>
               ) : (
                 <>
@@ -159,7 +227,7 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
                       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                     />
                   </svg>
-                  <span>Sign in with Google</span>
+                  <span>{existingAccounts.length > 0 ? 'Add another Google Account' : 'Sign in with Google'}</span>
                 </>
               )}
             </button>
@@ -184,7 +252,7 @@ export default function LoginView({ onLoginSuccess, onExploreDemo, theme = 'dark
             isDark ? 'border-white/10 text-zinc-400' : 'border-black/10 text-zinc-500'
           }`}>
             <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
-            <span>Privacy First: Vectors computed locally. Sakha never sends emails automatically.</span>
+            <span>Multi-User Isolated: Data is partitioned per account. No automatic email dispatch.</span>
           </div>
 
         </div>

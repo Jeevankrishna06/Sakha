@@ -30,8 +30,8 @@ class VectorStore:
             self.collection = None
             self._in_memory_docs: List[Dict[str, Any]] = []
 
-    def add_chunks(self, chunks: List[Dict[str, Any]]):
-        """Indexes conversation chunks into ChromaDB."""
+    def add_chunks(self, chunks: List[Dict[str, Any]], user_email: Optional[str] = None):
+        """Indexes conversation chunks into ChromaDB with user metadata."""
         if not chunks:
             return
             
@@ -48,6 +48,8 @@ class VectorStore:
                     clean_m[k] = v
                 else:
                     clean_m[k] = str(v)
+            if user_email and "user_email" not in clean_m:
+                clean_m["user_email"] = str(user_email)
             clean_metadatas.append(clean_m)
             
         embeddings = local_embedder.embed_texts(texts)

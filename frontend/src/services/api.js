@@ -2,11 +2,38 @@ import { MOCK_LEADS } from '../data/mockData';
 
 const BASE_URL = '/api';
 
+function getActiveUserEmail() {
+  try {
+    const saved = localStorage.getItem('sakha_auth_user');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return parsed?.email || '';
+    }
+  } catch (e) {
+    // ignore
+  }
+  return '';
+}
+
+function getRequestHeaders(custom = {}) {
+  const headers = {
+    'Content-Type': 'application/json',
+    ...custom
+  };
+  const email = getActiveUserEmail();
+  if (email) {
+    headers['X-User-Email'] = email;
+  }
+  return headers;
+}
+
 export const apiService = {
-  // Fetch dashboard statistics
+  // Fetch dashboard statistics for active user
   async getStats() {
     try {
-      const res = await fetch(`${BASE_URL}/stats`);
+      const res = await fetch(`${BASE_URL}/stats`, {
+        headers: getRequestHeaders()
+      });
       if (res.ok) return await res.json();
     } catch (e) {
       console.warn('[API] Backend offline, using local stats calculation.');
@@ -32,7 +59,7 @@ export const apiService = {
     };
   },
 
-  // Fetch prioritized leads
+  // Fetch prioritized leads for active user
   async getLeads(urgencyMin = null, search = '') {
     try {
       let url = `${BASE_URL}/leads`;
@@ -41,7 +68,9 @@ export const apiService = {
       if (search) params.append('search', search);
       if (params.toString()) url += `?${params.toString()}`;
       
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        headers: getRequestHeaders()
+      });
       if (res.ok) return await res.json();
     } catch (e) {
       console.warn('[API] Backend offline, filtering mock data.');
@@ -65,7 +94,9 @@ export const apiService = {
   // Fetch single lead details
   async getLeadDetails(leadId) {
     try {
-      const res = await fetch(`${BASE_URL}/lead/${leadId}`);
+      const res = await fetch(`${BASE_URL}/lead/${leadId}`, {
+        headers: getRequestHeaders()
+      });
       if (res.ok) return await res.json();
     } catch (e) {
       console.warn('[API] Backend offline, returning mock lead.');
@@ -78,7 +109,7 @@ export const apiService = {
     try {
       const res = await fetch(`${BASE_URL}/draft/${leadId}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getRequestHeaders(),
         body: JSON.stringify({
           to_email: draftData.recipient,
           subject: draftData.subject,
@@ -104,7 +135,7 @@ export const apiService = {
     try {
       const res = await fetch(`${BASE_URL}/draft/generate`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getRequestHeaders(),
         body: JSON.stringify({
           lead_id: leadId,
           tone,
@@ -127,19 +158,19 @@ export const apiService = {
     
     let body = "";
     if (tone === 'Short & Direct') {
-      body = `Hi ${firstName},\n\nFollowing up on ${cleanSubj} for ${lead.company}.\n\nAre you free for a quick 5-minute sync tomorrow at 11:00 AM to review next steps?\n\nBest,\nSathwik`;
+      body = `Hi ${firstName},\n\nFollowing up on ${cleanSubj} for ${lead.company}.\n\nAre you free for a quick 5-minute sync tomorrow at 11:00 AM to review next steps?\n\nBest,\nJeevan Krishna\nTeam Sakha`;
     } else if (tone === 'Warm & Friendly') {
-      body = `Hi ${firstName},\n\nHope you are having a wonderful week!\n\nI wanted to check in regarding our conversation on ${cleanSubj}. We would love to partner with ${lead.company} and make sure all your questions are answered.\n\nPlease let me know if you would like to jump on a quick call this week, or if I can share any additional details.\n\nWarm regards,\nSathwik`;
+      body = `Hi ${firstName},\n\nHope you are having a wonderful week!\n\nI wanted to check in regarding our conversation on ${cleanSubj}. We would love to partner with ${lead.company} and make sure all your questions are answered.\n\nPlease let me know if you would like to jump on a quick call this week, or if I can share any additional details.\n\nWarm regards,\nJeevan Krishna\nTeam Sakha`;
     } else if (tone === 'Urgent / Action-Oriented') {
-      body = `Hi ${firstName},\n\nFollowing up right away on ${cleanSubj} so we don't hold up your timeline for ${lead.company}.\n\nI have everything ready on our end—could we do a brief 10-minute call today or tomorrow morning to lock in next steps?\n\nBest regards,\nSathwik`;
+      body = `Hi ${firstName},\n\nFollowing up right away on ${cleanSubj} so we don't hold up your timeline for ${lead.company}.\n\nI have everything ready on our end—could we do a brief 10-minute call today or tomorrow morning to lock in next steps?\n\nBest regards,\nJeevan Krishna\nTeam Sakha`;
     } else if (tone === 'Executive / Concise') {
-      body = `Hi ${firstName},\n\nTouching base on the ${cleanSubj} initiative for ${lead.company}.\n\nKey next step: finalize timeline & deliverables.\n\nLet me know if 15 minutes this Thursday works for your calendar.\n\nBest regards,\nSathwik`;
+      body = `Hi ${firstName},\n\nTouching base on the ${cleanSubj} initiative for ${lead.company}.\n\nKey next step: finalize timeline & deliverables.\n\nLet me know if 15 minutes this Thursday works for your calendar.\n\nBest regards,\nJeevan Krishna\nTeam Sakha`;
     } else {
-      body = `Hi ${firstName},\n\nThank you for your time regarding ${cleanSubj}.\n\nI am following up to review our discussion for ${lead.company} and address any questions your team may have as we move forward.\n\nPlease let me know your availability this week for a brief review session.\n\nBest regards,\nSathwik`;
+      body = `Hi ${firstName},\n\nThank you for your time regarding ${cleanSubj}.\n\nI am following up to review our discussion for ${lead.company} and address any questions your team may have as we move forward.\n\nPlease let me know your availability this week for a brief review session.\n\nBest regards,\nJeevan Krishna\nTeam Sakha`;
     }
     
     if (customInstructions) {
-      body = `Hi ${firstName},\n\n${customInstructions}\n\nLooking forward to hearing from you.\n\nBest regards,\nSathwik`;
+      body = `Hi ${firstName},\n\n${customInstructions}\n\nLooking forward to hearing from you.\n\nBest regards,\nJeevan Krishna\nTeam Sakha`;
     }
 
     return {
@@ -157,7 +188,7 @@ export const apiService = {
     try {
       const res = await fetch(`${BASE_URL}/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getRequestHeaders(),
         body: JSON.stringify({ query })
       });
       if (res.ok) return await res.json();
@@ -199,7 +230,10 @@ export const apiService = {
   // Sync Inbox
   async syncInbox() {
     try {
-      const res = await fetch(`${BASE_URL}/sync`, { method: 'POST' });
+      const res = await fetch(`${BASE_URL}/sync`, {
+        method: 'POST',
+        headers: getRequestHeaders()
+      });
       if (res.ok) return await res.json();
     } catch (e) {
       console.warn('[API] Simulated sync.');
@@ -221,7 +255,7 @@ export const apiService = {
     try {
       const res = await fetch(`${BASE_URL}/gmail/connect`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getRequestHeaders(),
         body: JSON.stringify({ email, app_password: appPassword })
       });
       return await res.json();
@@ -233,7 +267,9 @@ export const apiService = {
   // Get Gmail connection status
   async getGmailStatus() {
     try {
-      const res = await fetch(`${BASE_URL}/gmail/status`);
+      const res = await fetch(`${BASE_URL}/gmail/status`, {
+        headers: getRequestHeaders()
+      });
       if (res.ok) return await res.json();
     } catch (e) {
       console.warn('[API] Could not fetch Gmail status.');
@@ -241,12 +277,25 @@ export const apiService = {
     return { authenticated: false, mode: 'Offline', auth_type: 'demo', email: '' };
   },
 
+  // Get All Registered Accounts
+  async getAccounts() {
+    try {
+      const res = await fetch(`${BASE_URL}/auth/users`, {
+        headers: getRequestHeaders()
+      });
+      if (res.ok) return await res.json();
+    } catch (e) {
+      console.warn('[API] Could not fetch accounts list.');
+    }
+    return [];
+  },
+
   // Interactive Google Sign-In (OAuth 2.0)
   async loginWithGoogle() {
     try {
       const res = await fetch(`${BASE_URL}/auth/google`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        headers: getRequestHeaders()
       });
       if (res.ok) return await res.json();
       const err = await res.json().catch(() => ({}));
@@ -260,7 +309,9 @@ export const apiService = {
   // Get Auth Status
   async getAuthStatus() {
     try {
-      const res = await fetch(`${BASE_URL}/auth/status`);
+      const res = await fetch(`${BASE_URL}/auth/status`, {
+        headers: getRequestHeaders()
+      });
       if (res.ok) return await res.json();
     } catch (e) {
       console.warn('[API] Auth status check error.');
@@ -271,7 +322,10 @@ export const apiService = {
   // Logout
   async logout() {
     try {
-      const res = await fetch(`${BASE_URL}/auth/logout`, { method: 'POST' });
+      const res = await fetch(`${BASE_URL}/auth/logout`, {
+        method: 'POST',
+        headers: getRequestHeaders()
+      });
       if (res.ok) return await res.json();
     } catch (e) {
       console.warn('[API] Logout error:', e);

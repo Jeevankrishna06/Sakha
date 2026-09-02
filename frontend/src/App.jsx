@@ -169,10 +169,39 @@ export default function App() {
     }
   };
 
+  const [accounts, setAccounts]     = useState([]);
+
+  const refreshAccounts = useCallback(async () => {
+    try {
+      const users = await apiService.getAccounts();
+      if (Array.isArray(users)) {
+        setAccounts(users);
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshAccounts();
+  }, [user, refreshAccounts]);
+
   const handleLoginSuccess = (authUser) => {
     setUser(authUser);
     localStorage.setItem('sakha_auth_user', JSON.stringify(authUser));
+    refreshAccounts();
     loadData();
+  };
+
+  const handleSwitchAccount = (account) => {
+    setUser(account);
+    localStorage.setItem('sakha_auth_user', JSON.stringify(account));
+    showToast(`Switched account to ${account.email}`);
+    loadData();
+  };
+
+  const handleAddAccount = () => {
+    setUser(null);
   };
 
   const handleExploreDemo = () => {
@@ -250,6 +279,9 @@ export default function App() {
         theme={theme}
         onToggleTheme={toggleTheme}
         user={user}
+        accounts={accounts}
+        onSwitchAccount={handleSwitchAccount}
+        onAddAccount={handleAddAccount}
         onLogout={handleLogout}
       />
 
