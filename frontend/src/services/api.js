@@ -127,19 +127,19 @@ export const apiService = {
     
     let body = "";
     if (tone === 'Short & Direct') {
-      body = `Hi ${firstName},\n\nFollowing up on ${cleanSubj} for ${lead.company}.\n\nAre you free for a quick 5-minute sync tomorrow at 11:00 AM to review next steps?\n\nBest,\nJeevan Krishna\nTeam Sakha`;
+      body = `Hi ${firstName},\n\nFollowing up on ${cleanSubj} for ${lead.company}.\n\nAre you free for a quick 5-minute sync tomorrow at 11:00 AM to review next steps?\n\nBest,\nSathwik`;
     } else if (tone === 'Warm & Friendly') {
-      body = `Hi ${firstName},\n\nHope you are having a wonderful week!\n\nI wanted to check in regarding our conversation on ${cleanSubj}. We would love to partner with ${lead.company} and make sure all your questions are answered.\n\nPlease let me know if you would like to jump on a quick call this week, or if I can share any additional details.\n\nWarm regards,\nJeevan Krishna\nTeam Sakha`;
+      body = `Hi ${firstName},\n\nHope you are having a wonderful week!\n\nI wanted to check in regarding our conversation on ${cleanSubj}. We would love to partner with ${lead.company} and make sure all your questions are answered.\n\nPlease let me know if you would like to jump on a quick call this week, or if I can share any additional details.\n\nWarm regards,\nSathwik`;
     } else if (tone === 'Urgent / Action-Oriented') {
-      body = `Hi ${firstName},\n\nFollowing up right away on ${cleanSubj} so we don't hold up your timeline for ${lead.company}.\n\nI have everything ready on our end—could we do a brief 10-minute call today or tomorrow morning to lock in next steps?\n\nBest regards,\nJeevan Krishna\nTeam Sakha`;
+      body = `Hi ${firstName},\n\nFollowing up right away on ${cleanSubj} so we don't hold up your timeline for ${lead.company}.\n\nI have everything ready on our end—could we do a brief 10-minute call today or tomorrow morning to lock in next steps?\n\nBest regards,\nSathwik`;
     } else if (tone === 'Executive / Concise') {
-      body = `Hi ${firstName},\n\nTouching base on the ${cleanSubj} initiative for ${lead.company}.\n\nKey next step: finalize timeline & deliverables.\n\nLet me know if 15 minutes this Thursday works for your calendar.\n\nBest regards,\nJeevan Krishna\nTeam Sakha`;
+      body = `Hi ${firstName},\n\nTouching base on the ${cleanSubj} initiative for ${lead.company}.\n\nKey next step: finalize timeline & deliverables.\n\nLet me know if 15 minutes this Thursday works for your calendar.\n\nBest regards,\nSathwik`;
     } else {
-      body = `Hi ${firstName},\n\nThank you for your time regarding ${cleanSubj}.\n\nI am following up to review our discussion for ${lead.company} and address any questions your team may have as we move forward.\n\nPlease let me know your availability this week for a brief review session.\n\nBest regards,\nJeevan Krishna\nTeam Sakha`;
+      body = `Hi ${firstName},\n\nThank you for your time regarding ${cleanSubj}.\n\nI am following up to review our discussion for ${lead.company} and address any questions your team may have as we move forward.\n\nPlease let me know your availability this week for a brief review session.\n\nBest regards,\nSathwik`;
     }
     
     if (customInstructions) {
-      body = `Hi ${firstName},\n\n${customInstructions}\n\nLooking forward to hearing from you.\n\nBest regards,\nJeevan Krishna\nTeam Sakha`;
+      body = `Hi ${firstName},\n\n${customInstructions}\n\nLooking forward to hearing from you.\n\nBest regards,\nSathwik`;
     }
 
     return {
