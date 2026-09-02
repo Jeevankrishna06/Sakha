@@ -185,7 +185,6 @@ export default function App() {
         onSync={handleSync}
         isSyncing={isSyncing}
         isLive={isLive}
-        isLiveGmail={Boolean(stats?.is_live_gmail)}
         lastSyncTime={stats?.last_sync || 'Just now'}
         theme={theme}
         onToggleTheme={toggleTheme}

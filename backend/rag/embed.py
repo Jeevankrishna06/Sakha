@@ -10,20 +10,16 @@ from backend.config import settings
 
 class LocalEmbedder:
     def __init__(self):
-        self._model = None
-        self._initialized = False
+        self.model = None
+        self._init_model()
 
-    @property
-    def model(self):
-        if not self._initialized:
-            self._initialized = True
-            try:
-                from sentence_transformers import SentenceTransformer
-                self._model = SentenceTransformer(settings.EMBEDDING_MODEL_NAME)
-            except Exception as e:
-                print(f"[LocalEmbedder] SentenceTransformer load deferred or offline: {e}. Using fast local vectorizer.")
-                self._model = None
-        return self._model
+    def _init_model(self):
+        try:
+            from sentence_transformers import SentenceTransformer
+            self.model = SentenceTransformer(settings.EMBEDDING_MODEL_NAME)
+        except Exception as e:
+            print(f"[LocalEmbedder] SentenceTransformer load deferred or offline: {e}. Using fast local vectorizer.")
+            self.model = None
 
     def embed_texts(self, texts: List[str]) -> List[List[float]]:
         if not texts:

@@ -209,49 +209,31 @@ class GmailClient:
                         print(f"[GmailClient] Could not read token.json: {token_err}. Will re-authenticate if credentials.json is present.")
                         creds = None
 
-                if creds and not creds.valid and creds.expired and creds.refresh_token:
-                    try:
-                        creds.refresh(Request())
-                    except Exception as ref_err:
-                        print(f"[GmailClient] Token refresh failed: {ref_err}")
-                        creds = None
+                if not creds or not creds.valid:
+                    if creds and creds.expired and creds.refresh_token:
+                        try:
+                            creds.refresh(Request())
+                        except Exception as ref_err:
+                            print(f"[GmailClient] Token refresh failed: {ref_err}")
+                            creds = None
+                    if (not creds or not creds.valid) and os.path.exists(creds_path) and os.path.getsize(creds_path) > 0:
+                        flow = InstalledAppFlow.from_client_secrets_file(creds_path, SCOPES)
+                        creds = flow.run_local_server(port=0)
+                        with open(token_path, 'w') as token:
+                            token.write(creds.to_json())
 
-                if creds and creds.valid:
+                if creds:
                     self.service = build('gmail', 'v1', credentials=creds)
                     self.is_authenticated = True
                     self.auth_mode = "oauth"
                     print("[GmailClient] OAuth2 Gmail API authenticated.")
                     return
             except Exception as e:
-                print(f"[GmailClient] OAuth token check: {e}. Falling back to demo.")
+                print(f"[GmailClient] OAuth failed: {e}. Falling back to demo.")
 
         # ── 3. Demo mode ──
         self.is_authenticated = False
         self.auth_mode = "demo"
-
-    def authenticate_interactive_oauth(self) -> Dict[str, Any]:
-        """Interactive OAuth 2.0 flow (called explicitly when interactive login is desired)."""
-        creds_path = settings.GMAIL_CREDENTIALS_PATH
-        token_path = settings.GMAIL_TOKEN_PATH
-        if not os.path.exists(creds_path) or os.path.getsize(creds_path) == 0:
-            return {"success": False, "message": f"{creds_path} not found."}
-        try:
-            from google_auth_oauthlib.flow import InstalledAppFlow
-            from googleapiclient.discovery import build
-            SCOPES = [
-                'https://www.googleapis.com/auth/gmail.readonly',
-                'https://www.googleapis.com/auth/gmail.compose'
-            ]
-            flow = InstalledAppFlow.from_client_secrets_file(creds_path, SCOPES)
-            creds = flow.run_local_server(port=0)
-            with open(token_path, 'w') as token:
-                token.write(creds.to_json())
-            self.service = build('gmail', 'v1', credentials=creds)
-            self.is_authenticated = True
-            self.auth_mode = "oauth"
-            return {"success": True, "message": "OAuth 2.0 authenticated successfully."}
-        except Exception as e:
-            return {"success": False, "message": f"OAuth flow failed: {e}"}
 
     def configure_imap(self, email_addr: str, app_password: str) -> Dict[str, Any]:
         """

@@ -136,35 +136,30 @@ def _broadcast_event(event_type: str, data: dict):
             _sse_clients.remove(q)
 
 def _background_auto_sync():
-    """Background thread that polls Gmail every N seconds and broadcasts changes when authenticated."""
+    """Background thread that polls Gmail every N seconds and broadcasts changes."""
     global _last_lead_hash
     import time as _time
     _time.sleep(5)  # wait for startup
     while True:
         try:
-            if gmail_client.is_authenticated:
-                run_ingestion_pipeline()
-                leads = get_all_leads()
-                new_hash = _compute_leads_hash(leads)
-                if _last_lead_hash is not None and new_hash != _last_lead_hash:
-                    _broadcast_event("leads_updated", {
-                        "total": len(leads),
-                        "timestamp": _time.strftime("%H:%M:%S"),
-                        "message": f"New emails detected! {len(leads)} leads updated."
-                    })
-                    print(f"[AutoSync] Change detected — pushed SSE update to {len(_sse_clients)} client(s)")
-                _last_lead_hash = new_hash
+            run_ingestion_pipeline()
+            leads = get_all_leads()
+            new_hash = _compute_leads_hash(leads)
+            if _last_lead_hash is not None and new_hash != _last_lead_hash:
+                _broadcast_event("leads_updated", {
+                    "total": len(leads),
+                    "timestamp": _time.strftime("%H:%M:%S"),
+                    "message": f"New emails detected! {len(leads)} leads updated."
+                })
+                print(f"[AutoSync] Change detected — pushed SSE update to {len(_sse_clients)} client(s)")
+            _last_lead_hash = new_hash
         except Exception as e:
             print(f"[AutoSync] Background sync error: {e}")
         _time.sleep(_auto_sync_interval)
 
-_sync_thread: Optional[threading.Thread] = None
-
-def start_background_sync():
-    global _sync_thread
-    if _sync_thread is None or not _sync_thread.is_alive():
-        _sync_thread = threading.Thread(target=_background_auto_sync, daemon=True)
-        _sync_thread.start()
+# Start background auto-sync thread on import
+_sync_thread = threading.Thread(target=_background_auto_sync, daemon=True)
+_sync_thread.start()
 
 @api_router.get("/stream/leads")
 async def stream_leads_sse(request: Request):
@@ -389,15 +384,11 @@ if FRONTEND_DIST.exists():
 
 @app.on_event("startup")
 async def startup_event():
-    """Seed ChromaDB with demo/cached data on startup and start background auto-sync."""
+    """Seed ChromaDB with demo/cached data on startup."""
     try:
         run_ingestion_pipeline()
     except Exception as e:
         print(f"[API] Startup indexing notice: {e}")
-    try:
-        start_background_sync()
-    except Exception as e:
-        print(f"[API] Background sync start notice: {e}")
 
 if __name__ == "__main__":
     import uvicorn
