@@ -458,20 +458,35 @@ if FRONTEND_DIST.exists():
     if assets_dir.exists():
         app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="frontend-assets")
     
-    # Catch-all SPA route
+    # Catch-all SPA route with no-cache headers to prevent asset mismatch errors
     @app.get("/{full_path:path}")
     def serve_frontend_spa(full_path: str):
         # Allow API docs and OpenAPI schema through
-        if full_path.startswith("docs") or full_path.startswith("openapi.json") or full_path.startswith("redoc"):
+        if full_path.startswith("docs") or full_path.startswith("openapi.json") or full_path.startswith("redoc") or full_path.startswith("api/"):
             raise HTTPException(status_code=404, detail="Not Found")
         
+        # If an asset (.js, .css, .map) is requested but does not exist in dist, return 404 rather than HTML
+        if full_path.startswith("assets/") or full_path.endswith(".js") or full_path.endswith(".css") or full_path.endswith(".map"):
+            target_file = FRONTEND_DIST / full_path
+            if target_file.exists() and target_file.is_file():
+                return FileResponse(str(target_file))
+            raise HTTPException(status_code=404, detail="Asset not found")
+
+        # Static files in dist root (like logo.jpeg, logo.png, favicon.ico)
         target_file = FRONTEND_DIST / full_path
         if target_file.exists() and target_file.is_file():
             return FileResponse(str(target_file))
         
         index_file = FRONTEND_DIST / "index.html"
         if index_file.exists():
-            return FileResponse(str(index_file))
+            return FileResponse(
+                str(index_file),
+                headers={
+                    "Cache-Control": "no-cache, no-store, must-revalidate",
+                    "Pragma": "no-cache",
+                    "Expires": "0"
+                }
+            )
         raise HTTPException(status_code=404, detail="Frontend build index.html not found")
 
 @app.on_event("startup")

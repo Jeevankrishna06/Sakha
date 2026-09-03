@@ -22,11 +22,11 @@ const QUICK_PROMPTS = [
   "Highlight product ROI"
 ];
 
-export default function DraftEditor({ lead, onDraftCreated, showToast, theme = 'dark' }) {
+export default function DraftEditor({ lead = {}, onDraftCreated, showToast, theme = 'dark' }) {
   const isDark = theme === 'dark';
-  const [tone, setTone]               = useState(lead.draft?.tone || 'Professional');
-  const [subject, setSubject]         = useState(lead.draft?.subject || `Re: ${lead.company} & Sakha`);
-  const [body, setBody]               = useState(lead.draft?.body || '');
+  const [tone, setTone]               = useState(lead?.draft?.tone || 'Professional');
+  const [subject, setSubject]         = useState(lead?.draft?.subject || (lead?.company ? `Re: ${lead.company} & Sakha` : 'Re: Next steps with Sakha'));
+  const [body, setBody]               = useState(lead?.draft?.body || '');
   const [customPrompt, setCustomPrompt] = useState('');
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [isCreatingDraft, setIsCreatingDraft] = useState(false);
@@ -35,7 +35,7 @@ export default function DraftEditor({ lead, onDraftCreated, showToast, theme = '
 
   useEffect(() => {
     if (lead?.draft) {
-      setSubject(lead.draft.subject || `Re: ${lead.company} & Sakha`);
+      setSubject(lead.draft.subject || (lead.company ? `Re: ${lead.company} & Sakha` : 'Re: Next steps with Sakha'));
       setBody(lead.draft.body || '');
       setTone(lead.draft.tone || 'Professional');
     }
