@@ -20,6 +20,13 @@ if not env_file.exists() and env_example.exists():
 
 load_dotenv(env_file)
 
+def _resolve_path(env_val: str, default_name: str) -> str:
+    val = env_val or default_name
+    p = Path(val)
+    if not p.is_absolute():
+        p = BASE_DIR / p
+    return str(p)
+
 class Settings:
     PROJECT_NAME: str = "Sakha AI Sales Follow-Up Agent"
     VERSION: str = "1.0.0"
@@ -30,8 +37,8 @@ class Settings:
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     
     # Gmail API Settings (OAuth)
-    GMAIL_CREDENTIALS_PATH: str = os.getenv("GMAIL_CREDENTIALS_PATH", str(BASE_DIR / "credentials.json"))
-    GMAIL_TOKEN_PATH: str = os.getenv("GMAIL_TOKEN_PATH", str(BASE_DIR / "token.json"))
+    GMAIL_CREDENTIALS_PATH: str = _resolve_path(os.getenv("GMAIL_CREDENTIALS_PATH", ""), "credentials.json")
+    GMAIL_TOKEN_PATH: str = _resolve_path(os.getenv("GMAIL_TOKEN_PATH", ""), "token.json")
     
     # User Profile / Sender Settings
     USER_NAME: str = os.getenv("USER_NAME", "")
@@ -57,7 +64,7 @@ class Settings:
     GMAIL_PUBSUB_TOPIC: str = os.getenv("GMAIL_PUBSUB_TOPIC", "")
 
     # Vector Database & Embeddings
-    CHROMA_PERSIST_DIR: str = os.getenv("CHROMA_PERSIST_DIR", str(BASE_DIR / "chroma_db"))
+    CHROMA_PERSIST_DIR: str = _resolve_path(os.getenv("CHROMA_PERSIST_DIR", ""), "chroma_db")
     EMBEDDING_MODEL_NAME: str = os.getenv("EMBEDDING_MODEL_NAME", "all-MiniLM-L6-v2")
     
     # Server Settings
@@ -67,6 +74,6 @@ class Settings:
     
     # Logging
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
-    LOG_FILE: str = os.getenv("LOG_FILE", str(BASE_DIR / "app.log"))
+    LOG_FILE: str = _resolve_path(os.getenv("LOG_FILE", ""), "app.log")
 
 settings = Settings()

@@ -352,8 +352,13 @@ class GmailClient:
             # Open interactive Google login flow with account chooser
             if not creds or not creds.valid:
                 flow = InstalledAppFlow.from_client_secrets_file(creds_path, SCOPES)
-                # prompt='select_account' forces Google to ask for the account email/password
-                creds = flow.run_local_server(port=0, prompt='select_account')
+                print(f"[GmailClient] Opening browser for Google Sign-In with {creds_path}...")
+                creds = flow.run_local_server(
+                    port=0,
+                    prompt='select_account',
+                    open_browser=True,
+                    authorization_prompt_message='Please authorize in your browser: {url}'
+                )
 
             if creds and creds.valid:
                 service = build('gmail', 'v1', credentials=creds)
