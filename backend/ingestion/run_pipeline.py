@@ -5,6 +5,14 @@ Ingests Gmail threads (real IMAP/OAuth or demo), runs AI analysis chain
 populates ChromaDB vector memory with user isolation, and updates the active leads store.
 """
 
+import sys
+from pathlib import Path
+
+# Ensure project root is in sys.path
+_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+
 from typing import Dict, Any, List, Optional
 from backend.ingestion.gmail_pull import get_gmail_client
 from backend.ingestion.chunker import chunk_conversation_thread

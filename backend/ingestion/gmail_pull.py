@@ -6,6 +6,10 @@ Falls back gracefully to demo data when neither is configured.
 """
 
 import os
+import re
+import html
+import json
+from pathlib import Path
 import imaplib
 import smtplib
 import email

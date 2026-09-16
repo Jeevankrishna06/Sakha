@@ -4,6 +4,7 @@ Provides zero-cost, local vector generation for email threads.
 Includes deterministic fallback for rapid startup.
 """
 
+import threading
 from typing import List
 import numpy as np
 from backend.config import settings
@@ -11,15 +12,20 @@ from backend.config import settings
 class LocalEmbedder:
     def __init__(self):
         self.model = None
-        self._init_model()
+        self._init_model_async()
 
-    def _init_model(self):
-        try:
-            from sentence_transformers import SentenceTransformer
-            self.model = SentenceTransformer(settings.EMBEDDING_MODEL_NAME)
-        except Exception as e:
-            print(f"[LocalEmbedder] SentenceTransformer load deferred or offline: {e}. Using fast local vectorizer.")
-            self.model = None
+    def _init_model_async(self):
+        def _loader():
+            try:
+                from sentence_transformers import SentenceTransformer
+                self.model = SentenceTransformer(settings.EMBEDDING_MODEL_NAME)
+                print(f"[LocalEmbedder] SentenceTransformer ({settings.EMBEDDING_MODEL_NAME}) ready.")
+            except Exception as e:
+                print(f"[LocalEmbedder] SentenceTransformer load deferred or offline: {e}. Using fast local vectorizer.")
+                self.model = None
+
+        thread = threading.Thread(target=_loader, daemon=True)
+        thread.start()
 
     def embed_texts(self, texts: List[str]) -> List[List[float]]:
         if not texts:

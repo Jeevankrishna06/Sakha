@@ -130,7 +130,7 @@ Provide a concise, direct, executive-ready sales summary with clear actionable n
         if self.llm_provider == "groq" and self.groq_key:
             try:
                 from groq import Groq
-                client = Groq(api_key=self.groq_key)
+                client = Groq(api_key=self.groq_key, timeout=5.0)
                 for model_name in ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "qwen/qwen3.6-27b"]:
                     try:
                         resp = client.chat.completions.create(
